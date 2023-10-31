@@ -1,44 +1,37 @@
-<script>
-export default {
-    data() {
-        return {
-            fines: [
-                { id: 1, user: 'John Doe', book: 'The Lightning Thief', amount: 3.75, dueDate: '10-26-2023' },
-                { id: 2, user: 'Jane Doe', book: 'The Hunger Games', amount: 1.50, dueDate: '10-25-2023' },
-                { id: 3, user: 'Jason Doe', book: 'Databases V2 Textbook', amount: 5.50, dueDate: '10-21-2023' },
-                { id: 4, user: 'Jordan Doe', book: 'Captain Underpants', amount: 4.50, dueDate: '10-22-2023' },
-                // ... more fines
-            ],
-            filteredFines: [],
-            showUsersDropdown: false,
-            showNamesDropdown: false,
-        };
-    },
-    computed: {
-        uniqueUsers() {
-            return [...new Set(this.fines.map(fine => ({ id: fine.id, name: fine.user })))];
-        },
-        uniqueNames() {
-            return [...new Set(this.fines.map(fine => fine.user))];
-        }
-    },
-    methods: {
-        filterByUserId(id) {
-            this.filteredFines = this.fines.filter(fine => fine.id === id);
-        },
-        filterByName(name) {
-            this.filteredFines = this.fines.filter(fine => fine.user === name);
-        },
-        resetFilter() {
-            this.filteredFines = this.fines;
-            this.showUsersDropdown = false;
-            this.showNamesDropdown = false;
-        },
-    },
-    mounted() {
-        this.resetFilter();
-    }
-};
+<script setup>
+import { ref, computed } from 'vue'
+
+const fines = ref([
+    { id: 1, user: 'John Doe', book: 'The Lightning Thief', amount: 3.75, dueDate: '10-26-2023' },
+    { id: 2, user: 'Jane Doe', book: 'The Hunger Games', amount: 1.50, dueDate: '10-25-2023' },
+    { id: 3, user: 'Jason Doe', book: 'Databases V2 Textbook', amount: 5.50, dueDate: '10-21-2023' },
+    { id: 4, user: 'Jordan Doe', book: 'Captain Underpants', amount: 4.50, dueDate: '10-22-2023' },
+])
+
+const filteredFines = ref([])
+const showUsersDropdown = ref(false)
+const showNamesDropdown = ref(false)
+
+const uniqueUsers = computed(() => {
+    return [...new Set(fines.value.map(fine => ({ id: fine.id, name: fine.user })))];
+})
+const uniqueNames = computed(() => {
+    return [...new Set(fines.value.map(fine => fine.user))];
+})
+
+function filterByUserId(id) {
+    filteredFines.value = fines.value.filter(fine => fine.id === id);
+}
+
+function filterByName(name) {
+    filteredFines.value = fines.value.filter(fine => fine.user === name);
+}
+
+function resetFilter() {
+    filteredFines.value = fines;
+    showUsersDropdown.value = false;
+    showNamesDropdown.value = false;
+}
 </script>
 
 <template>
