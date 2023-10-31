@@ -1,22 +1,17 @@
-<script>
-export default {
-    data() {
-        return {
-            loanItem: {
-                name: "Sample Book",
-                dueDate: "2023-11-15",
-            },
-        };
-    },
-    methods: {
-        returnItem() {
-            // Add later
-        },
-        extendLoan() {
-            // Add later
-        },
-    },
-};
+<script setup>
+import { ref, computed } from 'vue'
+
+const loanItem = ref({
+    name: "Sample Book",
+    dueDate: "2023-11-15",
+})
+
+function returnItem() {
+    return
+}
+function extendLoan() {
+    return
+}
 </script>
 
 <template>
