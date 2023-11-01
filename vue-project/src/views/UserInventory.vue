@@ -1,52 +1,39 @@
-<script>
-export default {
-  data() {
-    return {
-      loggedIn: false,
-      username: '',
-      password: '',
-      checkouts: [
-        { id: 1, user: 'John Doe', book: 'The Lightning Thief', checkoutDate: '10-12-2023', dueDate: '10-26-2023', device: 'calculator', checkoutDate: '10-12-2023', dueDate: '10-26-2023' },
-        { id: 2, user: 'Jane Doe', book: 'The Hunger Games', checkoutDate: '10-11-2023', dueDate: '10-25-2023', media: 'Movie', checkoutDate: '10-12-2023', dueDate: '10-26-2023' },
-        { id: 3, user: 'Jason Doe', book: 'Databases V2 Textbook', checkoutDate: '10-07-2023', dueDate: '10-21-2023' },
-        { id: 4, user: 'Jordan Doe', book: 'Captain Underpants', checkoutDate: '10-08-2023', dueDate: '10-22-2023' },
-        // ... more checkouts
-      ],
-      filteredcheckouts: [],
-      showUsersDropdown: false,
-      showNamesDropdown: false,
-    };
-  },
-  computed: {
-    uniqueUsers() {
-      return [...new Set(this.checkouts.map(checkout => ({ id: checkout.id, name: checkout.user })))];
-    },
-    uniqueNames() {
-      return [...new Set(this.checkouts.map(checkout => checkout.user))];
-    }
-  },
-  methods: {
-    login() {
-      if (this.username === 'admin' && this.password === 'password') {
-        this.loggedIn = true;
-        this.filteredcheckouts = this.checkouts;
-      } else {
-        alert('Incorrect username or password.');
-      }
-    },
-    filterByUserId(id) {
-      this.filteredcheckouts = this.checkouts.filter(checkout => checkout.id === id);
-    },
-    filterByName(name) {
-      this.filteredcheckouts = this.checkouts.filter(checkout => checkout.user === name);
-    },
-    resetFilter() {
-      this.filteredcheckouts = this.checkouts;
-      this.showUsersDropdown = false;
-      this.showNamesDropdown = false;
-    },
-  }
-};
+<script setup>
+import { ref, computed } from 'vue'
+const loggedIn = ref(false)
+const username = ref('')
+const password = ref('')
+const filteredcheckouts = ref([])
+const checkouts = ref([
+  { id: 1, user: 'John Doe', book: 'The Lightning Thief', checkoutDate: '10-12-2023', dueDate: '10-26-2023', device: 'calculator', checkoutDate: '10-12-2023', dueDate: '10-26-2023' },
+  { id: 2, user: 'Jane Doe', book: 'The Hunger Games', checkoutDate: '10-11-2023', dueDate: '10-25-2023', media: 'Movie', checkoutDate: '10-12-2023', dueDate: '10-26-2023' },
+  { id: 3, user: 'Jason Doe', book: 'Databases V2 Textbook', checkoutDate: '10-07-2023', dueDate: '10-21-2023' },
+  { id: 4, user: 'Jordan Doe', book: 'Captain Underpants', checkoutDate: '10-08-2023', dueDate: '10-22-2023' },
+  // ... more checkouts
+])
+const showUsersDropdown = ref(false)
+const showNamesDropdown = ref(false)
+
+
+const uniqueUsers = computed(() => {
+  return [...new Set(checkouts.value.map(checkout => ({ id: checkout.id, name: checkout.user })))];
+})
+
+const uniqueNames = computed(() => {
+  return [...new Set(checkouts.value.map(checkout => checkout.user))];
+})
+
+function filterByUserId(id) {
+  filteredcheckouts.value = checkouts.value.filter(checkout => checkout.id === id);
+}
+function filterByName(name) {
+  filteredcheckouts.value = checkouts.value.filter(checkout => checkout.user === name);
+}
+function resetFilter() {
+  filteredcheckouts.value = checkouts;
+  showUsersDropdown.value = false;
+  showNamesDropdown.value = false;
+}
 </script>
 
 <template>
