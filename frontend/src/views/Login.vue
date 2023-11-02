@@ -10,7 +10,7 @@ const alert = ref('')
 const textAlert = reactive({ text: '' })
 
 axios
-    .get('http://localhost:3000/api/users') // Replace with your backend server URL
+    .get(`http://${import.meta.env.VITE_SERVER_URL}:3000/api/users`) // Replace with your backend server URL
     .then((response) => {
         console.log(response.data)
     })
