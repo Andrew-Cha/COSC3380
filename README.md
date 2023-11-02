@@ -1,5 +1,12 @@
 # COSC 3380 Project
 
+## Prerequisites
+- Node V21+
+- Nginx
+
+`npm install` in the `frontend` and `backend` folders
+
+## Starting the project
 Must be on a unix system
 
 Start using
