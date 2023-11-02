@@ -1,4 +1,4 @@
 #!/bin/sh
 pg_ctl -D ./db-data start
-cd ./vue-project 
+cd ./frontend 
 npm run build
