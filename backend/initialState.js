@@ -1,6 +1,4 @@
 const initializeQuery = `
-DROP DATABASE postgres;
-
 CREATE TABLE role(
     id serial PRIMARY KEY,
     role_name text,

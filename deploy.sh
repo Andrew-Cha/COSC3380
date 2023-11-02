@@ -1,5 +1,5 @@
 #!/bin/sh
-pg_createcluster 12 main -- --username=cooluser
+pg_createcluster 12 main
 pg_ctlcluster 12 main start
 cd ./frontend 
 npm run build
