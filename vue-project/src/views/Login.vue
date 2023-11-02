@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from 'vue'
 import { reactive } from 'vue'
+import axios from 'axios'
 import router from '../router';
 
 const name = ref('')
@@ -8,7 +9,16 @@ const password = ref('')
 const alert = ref('')
 const textAlert = reactive({ text: '' })
 
-function login() {
+axios
+    .get('http://localhost:3000/api/users') // Replace with your backend server URL
+    .then((response) => {
+        console.log(response.data)
+    })
+    .catch((error) => {
+        console.error(error);
+    });
+
+async function login() {
     if (name.value == "" || password.value == "") {
         console.log('404: Not Found')
         alert.value = 'error'
