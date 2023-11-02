@@ -170,12 +170,12 @@ values(1, 'mobile', 'iPad Pro 11', 'Macintosh', '04-01-2021', 'ABC-1234', 'Mac',
 
 create table device_to_customer(
         id serial primary key,
-        user_id integer references customer(id),
+        customer_id integer references customer(id),
         device_id integer references device(id),
         held_at date,
         held_until date
     );
-insert into device_to_customer(user_id, device_id, held_at, held_until)
+insert into device_to_customer(customer_id, device_id, held_at, held_until)
 values(1, 1, '2022-04-22', '2022-05-02'),
     (2, 2, '2023-07-25', '2023-08-14');
 
