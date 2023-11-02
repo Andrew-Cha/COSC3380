@@ -1,8 +1,6 @@
 <script setup>
 import { ref, computed } from 'vue'
-const loggedIn = ref(false)
-const username = ref('')
-const password = ref('')
+
 const filteredcheckouts = ref([])
 const checkouts = ref([
   { id: 1, user: 'John Doe', book: 'The Lightning Thief', checkoutDate: '10-12-2023', dueDate: '10-26-2023', device: 'calculator', checkoutDate: '10-12-2023', dueDate: '10-26-2023' },

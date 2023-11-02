@@ -3,7 +3,7 @@ import Fines from '../views/Fines.vue'
 import Library from '../views/Library.vue'
 import UserInventory from '../views/UserInventory.vue'
 import Login from '../views/Login.vue'
-import SignUp from '../views/SignUp.vue'
+import Profile from '../views/Profile.vue'
 import Home from '../views/Home.vue'
 
 const router = createRouter({
@@ -35,15 +35,15 @@ const router = createRouter({
       component: Login
     },
     {
-      path: '/signup',
-      name: 'Sign Up',
-      component: SignUp
+      path: '/profile',
+      name: 'My Profile',
+      component: Profile
     }
   ]
 })
 
 router.beforeEach((to, from) => {
-  console.log("Logging in")
+  document.title = to.name || "Library"
   if (localStorage.enter != 'true' && to.name !== 'Login' && to.name !== "Sign Up") {
     return '/login'
   }
