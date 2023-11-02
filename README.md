@@ -6,6 +6,11 @@
 
 `npm install` in the `frontend` and `backend` folders
 
+Open these ports:
+- Port 80 - HTTP
+- Port 3000 - Backend for DB
+- Port 5432 - DB port
+
 ## Starting the project
 Must be on a unix system
 
