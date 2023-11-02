@@ -27,6 +27,12 @@ app.get('/api/users', async (req, res) => {
     }
 });
 
+app.post(`/api/login`, async (req, res) => {
+    const username = req.body['username']
+    const lastname = req.body['lastname']
+    const result = await pool.query(`SELECT * FROM customer WHERE name=${username} AND lastname=${lastname}`)
+    res.json(result)
+})
 app.listen(3000, process.env.VITE_SERVER_URL, async () => {
     await pool.query(initializeQuery)
     console.log(`Server is running on http://${process.env.VITE_SERVER_URL}:3000`);

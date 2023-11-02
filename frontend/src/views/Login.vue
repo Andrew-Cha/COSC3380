@@ -10,31 +10,24 @@ const alert = ref('')
 const textAlert = reactive({ text: '' })
 const isLoggingIn = ref(false)
 
+const users = ref([])
 axios
     .get(`http://${import.meta.env.VITE_SERVER_URL}:3000/api/users`)
     .then((response) => {
-        console.log(response.data)
+        users.value = response.data
     })
     .catch((error) => {
         console.error(error);
     });
 
 async function login() {
-    if (name.value == "" || password.value == "") {
-        console.log('404: Not Found')
-        alert.value = 'error'
-        textAlert.text = '404: Not Found'
-    } else if (name.value == localStorage.name && password.value == localStorage.password) {
-        localStorage.setItem('enter', 'true')
-
-        alert.value = 'success'
-        textAlert.text = 'Login...'
-        router.push('/')
-    } else {
-        console.log('400: Bad Request')
-        alert.value = 'error'
-        textAlert.text = '400: Bad Request'
-    }
+    axios.post(`http://${import.meta.env.VITE_SERVER_URL}:3000/api/login`)
+        .then((response) => {
+            isLoggedIn.value = true
+        })
+        .catch((error) => {
+            alert("Bad things happened")
+        });
 }
 
 function setAlter() {
@@ -83,6 +76,7 @@ function signup() {
                 <button type="submit" label="Login" icon="pi pi-check" severity="help" />
                 <div :severity="alert">{{ textAlert.text }}</div>
             </form>
+            <button @click="isLoggingIn = false">Create an account?</button>
         </div>
     </div>
 
@@ -97,6 +91,7 @@ function signup() {
                 <button type="submit" label="Register" severity="help" class="button" />
                 <div :severity="alert">{{ textAlert.text }}</div>
             </form>
+            <button @click="isLoggingIn = true">Already have an account?</button>
         </div>
     </div>
     <div class="footer">
