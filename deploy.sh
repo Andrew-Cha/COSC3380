@@ -1,8 +1,7 @@
 #!/bin/sh
-pg_ctl -D ./db-data init
-pg_ctl -D ./db-data start
-cd ./frontend
-npm install
+pg_createcluster 12 main -- --username=root
+pg_ctlcluster 12 main start
+cd ./frontend 
 npm run build
 cd ..
 cd ./backend
