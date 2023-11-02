@@ -12,7 +12,7 @@ const isLoggingIn = ref(false)
 
 const users = ref([])
 axios
-    .get(`http://${import.meta.env.VITE_SERVER_URL}:3000/api/users`)
+    .get(`http://${import.meta.env.VITE_SERVER_URL}:3000/api/customers`)
     .then((response) => {
         users.value = response.data
     })
@@ -23,78 +23,52 @@ axios
 async function login() {
     axios.post(`http://${import.meta.env.VITE_SERVER_URL}:3000/api/login`)
         .then((response) => {
-            isLoggedIn.value = true
+            alert("Created user successfully, please log in.")
         })
         .catch((error) => {
-            alert("Bad things happened")
+            alert("Could not create your user.")
         });
 }
 
-function setAlter() {
-    localStorage.setItem('alter', 'true')
-}
-
 function signup() {
-    if (name.value == "" || password.value == "") {
-        console.log('404: Not Found')
-        alert.value = 'error'
-        textAlert.text = '404: Not Found'
-
-    } else if (localStorage.name == null && localStorage.password == null) {
-        localStorage.setItem('name', name.value)
-        localStorage.setItem('password', password.value)
-        localStorage.setItem('alter', false)
-
-        alert.value = 'success'
-        textAlert.text = 'Account created!'
-        router.push('/')
-    } else if (localStorage.alter == 'true') {
-        localStorage.setItem('name', name.value)
-        localStorage.setItem('password', password.value)
-        localStorage.setItem('alter', false)
-
-        alert.value = 'success'
-        textAlert.text = 'Account created!'
-
-        router.push('/')
-    } else {
-        alert.value = 'info'
-        textAlert.text = 'You already have an account'
+    const customer = {
+        firstName: name.value,
+        lastName: name.value,
+        password: password.value
     }
+    axios.post(`http://${import.meta.env.VITE_SERVER_URL}:3000/api/customers/create`, customer).then((response) => {
+        window.alert("Created user successfully, please log in.")
+    })
+        .catch((error) => {
+            window.alert("Could not create your user.")
+        });
 }
 </script>
 
 <template>
     <div v-if="isLoggingIn == true" class="login">
-        <div>
+        <form class="form" action="" @submit.prevent="login">
             <h1>
                 Login
             </h1>
-            <form class="form" action="" @submit.prevent="login">
-                <input type="text" placeholder="Username" v-model="name" />
-                <input type="text" placeholder="Password" v-model="password" />
-                <button type="submit" label="Login" icon="pi pi-check" severity="help" />
-                <div :severity="alert">{{ textAlert.text }}</div>
-            </form>
-            <button @click="isLoggingIn = false">Create an account?</button>
-        </div>
+            <input type="text" placeholder="Username" v-model="name" />
+            <input type="text" placeholder="Password" v-model="password" />
+            <button type="submit">Login</button>
+            <div :severity="alert">{{ textAlert.text }}</div>
+        </form>
+        <button @click="isLoggingIn = false">Create an account?</button>
     </div>
 
     <div v-else="isLoggingIn == false" class="signup">
-        <div>
+        <form class="form" action="" @submit.prevent="signup">
             <h1>
                 Sign Up
             </h1>
-            <form class="form" action="" @submit.prevent="signup">
-                <input type="text" placeholder="Username" v-model="name" />
-                <input type="text" placeholder="Password" v-model="password" />
-                <button type="submit" label="Register" severity="help" class="button" />
-                <div :severity="alert">{{ textAlert.text }}</div>
-            </form>
-            <button @click="isLoggingIn = true">Already have an account?</button>
-        </div>
-    </div>
-    <div class="footer">
+            <input type="text" placeholder="Username" v-model="name" />
+            <input type="text" placeholder="Password" v-model="password" />
+            <button type="submit" @click="createUser">Register</button>
+        </form>
+        <button @click="isLoggingIn = true">Already have an account?</button>
     </div>
 </template>
 
