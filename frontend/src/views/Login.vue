@@ -6,27 +6,25 @@ import router from '../router';
 
 const name = ref('')
 const password = ref('')
-const alert = ref('')
-const textAlert = reactive({ text: '' })
-const isLoggingIn = ref(false)
-
-const users = ref([])
-axios
-    .get(`http://${import.meta.env.VITE_SERVER_URL}:3000/api/customers`)
-    .then((response) => {
-        users.value = response.data
-    })
-    .catch((error) => {
-        console.error(error);
-    });
+const isLoggingIn = ref(true)
 
 async function login() {
-    axios.post(`http://${import.meta.env.VITE_SERVER_URL}:3000/api/login`)
+    console.log("here")
+    const customer = {
+        firstName: name.value,
+        lastName: name.value,
+        password: password.value
+    }
+    axios.post(`http://${import.meta.env.VITE_SERVER_URL}:3000/api/customers/login`, customer)
         .then((response) => {
-            alert("Created user successfully, please log in.")
+            console.log(response.data)
+            console.log("test")
+            window.alert("Logged in successfully.")
+            localStorage.setItem('isLoggedIn', 'true')
+            router.push('/')
         })
         .catch((error) => {
-            alert("Could not create your user.")
+            window.alert("Could not log in.")
         });
 }
 
@@ -54,7 +52,6 @@ function signup() {
             <input type="text" placeholder="Username" v-model="name" />
             <input type="text" placeholder="Password" v-model="password" />
             <button type="submit">Login</button>
-            <div :severity="alert">{{ textAlert.text }}</div>
         </form>
         <button @click="isLoggingIn = false">Create an account?</button>
     </div>
@@ -66,7 +63,7 @@ function signup() {
             </h1>
             <input type="text" placeholder="Username" v-model="name" />
             <input type="text" placeholder="Password" v-model="password" />
-            <button type="submit" @click="createUser">Register</button>
+            <button type="submit">Register</button>
         </form>
         <button @click="isLoggingIn = true">Already have an account?</button>
     </div>

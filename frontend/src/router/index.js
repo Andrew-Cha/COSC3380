@@ -44,7 +44,7 @@ const router = createRouter({
 
 router.beforeEach((to, from) => {
   document.title = to.name || "Library"
-  if (localStorage.enter != 'true' && to.name !== 'Login' && to.name !== "Sign Up") {
+  if (localStorage.isLoggedIn != 'true' && to.name !== 'Login') {
     return '/login'
   }
 })

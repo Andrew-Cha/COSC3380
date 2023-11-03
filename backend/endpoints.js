@@ -30,6 +30,23 @@ app.get('/api/customers', async (req, res) => {
     }
 });
 
+app.post('/api/customers/login', async (req, res) => {
+    const { firstName, lastName, password } = req.body
+    const query = {
+        text: 'SELECT * FROM customer WHERE first_name = $1 AND last_name = $2 AND password = $3',
+        values: [firstName, lastName, password]
+    }
+
+    pool.query(query, (error, results) => {
+        if (error || results.length == 0) {
+            console.error('Could not find user in database.')
+            res.status(400).json({ message: "Invalid credentials" })
+        } else {
+            res.status(200).json(results.rows[0])
+        }
+    })
+})
+
 app.post('/api/customers/create', async (req, res) => {
     const { firstName, lastName, password } = req.body
     const query = {
