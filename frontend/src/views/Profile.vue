@@ -1,12 +1,14 @@
 <script setup>
 import { ref } from 'vue'
+import axios from 'axios';
+import { ref, onMounted } from 'vue';
 
 const user = ref({
-    name: "John Smith",
-    registration: "2023-10-31",
-    identificationNumber: "012345",
-    role_ID: "1",
-})
+    name: "",
+    registration: "",
+    identificationNumber: "",
+    role_ID: "",
+});
 
 function previousUser() {
 
@@ -14,7 +16,30 @@ function previousUser() {
 function nextUser() {
 
 }
+
+async function fetchUser() {
+    try {
+        const response = await axios.get(`http://${import.meta.env.VITE_SERVER_URL}:3000/api/customers/:id`);
+        if (response.status === 200) {
+            const userData = response.data;
+            user.value = {
+                name: userData.first_name + ' ' + userData.last_name,
+                registration: userData.registration_date,
+                password: userData.password
+            };
+        } else {
+            console.error('Error getting customer data');
+        }
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+onMounted(fetchUser);
+
 </script>
+
+
 
 <template>
     <div class="user-profile-page">
@@ -22,14 +47,9 @@ function nextUser() {
         <button @click="previousUser" class="return-button">Previous</button>
         <button @click="nextUser" class="extend-button">Next</button>
         <div class="user-information">
-
             <p>Name: {{ user.name }}</p>
-            <p>User ID: {{ user.identificationNumber }}</p>
             <p>Registration Date: {{ user.registration }}</p>
-            <p> Role ID: {{ user.role_ID }}</p>
         </div>
-
-
     </div>
 </template>
   
@@ -55,5 +75,7 @@ function nextUser() {
     background-color: rgb(212, 250, 244);
     color: #fff;
 }
+</style>
+  
 </style>
   
