@@ -35,35 +35,80 @@ onMounted(fetchUser);
 
 <template>
     <div class="user-profile-page">
-        <h2>User Information</h2>
+        <h2 class="page-title">User Information - Hardcoded to the first user for now</h2>
         <div class="user-information">
-            <p>Name: {{ user.name }}</p>
-            <p>Registration Date: {{ user.registration }}</p>
+            <div class="user-detail">
+                <strong>Name:</strong>
+                <p>{{ user.name }}</p>
+            </div>
+            <div class="user-detail">
+                <strong>Registration Date:</strong>
+                <p>{{ user.registration }}</p>
+            </div>
         </div>
     </div>
 </template>
   
 <style scoped>
-.profile-page {
+.user-profile-page {
     text-align: center;
     margin: 20px;
 }
 
-.user-info {
-    border: 1px solid #ffffff;
-    padding: 10px;
-    margin: 10px;
+.page-title {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.user-information {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 1px solid #ccc;
+    padding: 20px;
+    margin: 20px;
+    background-color: #f5f5f5;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.user-detail {
+    margin: 10px 0;
+    text-align: left;
+}
+
+.user-detail strong {
+    font-weight: bold;
+    margin-right: 5px;
+    color: #007BFF;
+}
+
+.user-detail p {
+    margin: 0;
 }
 
 .previous-button {
-    background-color: rgb(212, 250, 244);
+    background-color: #007BFF;
     color: #fff;
     margin-right: 10px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
 }
 
 .next-button {
-    background-color: rgb(212, 250, 244);
+    background-color: #007BFF;
     color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.previous-button:hover,
+.next-button:hover {
+    background-color: #0056b3;
 }
 </style>
   

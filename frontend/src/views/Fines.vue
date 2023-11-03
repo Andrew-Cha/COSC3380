@@ -1,36 +1,34 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
+import axios from 'axios'
 
-const fines = ref([
-    { id: 1, user: 'John Doe', book: 'The Lightning Thief', amount: 3.75, dueDate: '10-26-2023' },
-    { id: 2, user: 'Jane Doe', book: 'The Hunger Games', amount: 1.50, dueDate: '10-25-2023' },
-    { id: 3, user: 'Jason Doe', book: 'Databases V2 Textbook', amount: 5.50, dueDate: '10-21-2023' },
-    { id: 4, user: 'Jordan Doe', book: 'Captain Underpants', amount: 4.50, dueDate: '10-22-2023' },
-])
+const apiUrl = `http://${import.meta.env.VITE_SERVER_URL}:3000/api`;
 
-const filteredFines = ref([])
-const showUsersDropdown = ref(false)
-const showNamesDropdown = ref(false)
+const fineToBook = ref([])
+const fineToDevice = ref([])
+const finetoMedia = ref([])
 
-const uniqueUsers = computed(() => {
-    return [...new Set(fines.value.map(fine => ({ id: fine.id, name: fine.user })))];
-})
-const uniqueNames = computed(() => {
-    return [...new Set(fines.value.map(fine => fine.user))];
-})
-
-function filterByUserId(id) {
-    filteredFines.value = fines.value.filter(fine => fine.id === id);
-}
-
-function filterByName(name) {
-    filteredFines.value = fines.value.filter(fine => fine.user === name);
-}
-
-function resetFilter() {
-    filteredFines.value = fines;
-    showUsersDropdown.value = false;
-    showNamesDropdown.value = false;
+onMounted(async () => {
+    try {
+        const bookResponse = await axios.get(`${apiUrl}/fineToBook`);
+        fineToBook.value = bookResponse.data;
+        const mediaResponse = await axios.get(`${apiUrl}/fineToMedia`);
+        fineToMedia.value = mediaResponse.data;
+        const deviceResponse = await axios.get(`${apiUrl}/fineToDevice`);
+        fineTodevice.value = deviceResponse.data;
+        console.log(fineToBook.value)
+        console.log(fineToDevice.value)
+        console.log(finetoMedia.value)
+    } catch (error) {
+        console.error('Error fetching data:', error);
+    }
+});
+async function payFine(id) {
+    try {
+        await axios.post(`${apiUrl}/pay`, { id });
+    } catch (error) {
+        console.error('Error returning the item:', error);
+    }
 }
 </script>
 
@@ -38,39 +36,51 @@ function resetFilter() {
     <div class="fines-page">
         <h1>Fines Page</h1>
 
-        <div>
-            <div class="filters">
-                <button @click="showUsersDropdown = !showUsersDropdown">User ID</button>
-                <div v-if="showUsersDropdown" class="dropdown">
-                    <button v-for="user in uniqueUsers" :key="user.id" @click="filterByUserId(user.id)">
-                        {{ user.id }}
-                    </button>
-                    <button @click="resetFilter">Back</button>
-                </div>
+        <div class="table-section">
+            <h3>Books</h3>
+            <table>
+                <tr v-for="book in fine_to_book" :key="book.id">
+                    <td>
+                        {{ book.id }}
+                        {{ book.title }}
+                    </td>
+                    <td>
+                        <button @click="payFine(book.id)">Pay Fine</button>
+                    </td>
 
-                <button @click="showNamesDropdown = !showNamesDropdown">Name</button>
-                <div v-if="showNamesDropdown" class="dropdown">
-                    <button v-for="name in uniqueNames" :key="name" @click="filterByName(name)">
-                        {{ name }}
-                    </button>
-                    <button @click="resetFilter">Back</button>
-                </div>
-            </div>
+                </tr>
+            </table>
+        </div>
 
-            <div v-if="filteredFines.length > 0">
-                <div class="fine" v-for="fine in filteredFines" :key="fine.id">
-                    <h3>{{ fine.user }}</h3>
-                    <p>Book: {{ fine.book }}</p>
-                    <p>Amount: ${{ fine.amount.toFixed(2) }}</p>
-                    <p>Due Date: {{ fine.dueDate }}</p>
-                </div>
-            </div>
-            <div v-else>
-                <p>No fines to display</p>
-            </div>
-            <div class="library-image">
-                <img src="@/assets/library.jpeg" alt="Library">
-            </div>
+        <div class="table-section">
+            <h3>Media</h3>
+            <table>
+                <tr v-for="media in fine_to_media" :key="media.id">
+                    <td>
+                        {{ media.id }}
+                        {{ media.title }}
+                    </td>
+                    <td>
+                        <button @click="payFine(media.id)">Pay Fine</button>
+                    </td>
+
+                </tr>
+            </table>
+        </div>
+        <div class="table-section">
+            <h3>Device</h3>
+            <table>
+                <tr v-for="device in device_to_book" :key="device.id">
+                    <td>
+                        {{ device.id }}
+                        {{ device.device_name }}
+                    </td>
+                    <td>
+                        <button @click="payFine(device.id)">Pay Fine</button>
+                    </td>
+
+                </tr>
+            </table>
         </div>
     </div>
 </template>
@@ -82,6 +92,36 @@ function resetFilter() {
     margin: 0 auto;
     padding: 20px;
     text-align: center;
+}
+
+.table-section {
+    margin-bottom: 20px;
+    width: 80%;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 10px 0;
+}
+
+td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: left;
+}
+
+button {
+    background-color: #5cb85c;
+    color: white;
+    padding: 5px 10px;
+    margin-right: 5px;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #4cae4c;
 }
 
 .fine {
