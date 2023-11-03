@@ -33,6 +33,8 @@ import { RouterLink } from 'vue-router'
         <li>Reports on admin page, user inventory pages, fines pages</li>
         <li>Show triggers disallowing certain actions / creating fines</li>
         <li>Prompt user with more info on login</li>
+        <li>Fix fines queries to do proper joins</li>
+        <li>Finish writing my items page queries</li>
     </div>
 </template>
   
