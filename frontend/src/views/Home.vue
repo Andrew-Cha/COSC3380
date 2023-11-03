@@ -23,6 +23,15 @@ import { RouterLink } from 'vue-router'
                 </li>
             </ul>
         </section>
+
+        <ul>
+            <h1>TODO List:</h1>
+            <li>User roles</li>
+            <li>Interaction with items from the DB</li>
+            <li>Admin page</li>
+            <li>Reports on admin page, user inventory pages, fines pages</li>
+            <li>Show triggers disallowing certain actions / creating fines</li>
+        </ul>
     </div>
 </template>
   

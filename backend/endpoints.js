@@ -64,6 +64,9 @@ app.get('/api/customers', async (req, res) => {
 
 app.post('/api/customers/login', async (req, res) => {
     const { firstName, lastName, password } = req.body
+    if (firstName == "" || lastName == "" || password == "") {
+        res.status(400).json({ message: "Invalid credentials" })
+    }
     const query = {
         text: 'SELECT * FROM customer WHERE first_name = $1 AND last_name = $2 AND password = $3',
         values: [firstName, lastName, password]
