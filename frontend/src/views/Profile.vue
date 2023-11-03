@@ -1,5 +1,4 @@
 <script setup>
-import { ref } from 'vue'
 import axios from 'axios';
 import { ref, onMounted } from 'vue';
 
@@ -10,16 +9,10 @@ const user = ref({
     role_ID: "",
 });
 
-function previousUser() {
-
-}
-function nextUser() {
-
-}
 
 async function fetchUser() {
     try {
-        const response = await axios.get(`http://${import.meta.env.VITE_SERVER_URL}:3000/api/customers/:id`);
+        const response = await axios.get(`http://${import.meta.env.VITE_SERVER_URL}:3000/api/customer/1`);
         if (response.status === 200) {
             const userData = response.data;
             user.value = {
@@ -40,12 +33,9 @@ onMounted(fetchUser);
 </script>
 
 
-
 <template>
     <div class="user-profile-page">
         <h2>User Information</h2>
-        <button @click="previousUser" class="return-button">Previous</button>
-        <button @click="nextUser" class="extend-button">Next</button>
         <div class="user-information">
             <p>Name: {{ user.name }}</p>
             <p>Registration Date: {{ user.registration }}</p>
@@ -75,7 +65,5 @@ onMounted(fetchUser);
     background-color: rgb(212, 250, 244);
     color: #fff;
 }
-</style>
-  
 </style>
   

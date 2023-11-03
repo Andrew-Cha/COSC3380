@@ -99,14 +99,9 @@ app.post('/api/customers/create', async (req, res) => {
     });
 })
 
-app.listen(3000, process.env.VITE_SERVER_URL, async () => {
-    await pool.query(initializeQuery)
-    console.log(`Server is running on http://${process.env.VITE_SERVER_URL}:3000`);
-});
-
 app.get('/api/customer/:id', async (req, res) => {
     const customerId = req.params.id;
-
+    console.log(customerId)
     try {
         const result = await pool.query('SELECT first_name, last_name, registration_date, password FROM customer WHERE id = $1', [customerId]);
         if (result.rows.length === 0) {

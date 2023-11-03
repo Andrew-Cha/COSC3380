@@ -24,14 +24,15 @@ import { RouterLink } from 'vue-router'
             </ul>
         </section>
 
-        <ul>
-            <h1>TODO List:</h1>
-            <li>User roles</li>
-            <li>Interaction with items from the DB</li>
-            <li>Admin page</li>
-            <li>Reports on admin page, user inventory pages, fines pages</li>
-            <li>Show triggers disallowing certain actions / creating fines</li>
-        </ul>
+        <h1>TODO List:</h1>
+        <li>Display user specific information, right now most queries are SELECT * FROM</li>
+        <li>More information from items in the DB</li>
+        <li>User roles</li>
+        <li>Interaction with items from the DB. Loan items, return items, cancel hold, pay fine, update profile.</li>
+        <li>Admin page</li>
+        <li>Reports on admin page, user inventory pages, fines pages</li>
+        <li>Show triggers disallowing certain actions / creating fines</li>
+        <li>Prompt user with more info on login</li>
     </div>
 </template>
   
