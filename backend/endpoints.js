@@ -20,6 +20,38 @@ const pool = new Pool({
     port: 5432,
 });
 
+
+app.get('/api/media', async (req, res) => {
+    try {
+        const result = await pool.query('SELECT * FROM Media');
+        res.json(result.rows);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Database error' });
+    }
+});
+
+
+app.get('/api/books', async (req, res) => {
+    try {
+        const result = await pool.query('SELECT * FROM Book');
+        res.json(result.rows);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Database error' });
+    }
+});
+
+app.get('/api/devices', async (req, res) => {
+    try {
+        const result = await pool.query('SELECT * FROM Device');
+        res.json(result.rows);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Database error' });
+    }
+});
+
 app.get('/api/customers', async (req, res) => {
     try {
         const result = await pool.query('SELECT * FROM customer');

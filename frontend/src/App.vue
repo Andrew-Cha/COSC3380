@@ -41,7 +41,6 @@ nav a {
 }
 
 .application {
-  background-color: #CDD3D5;
   padding: 0px;
 }
 </style>
