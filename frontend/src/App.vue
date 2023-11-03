@@ -5,42 +5,54 @@ import { RouterLink, RouterView } from 'vue-router'
 <template>
   <div class="application">
     <header>
-      <div class="wrapper">
-        <nav>
-          <RouterLink class="navbutton" to="/">Home</RouterLink>
-          <RouterLink class="navbutton" to="/library">Library</RouterLink>
-          <RouterLink class="navbutton" to="/inventory">My Items</RouterLink>
-          <RouterLink class="navbutton" to="/fines">My Fines</RouterLink>
-          <RouterLink class="navbutton" to="/profile">My Profile</RouterLink>
-          <RouterLink class="navbutton" to="/login">Login</RouterLink>
-        </nav>
-      </div>
+      <nav class="main-header">
+        <RouterLink class="navbutton" to="/">Home</RouterLink>
+        <RouterLink class="navbutton" to="/library">Library</RouterLink>
+        <RouterLink class="navbutton" to="/inventory">My Items</RouterLink>
+        <RouterLink class="navbutton" to="/fines">My Fines</RouterLink>
+        <RouterLink class="navbutton" to="/profile">My Profile</RouterLink>
+        <RouterLink class="navbutton" to="/login">Login</RouterLink>
+      </nav>
     </header>
 
     <RouterView />
   </div>
 </template>
-
 <style scoped>
-nav {
-  display: flex;
-  justify-content: space-evenly;
-  background-color: #75B8C8;
-  width: 100vw;
-  height: 40px;
-  font-size: 20px;
-  border-radius: 5px;
-}
-
-nav a {
-  height: 30px;
-  width: 100px;
-  border: 2px;
-  border-style: dashed;
+.main-header {
+  background-color: #77CBB9;
+  padding: 15px 0;
   text-align: center;
+  color: #fff;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
 }
 
-.application {
-  padding: 0px;
+.main-nav {
+  display: flex;
+  justify-content: center;
+}
+
+.navbutton {
+  text-decoration: none;
+  padding: 10px 20px;
+  background-color: #007BFF;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  transition: background-color 0.3s ease-in-out;
+  margin: 0 10px;
+}
+
+.navbutton:hover {
+  background-color: #0056b3;
+}
+</style>
+
+<style>
+body {
+  padding: 0;
+  margin: 0;
+  background-color: #CDD3D5;
 }
 </style>

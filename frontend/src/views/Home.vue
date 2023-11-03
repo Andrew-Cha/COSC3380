@@ -3,29 +3,54 @@ import { RouterLink } from 'vue-router'
 </script>
 
 <template>
-    <div>
+    <div class="welcome-page">
         <h1>Welcome to Our Cool Library!</h1>
 
-        <body>
-            Check out these things in our website:
-            <ul>
+        <section>
+            <p>Check out these features on our website:</p>
+            <ul class="feature-list">
                 <li>
-                    What we have available at the <RouterLink to="/library">Library</RouterLink>
+                    <router-link to="/library" class="big-button">Explore the Library</router-link>
                 </li>
                 <li>
-                    What you have taken out or held at <RouterLink to="/inventory">My Items</RouterLink>
+                    <router-link to="/inventory" class="big-button">My Items</router-link>
                 </li>
                 <li>
-                    If you have any fines at <RouterLink to="/fines">My Fines</RouterLink>
+                    <router-link to="/fines" class="big-button">My Fines</router-link>
                 </li>
                 <li>
-                    Your information at <RouterLink to="/profile">My Profile</RouterLink>
+                    <router-link to="/profile" class="big-button">My Profile</router-link>
                 </li>
             </ul>
-        </body>
+        </section>
     </div>
 </template>
-
+  
 <style scoped>
+.welcome-page {
+    text-align: center;
+}
 
+.feature-list {
+    list-style: none;
+    padding: 0;
+}
+
+.big-button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #007BFF;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 18px;
+    margin: 10px;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.big-button:hover {
+    background-color: #0056b3;
+}
 </style>
+  
