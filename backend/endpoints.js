@@ -72,8 +72,9 @@ app.post('/api/customers/login', async (req, res) => {
         values: [firstName, lastName, password]
     }
 
-    pool.query(query, (error, results) => {
-        if (error || results.length == 0) {
+    await pool.query(query, (error, results) => {
+        console.log(results)
+        if (error || results.rowCount == 0) {
             console.error('Could not find user in database.')
             res.status(400).json({ message: "Invalid credentials" })
         } else {
