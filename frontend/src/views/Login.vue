@@ -1,12 +1,13 @@
 <script setup>
 import { ref } from 'vue'
-import { reactive } from 'vue'
+import { useMainStore } from '@/stores/main'
 import axios from 'axios'
 import router from '../router';
 
 const name = ref('')
 const password = ref('')
 const isLoggingIn = ref(true)
+const isLoggedIn = useMainStore()
 
 async function login() {
     console.log("here")
@@ -15,12 +16,13 @@ async function login() {
         lastName: name.value,
         password: password.value
     }
+
     axios.post(`http://${import.meta.env.VITE_SERVER_URL}:3000/api/customers/login`, customer)
         .then((response) => {
             console.log(response.data)
             console.log("test")
             window.alert("Logged in successfully.")
-            localStorage.setItem('isLoggedIn', 'true')
+            isLoggedIn.value = true
             router.push('/')
         })
         .catch((error) => {

@@ -39,7 +39,7 @@ async function payFine(id) {
         <div class="table-section">
             <h3>Books</h3>
             <table>
-                <tr v-for="book in fine_to_book" :key="book.id">
+                <tr v-for="book in fineToBook" :key="book.id">
                     <td>
                         {{ book.id }}
                         {{ book.title }}
@@ -55,7 +55,7 @@ async function payFine(id) {
         <div class="table-section">
             <h3>Media</h3>
             <table>
-                <tr v-for="media in fine_to_media" :key="media.id">
+                <tr v-for="media in fineToMedia" :key="media.id">
                     <td>
                         {{ media.id }}
                         {{ media.title }}
@@ -70,7 +70,7 @@ async function payFine(id) {
         <div class="table-section">
             <h3>Device</h3>
             <table>
-                <tr v-for="device in device_to_book" :key="device.id">
+                <tr v-for="device in fineToDevice" :key="device.id">
                     <td>
                         {{ device.id }}
                         {{ device.device_name }}

@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { useMainStore } from '../stores/main'
 import Fines from '../views/Fines.vue'
 import Library from '../views/Library.vue'
 import UserInventory from '../views/UserInventory.vue'
@@ -12,40 +13,62 @@ const router = createRouter({
     {
       path: '/',
       name: 'Home',
-      component: Home
+      component: Home,
+      meta: {
+        loginNeeded: false
+      }
     },
     {
       path: '/inventory',
       name: 'My Items',
-      component: UserInventory
+      component: UserInventory,
+      meta: {
+        loginNeeded: true
+      }
     },
     {
       path: '/fines',
       name: 'My Fines',
-      component: Fines
+      component: Fines,
+      meta: {
+        loginNeeded: true
+      }
     },
     {
       path: '/library',
       name: 'Library',
-      component: Library
+      component: Library,
+      meta: {
+        loginNeeded: false
+      }
     },
     {
       path: '/login',
       name: 'Login',
-      component: Login
+      component: Login,
+      meta: {
+        loginNeeded: false
+      }
     },
     {
       path: '/profile',
       name: 'My Profile',
-      component: Profile
+      component: Profile,
+      meta: {
+        loginNeeded: true
+      }
     }
   ]
 })
 
 router.beforeEach((to, from) => {
-  document.title = to.name || "Library"
-  if (localStorage.isLoggedIn != 'true' && to.name !== 'Login') {
+  const isLoggedIn = useMainStore()
+
+  if (isLoggedIn.value !== true && to.meta.loginNeeded && to.name !== 'Login') {
+    document.title = "Library"
     return '/login'
   }
+
+  document.title = to.name || "Library"
 })
 export default router

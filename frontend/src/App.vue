@@ -1,5 +1,14 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
+import { useMainStore } from '@/stores/main';
+import router from './router';
+
+const isLoggedIn = useMainStore()
+
+function signOut() {
+  isLoggedIn.value = false
+  router.push("/")
+}
 </script>
 
 <template>
@@ -11,7 +20,9 @@ import { RouterLink, RouterView } from 'vue-router'
         <RouterLink class="navbutton" to="/inventory">My Items</RouterLink>
         <RouterLink class="navbutton" to="/fines">My Fines</RouterLink>
         <RouterLink class="navbutton" to="/profile">My Profile</RouterLink>
-        <RouterLink class="navbutton" to="/login">Login</RouterLink>
+        <RouterLink v-if="isLoggedIn.value === false || isLoggedIn.value === undefined" class="navbutton" to="/login">
+          Login</RouterLink>
+        <button v-else="isLoggedIn.value === true" class="navbutton" @click="signOut">Log Out</button>
       </nav>
     </header>
 
