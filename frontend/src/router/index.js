@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import { useMainStore } from '../stores/main'
+import { useMainStore } from '@/stores/main';
+import { storeToRefs } from 'pinia';
 import Fines from '../views/Fines.vue'
 import Library from '../views/Library.vue'
 import UserInventory from '../views/UserInventory.vue'
@@ -62,7 +63,8 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from) => {
-  const isLoggedIn = useMainStore()
+  const mainStore = useMainStore()
+  const { isLoggedIn } = storeToRefs(mainStore)
 
   if (isLoggedIn.value !== true && to.meta.loginNeeded && to.name !== 'Login') {
     document.title = "Login"

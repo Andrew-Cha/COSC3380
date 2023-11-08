@@ -1,49 +1,34 @@
 <script setup>
-import axios from 'axios';
-import { ref, onMounted } from 'vue';
+import { useMainStore } from '@/stores/main';
+import { storeToRefs } from 'pinia';
 
-const user = ref({
-    name: "",
-    registration: "",
-    identificationNumber: "",
-    role_ID: "",
-});
-
-
-async function fetchUser() {
-    try {
-        const response = await axios.get(`http://${import.meta.env.VITE_SERVER_URL}:3000/api/customer/1`);
-        if (response.status === 200) {
-            const userData = response.data;
-            user.value = {
-                name: userData.first_name + ' ' + userData.last_name,
-                registration: userData.registration_date,
-                password: userData.password
-            };
-        } else {
-            console.error('Error getting customer data');
-        }
-    } catch (error) {
-        console.error(error);
-    }
-}
-
-onMounted(fetchUser);
+const mainStore = useMainStore()
+const { user } = storeToRefs(mainStore)
 
 </script>
 
 
 <template>
     <div class="user-profile-page">
-        <h2 class="page-title">User Information - Hardcoded to the first user for now</h2>
+        <h2 class="page-title">Your Information</h2>
         <div class="user-information">
             <div class="user-detail">
-                <strong>Name:</strong>
-                <p>{{ user.name }}</p>
+                <strong>First Name:</strong>
+                <p>{{ user.first_name }}</p>
+            </div>
+            <div class="user-detail">
+                <strong>Last Name:</strong>
+                <p>{{ user.last_name }}</p>
             </div>
             <div class="user-detail">
                 <strong>Registration Date:</strong>
-                <p>{{ user.registration }}</p>
+                <p>{{ user.registration_date }}</p>
+            </div>
+            <div class="user-detail">
+                <strong>Role:</strong>
+                <p v-if="user.role_id === 1">Customer</p>
+                <p v-else-if="user.role_id === 2">Faculty</p>
+                <p v-else-if="user.role_id === 3">Admin</p>
             </div>
         </div>
     </div>

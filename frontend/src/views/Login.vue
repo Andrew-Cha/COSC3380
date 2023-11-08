@@ -1,40 +1,53 @@
 <script setup>
-import { ref } from 'vue'
-import { useMainStore } from '@/stores/main'
 import axios from 'axios'
 import router from '../router';
+import { ref } from 'vue'
+import { useMainStore } from '@/stores/main';
+import { storeToRefs } from 'pinia';
 
-const name = ref('')
-const password = ref('')
+const mainStore = useMainStore()
+const { isLoggedIn, user } = storeToRefs(mainStore)
+
+const firstName = ref("")
+const lastName = ref("")
+const password = ref("")
 const isLoggingIn = ref(true)
-const isLoggedIn = useMainStore()
+const roleId = ref(1)
+
+
+function setUserRole(event) {
+    const roleChosen = event.target.value
+    if (roleChosen === "admin") roleId.value = 3
+    if (roleChosen === "faculty") roleId.value = 2
+    if (roleChosen === "customer") roleId.value = 1
+}
 
 async function login() {
-    console.log("here")
     const customer = {
-        firstName: name.value,
-        lastName: name.value,
-        password: password.value
+        firstName: firstName.value,
+        lastName: lastName.value,
+        password: password.value,
     }
 
     axios.post(`http://${import.meta.env.VITE_SERVER_URL}:3000/api/customers/login`, customer)
         .then((response) => {
-            console.log(response.data)
-            console.log("test")
+            user.value = response.data
             window.alert("Logged in successfully.")
             isLoggedIn.value = true
             router.push('/')
         })
         .catch((error) => {
+            console.log(error)
             window.alert("Could not log in.")
         });
 }
 
 function signup() {
     const customer = {
-        firstName: name.value,
-        lastName: name.value,
-        password: password.value
+        firstName: firstName.value,
+        lastName: lastName.value,
+        password: password.value,
+        roleId: roleId.value
     }
     axios.post(`http://${import.meta.env.VITE_SERVER_URL}:3000/api/customers/create`, customer).then((response) => {
         window.alert("Created user successfully, please log in.")
@@ -50,44 +63,30 @@ function signup() {
         <div v-if="isLoggingIn" class="auth-form">
             <form class="form" action="" @submit.prevent="login">
                 <h1>Login</h1>
-                <div class="form-group">
-                    <input type="text" placeholder="Username" v-model="name" />
-                </div>
-                <div class="form-group">
-                    <input type="password" placeholder="Password" v-model="password" />
-                </div>
-                <div class="form-group">
-                    <button type="submit">Login</button>
-                </div>
+                <input type="text" placeholder="First Name" required="true" v-model="firstName" />
+                <input type="text" placeholder="Last Name" required="true" v-model="lastName" />
+                <input type="password" placeholder="Password" required="true" v-model="password" />
+                <button class="submit-button" type="submit">Login</button>
             </form>
-            <div class="toggle-action">
-                <button @click="isLoggingIn = false">Create an account?</button>
-            </div>
+            <button class="submit-button" @click="isLoggingIn = false">Create an account?</button>
         </div>
 
         <div v-else class="auth-form">
             <form class="form" action="" @submit.prevent="signup">
                 <h1>Sign Up</h1>
-                <div class="form-group">
-                    <input type="text" placeholder="Username" v-model="name" />
-                </div>
-                <div class="form-group">
-                    <input type="password" placeholder="Password" v-model="password" />
-                </div>
+                <input type="text" placeholder="First Name" required="true" v-model="firstName" />
+                <input type="text" placeholder="Last Name" required="true" v-model="lastName" />
+                <input type="password" placeholder="Password" required="true" v-model="password" />
                 <p>Please select your role. Be truthful. This really doesn't let you do much except see more fake generated
-                    database data.</p>
-                <select @input="event => text = console.log(event.target.value)">
+                    database data and take out more items.</p>
+                <select required="true" @input="setUserRole">
+                    <option value="customer">Customer</option>
+                    <option value="faculty">Faculty</option>
                     <option value="admin">Admin</option>
-                    <option value="professor">Professor</option>
-                    <option value="user">User</option>
                 </select>
-                <div class="form-group">
-                    <button type="submit">Register</button>
-                </div>
+                <button class="submit-button" type="submit">Register</button>
             </form>
-            <div class="toggle-action">
-                <button @click="isLoggingIn = true">Already have an account?</button>
-            </div>
+            <button class="submit-button" @click="isLoggingIn = true">Already have an account?</button>
         </div>
     </div>
 </template>
@@ -116,10 +115,6 @@ function signup() {
     text-align: center;
 }
 
-.form-group {
-    text-align: left;
-}
-
 input[type="text"],
 input[type="password"] {
     text-align: center;
@@ -144,7 +139,7 @@ button:hover {
     background-color: #0056b3;
 }
 
-.toggle-action {
+.submit-button {
     margin-top: 10px;
 }
 </style>

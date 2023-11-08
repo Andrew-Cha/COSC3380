@@ -25,15 +25,12 @@ import { RouterLink } from 'vue-router'
         </section>
 
         <h1>TODO List:</h1>
-        <li>Display user specific information, right now most queries are SELECT * FROM</li>
-        <li>More information from items in the DB</li>
-        <li>User roles verification, add conditional rendering for admins or professors.</li>
-        <li>Interaction with items from the DB. Loan items, return items, cancel hold, pay fine, update profile.</li>
-        <li>Admin page</li>
-        <li>Reports on admin page, user inventory pages, fines pages</li>
+        <li>Finish Library Page, add interactive buttons</li>
+        <li>Finish My Items page, add interactive buttons</li>
+        <li>Finish My Fines page, add interactive buttons</li>
+        <li>Add Admin page to My Profile.</li>
+        <li>Reports on Admin page, My Inventory page, My Fines page</li>
         <li>Show triggers disallowing certain actions / creating fines</li>
-        <li>Fix fines queries to do proper joins</li>
-        <li>Finish writing my items page queries</li>
     </div>
 </template>
   

@@ -63,6 +63,7 @@ app.get('/api/customers', async (req, res) => {
 });
 
 app.post('/api/customers/login', async (req, res) => {
+    console.log(req.body)
     const { firstName, lastName, password } = req.body
     if (firstName == "" || lastName == "" || password == "") {
         res.status(400).json({ message: "Invalid credentials" })
@@ -73,7 +74,6 @@ app.post('/api/customers/login', async (req, res) => {
     }
 
     await pool.query(query, (error, results) => {
-        console.log(results)
         if (error || results.rowCount == 0) {
             console.error('Could not find user in database.')
             res.status(400).json({ message: "Invalid credentials" })
@@ -84,13 +84,27 @@ app.post('/api/customers/login', async (req, res) => {
 })
 
 app.post('/api/customers/create', async (req, res) => {
-    const { firstName, lastName, password } = req.body
-    const query = {
-        text: 'INSERT INTO customer(first_name, last_name, password) VALUES($1, $2, $3)',
-        values: [firstName, lastName, password],
-    };
+    const { firstName, lastName, password, roleId } = req.body
 
-    pool.query(query, (error, results) => {
+    const existing_user_query = {
+        text: 'SELECT * FROM customer WHERE first_name = $1 AND last_name = $2 AND password = $3',
+        values: [firstName, lastName, password]
+    }
+    let alreadyExists = false
+    await pool.query(existing_user_query, (error, results) => {
+        if (error || results.rowCount > 0) {
+            res.status(400).json({ message: "This name already exists." })
+            alreadyExists = true
+        }
+    })
+
+    if (alreadyExists) return;
+
+    const query = {
+        text: 'INSERT INTO customer(first_name, last_name, password, registration_date, role_id) VALUES($1, $2, $3, current_timestamp, $4)',
+        values: [firstName, lastName, password, roleId],
+    };
+    await pool.query(query, (error, results) => {
         if (error) {
             console.error('Error executing query:', error);
             res.status(500).json({ error: 'An error occurred while inserting the data.' });
@@ -99,22 +113,6 @@ app.post('/api/customers/create', async (req, res) => {
         }
     });
 })
-
-app.get('/api/customer/:id', async (req, res) => {
-    const customerId = req.params.id;
-    console.log(customerId)
-    try {
-        const result = await pool.query('SELECT first_name, last_name, registration_date, password FROM customer WHERE id = $1', [customerId]);
-        if (result.rows.length === 0) {
-            res.status(404).json({ error: 'Customer not found' });
-        } else {
-            res.json(result.rows[0]);
-        }
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Database error' });
-    }
-});
 
 app.get('/api/fineToBook', async (req, res) => {
     try {

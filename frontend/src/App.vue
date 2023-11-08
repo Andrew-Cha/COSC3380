@@ -1,13 +1,13 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
 import { useMainStore } from '@/stores/main';
-import router from './router';
+import { storeToRefs } from 'pinia';
 
-const isLoggedIn = useMainStore()
+const mainStore = useMainStore()
+const { isLoggedIn } = storeToRefs(mainStore)
 
 function signOut() {
   isLoggedIn.value = false
-  router.push("/")
 }
 </script>
 
@@ -20,9 +20,14 @@ function signOut() {
         <RouterLink class="navbutton" to="/inventory">My Items</RouterLink>
         <RouterLink class="navbutton" to="/fines">My Fines</RouterLink>
         <RouterLink class="navbutton" to="/profile">My Profile</RouterLink>
-        <RouterLink v-if="isLoggedIn.value === false || isLoggedIn.value === undefined" class="navbutton" to="/login">
-          Login</RouterLink>
-        <button v-else="isLoggedIn.value === true" class="navbutton" @click="signOut">Log Out</button>
+        <div v-if="isLoggedIn === false">
+          <RouterLink class="navbutton" to="/login">
+            Login</RouterLink>
+        </div>
+        <div v-else="isLoggedIn === true">
+          <RouterLink class="navbutton" @click="signOut" to="/">Log Out</RouterLink>
+        </div>
+
       </nav>
     </header>
 
