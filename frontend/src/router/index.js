@@ -65,7 +65,7 @@ router.beforeEach((to, from) => {
   const isLoggedIn = useMainStore()
 
   if (isLoggedIn.value !== true && to.meta.loginNeeded && to.name !== 'Login') {
-    document.title = "Library"
+    document.title = "Login"
     return '/login'
   }
 

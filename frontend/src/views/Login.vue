@@ -74,6 +74,13 @@ function signup() {
                 <div class="form-group">
                     <input type="password" placeholder="Password" v-model="password" />
                 </div>
+                <p>Please select your role. Be truthful. This really doesn't let you do much except see more fake generated
+                    database data.</p>
+                <select @input="event => text = console.log(event.target.value)">
+                    <option value="admin">Admin</option>
+                    <option value="professor">Professor</option>
+                    <option value="user">User</option>
+                </select>
                 <div class="form-group">
                     <button type="submit">Register</button>
                 </div>

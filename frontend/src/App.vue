@@ -62,6 +62,7 @@ function signOut() {
 
 <style>
 body {
+  font-family: sans-serif;
   padding: 0;
   margin: 0;
   background-color: #CDD3D5;
