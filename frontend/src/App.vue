@@ -20,13 +20,9 @@ function signOut() {
         <RouterLink class="navbutton" to="/inventory">My Items</RouterLink>
         <RouterLink class="navbutton" to="/fines">My Fines</RouterLink>
         <RouterLink class="navbutton" to="/profile">My Profile</RouterLink>
-        <div v-if="isLoggedIn === false">
-          <RouterLink class="navbutton" to="/login">
-            Login</RouterLink>
-        </div>
-        <div v-else="isLoggedIn === true">
-          <RouterLink class="navbutton" @click="signOut" to="/">Log Out</RouterLink>
-        </div>
+        <RouterLink v-if="isLoggedIn === false" class="navbutton" to="/login">
+          Login</RouterLink>
+        <RouterLink v-else="isLoggedIn === true" class="navbutton" @click="signOut" to="/">Log Out</RouterLink>
 
       </nav>
     </header>
