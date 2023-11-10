@@ -86,7 +86,7 @@ app.post('/api/customers/create', async (req, res) => {
     const { firstName, lastName, password, roleId } = req.body
 
     const existing_user_query = {
-        text: 'SELECT * FROM customer WHERE first_name = $1 AND last_name = $2 AND password = $3',
+        text: 'SELECT * FROM customer WHERE first_name = $1 AND last_name = $2',
         values: [firstName, lastName, password]
     }
     let alreadyExists = false
