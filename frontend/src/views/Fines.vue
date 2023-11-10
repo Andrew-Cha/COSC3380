@@ -6,7 +6,7 @@ const apiUrl = `http://${import.meta.env.VITE_SERVER_URL}:3000/api`;
 
 const fineToBook = ref([])
 const fineToDevice = ref([])
-const finetoMedia = ref([])
+const fineToMedia = ref([])
 
 onMounted(async () => {
     try {
@@ -35,7 +35,7 @@ async function payFine(id) {
 
         <div class="table-section">
             <h3>Books</h3>
-            <table>
+            <table v-if="fineToBook.length != 0">
                 <tr v-for="book in fineToBook" :key="book.id">
                     <td>
                         {{ book.id }}
@@ -47,26 +47,15 @@ async function payFine(id) {
 
                 </tr>
             </table>
+
+            <div v-else>
+                <p>You have no fines for books.</p>
+            </div>
         </div>
 
-        <div class="table-section">
-            <h3>Media</h3>
-            <table>
-                <tr v-for="media in fineToMedia" :key="media.id">
-                    <td>
-                        {{ media.id }}
-                        {{ media.title }}
-                    </td>
-                    <td>
-                        <button @click="payFine(media.id)">Pay Fine</button>
-                    </td>
-
-                </tr>
-            </table>
-        </div>
         <div class="table-section">
             <h3>Device</h3>
-            <table>
+            <table v-if="fineToDevice.length != 0">
                 <tr v-for="device in fineToDevice" :key="device.id">
                     <td>
                         {{ device.id }}
@@ -78,6 +67,28 @@ async function payFine(id) {
 
                 </tr>
             </table>
+            <div v-else>
+                <p>You have no fines for devices.</p>
+            </div>
+        </div>
+
+        <div class="table-section">
+            <h3>Media</h3>
+            <table v-if="fineToMedia.length != 0">
+                <tr v-for="media in fineToMedia" :key="media.id">
+                    <td>
+                        {{ media.id }}
+                        {{ media.title }}
+                    </td>
+                    <td>
+                        <button @click="payFine(media.id)">Pay Fine</button>
+                    </td>
+
+                </tr>
+            </table>
+            <div v-else>
+                <p>You have no fines for media.</p>
+            </div>
         </div>
     </div>
 </template>
@@ -105,7 +116,6 @@ table {
 td {
     border: 1px solid #ccc;
     padding: 8px;
-    text-align: left;
 }
 
 button {
