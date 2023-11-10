@@ -125,5 +125,11 @@ td {
 .action-button:hover {
     background-color: #0056b3;
 }
+
+table,
+th,
+td {
+    border: 1px solid;
+}
 </style>
   

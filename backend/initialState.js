@@ -50,9 +50,17 @@ CREATE TABLE book(
         genre varchar
     );
 INSERT INTO book(publisher_id, condition_book, isbn, title, year_book, edition, genre)
-VALUES
-    (1, 'NEW', '9780451524935', 'Moby', 1851, '1st', 'Adventure'),
-    (2, 'GOOD', '9780061122415', 'The Da Vinci Code', 2003, '1st', 'Thriller');
+VALUES(1, 'NEW', '9780451524935', 'Moby', 1851, '1st', 'Adventure'),
+(2, 'GOOD', '9780061122415', 'The Da Vinci Code', 2003, '1st', 'Thriller'),
+(1, 'LIKE NEW', '9780141439839', 'Pride and Prejudice', 1813, '2nd', 'Romance'),
+(2, 'USED', '9780743273565', 'The Great Gatsby', 1925, '1st', 'Classic'),
+(1, 'ACCEPTABLE', '9780553294385', 'Dune', 1965, '3rd', 'Science Fiction'),
+(2, 'NEW', '9780345342966', 'The Hitchhiker\s Guide to the Galaxy', 1979, '1st', 'Science Fiction'),
+(1, 'GOOD', '9780060850524', 'To Kill a Mockingbird', 1960, '2nd', 'Drama'),
+(2, 'LIKE NEW', '9780316769487', 'The Catcher in the Rye', 1951, '1st', 'Coming-of-age'),
+(1, 'USED', '9781400079986', 'The Kite Runner', 2003, '2nd', 'Drama'),
+(2, 'ACCEPTABLE', '9780385504201', 'The Pillars of the Earth', 1989, '1st', 'Historical Fiction'),
+(1, 'NEW', '9780441172719', 'Neuromancer', 1984, '1st', 'Cyberpunk');
 
 
 CREATE TABLE book_to_customer(
@@ -79,8 +87,17 @@ CREATE table media(
         file_size numeric
     );
 insert into media(publisher_id, title, file_link, file_type, author, upload_day, file_size)
-values(1, 'Bergstrom Podcast', 'https://sample.edu/railway', '.MP3', 'Joe Rogan', '2022-01-02', '50'),
-    (2, 'Bermuda Triangle Map', 'https://btm.edu/map', '.MAP', 'Jefferson Thomas', '2022-01-03', '30');
+VALUES (1, 'Tech Insights with Sarah', 'https://sample.edu/tech-insights', '.MP3', 'Sarah Johnson', '2022-02-15', '45'),
+    (2, 'Ancient Civilizations Documentary', 'https://btm.edu/documentary', '.MP4', 'Emily Turner', '2022-02-18', '75'),
+    (1, 'Healthy Living Tips', 'https://sample.edu/health-tips', '.PDF', 'Dr. Smith', '2022-03-05', '20'),
+    (2, 'Space Exploration Podcast', 'https://btm.edu/space-podcast', '.MP3', 'Astronaut Mike', '2022-03-10', '55'),
+    (1, 'Cooking with Chef Amanda', 'https://sample.edu/cooking-show', '.AVI', 'Chef Amanda', '2022-04-01', '40'),
+    (2, 'Travel Adventures with Alex', 'https://btm.edu/travel-adventures', '.MP4', 'Alexandra Roberts', '2022-05-20', '65'),
+    (1, 'Fitness Challenge Video', 'https://sample.edu/fitness-challenge', '.MOV', 'John Fitness', '2022-06-02', '30'),
+    (2, 'History Uncovered: Ancient Rome', 'https://btm.edu/history-rome', '.MP4', 'Professor Davis', '2022-06-15', '80'),
+    (1, 'Gaming Tips and Tricks', 'https://sample.edu/gaming-tips', '.MP4', 'GamerX', '2022-10-05', '50'),
+    (2, 'DIY Home Improvement Series', 'https://btm.edu/diy-home', '.AVI', 'HomeExpert', '2022-11-12', '45'),
+    (1, 'Financial Planning Seminar', 'https://sample.edu/financial-seminar', '.PDF', 'FinancialAdvisor', '2022-12-01', '25');
 
 
 create table media_to_customer(
@@ -164,9 +181,17 @@ create table device(
         maintenance_history varchar
     );
 insert into device(publisher_id, device_type, device_name, manufacturer, year_publish, serial_number, operating_system, maintenance_history)
-values(1, 'mobile', 'iPad Pro 11', 'Macintosh', '04-01-2021', 'ABC-1234', 'Mac', 'none'),
-    (2, 'laptop', 'HP Laptop 12', 'HP', '01-01-2019', 'DEF-5678', 'Windows', 'repaired');
-
+VALUES(1, 'mobile', 'iPad Pro 11', 'Macintosh', '04-01-2021', 'ABC-1234', 'Mac', 'none'),
+(2, 'laptop', 'HP Laptop 12', 'HP', '01-01-2019', 'DEF-5678', 'Windows', 'repaired'),
+(1, 'tablet', 'Samsung Galaxy Tab S7', 'Samsung', '06-15-2020', 'GHI-9012', 'Android', 'none'),
+(2, 'desktop', 'Dell OptiPlex 7070', 'Dell', '03-10-2020', 'JKL-3456', 'Windows', 'upgraded RAM'),
+(1, 'smartphone', 'iPhone 12', 'Apple', '09-20-2020', 'MNO-7890', 'iOS', 'battery replacement'),
+(2, 'laptop', 'Lenovo ThinkPad X1 Carbon', 'Lenovo', '05-05-2022', 'PQR-1234', 'Windows', 'none'),
+(1, 'smartwatch', 'Fitbit Versa 3', 'Fitbit', '11-30-2021', 'STU-5678', 'Fitbit OS', 'screen replacement'),
+(2, 'tablet', 'Amazon Fire HD 10', 'Amazon', '07-01-2018', 'VWX-9012', 'Fire OS', 'speaker repair'),
+(1, 'smartphone', 'Google Pixel 6', 'Google', '10-15-2022', 'YZA-3456', 'Android', 'camera replacement'),
+(2, 'laptop', 'Asus ROG Zephyrus G14', 'Asus', '04-02-2021', 'BCD-7890', 'Windows', 'keyboard repair'),
+(1, 'desktop', 'HP Pavilion 24', 'HP', '08-20-2019', 'EFG-1234', 'Windows', 'none');
 
 create table device_to_customer(
         id serial primary key,
