@@ -21,7 +21,6 @@ onMounted(async () => {
     }
 });
 
-/* refreshing for returning and extending */
 async function returnItem(id) {
 
 }
@@ -29,28 +28,10 @@ async function returnItem(id) {
 async function extendLoan(id) {
 
 }
-/* item book device tables */
 </script>
 <template>
     <div class="inventory-page">
         <h2 class="page-title">Library Inventory</h2>
-
-        <div class="inventory-section">
-            <h3>Media</h3>
-            <table v-if="media.length != 0" class="inventory-table">
-                <tr v-for="item in media" :key="item.id">
-                    <td>{{ item.title }}</td>
-                    <td>
-                        <button class="action-button return-button" @click="returnItem(item.id)">Loan</button>
-                        <button class="action-button extend-button" @click="extendLoan(item.id)">Hold</button>
-                    </td>
-                </tr>
-            </table>
-
-            <div v-else>
-                <p>Loading media..</p>
-            </div>
-        </div>
 
         <div class="inventory-section">
             <h3>Books</h3>
@@ -81,9 +62,22 @@ async function extendLoan(id) {
         <div class="inventory-section">
             <h3>Devices</h3>
             <table v-if="devices.length != 0" class="inventory-table">
+                <th>Name</th>
+                <th>Type</th>
+                <th>Maintenance History</th>
+                <th>Manufacturer</th>
+                <th>Opearting System</th>
+                <th>Serial Number</th>
+                <th>Year Released</th>
+                <th>Actions</th>
                 <tr v-for="device in devices" :key="device.id">
                     <td>{{ device.device_name }}</td>
                     <td>{{ device.device_type }}</td>
+                    <td> {{ device.maintenance_history }}</td>
+                    <td> {{ device.manufacturer }}</td>
+                    <td> {{ device.operating_system }}</td>
+                    <td> {{ device.serial_number }}</td>
+                    <td> {{ device.year_publish }}</td>
                     <td>
                         <button class="action-button return-button" @click="returnItem(device.id)">Loan</button>
                         <button class="action-button extend-button" @click="extendLoan(device.id)">Hold</button>
@@ -93,6 +87,31 @@ async function extendLoan(id) {
 
             <div v-else>
                 <p>Loading devices..</p>
+            </div>
+        </div>
+
+        <div class="inventory-section">
+            <h3>Media</h3>
+            <table v-if="media.length != 0" class="inventory-table">
+                <th>Author</th>
+                <th>Title</th>
+                <th>Media Type</th>
+                <th>Media Size</th>
+                <th>Actions</th>
+                <tr v-for="item in media" :key="item.id">
+                    <td>{{ item.author }}</td>
+                    <td>{{ item.title }}</td>
+                    <td>{{ item.file_type }}</td>
+                    <td>{{ item.file_size }}</td>
+                    <td>
+                        <button class="action-button return-button" @click="returnItem(item.id)">Loan</button>
+                        <button class="action-button extend-button" @click="extendLoan(item.id)">Hold</button>
+                    </td>
+                </tr>
+            </table>
+
+            <div v-else>
+                <p>Loading media..</p>
             </div>
         </div>
     </div>
