@@ -87,11 +87,11 @@ app.post('/api/customers/create', async (req, res) => {
 
     const existing_user_query = {
         text: 'SELECT * FROM customer WHERE first_name = $1 AND last_name = $2',
-        values: [firstName, lastName, password]
+        values: [firstName, lastName]
     }
     let alreadyExists = false
     await pool.query(existing_user_query, (error, results) => {
-        if (error || results.rowCount > 0) {
+        if (results.rowCount > 0) {
             res.status(400).json({ message: "This name already exists." })
             alreadyExists = true
         }
