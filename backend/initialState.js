@@ -42,14 +42,14 @@ values
 CREATE TABLE book(
         id serial PRIMARY KEY,
         publisher_id integer references publisher(id),
-        condition_book varchar,
+        condition varchar,
         isbn varchar,
         title varchar,
-        year_book varchar(4),
+        release_year varchar(4),
         edition varchar,
         genre varchar
     );
-INSERT INTO book(publisher_id, condition_book, isbn, title, year_book, edition, genre)
+INSERT INTO book(publisher_id, condition, isbn, title, release_year, edition, genre)
 VALUES(1, 'NEW', '9780451524935', 'Moby', 1851, '1st', 'Adventure'),
 (2, 'GOOD', '9780061122415', 'The Da Vinci Code', 2003, '1st', 'Thriller'),
 (1, 'LIKE NEW', '9780141439839', 'Pride and Prejudice', 1813, '2nd', 'Romance'),

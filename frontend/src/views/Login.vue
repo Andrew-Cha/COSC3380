@@ -37,7 +37,6 @@ async function login() {
             router.push('/')
         })
         .catch((error) => {
-            console.log(error)
             window.alert("Could not log in.")
         });
 }

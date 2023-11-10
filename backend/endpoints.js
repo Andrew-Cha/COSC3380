@@ -63,7 +63,6 @@ app.get('/api/customers', async (req, res) => {
 });
 
 app.post('/api/customers/login', async (req, res) => {
-    console.log(req.body)
     const { firstName, lastName, password } = req.body
     if (firstName == "" || lastName == "" || password == "") {
         res.status(400).json({ message: "Invalid credentials" })

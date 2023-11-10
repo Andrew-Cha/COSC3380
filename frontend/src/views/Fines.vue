@@ -16,9 +16,6 @@ onMounted(async () => {
         fineToMedia.value = mediaResponse.data;
         const deviceResponse = await axios.get(`${apiUrl}/fineToDevice`);
         fineTodevice.value = deviceResponse.data;
-        console.log(fineToBook.value)
-        console.log(fineToDevice.value)
-        console.log(finetoMedia.value)
     } catch (error) {
         console.error('Error fetching data:', error);
     }

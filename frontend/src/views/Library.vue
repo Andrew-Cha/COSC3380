@@ -16,9 +16,6 @@ onMounted(async () => {
         books.value = booksResponse.data;
         const devicesResponse = await axios.get(`${apiUrl}/devices`);
         devices.value = devicesResponse.data;
-        console.log(media.value)
-        console.log(books.value)
-        console.log(devices.value)
     } catch (error) {
         console.error('Error fetching data:', error);
     }
@@ -40,43 +37,63 @@ async function extendLoan(id) {
 
         <div class="inventory-section">
             <h3>Media</h3>
-            <table class="inventory-table">
+            <table v-if="media.length != 0" class="inventory-table">
                 <tr v-for="item in media" :key="item.id">
                     <td>{{ item.title }}</td>
                     <td>
-                        <button class="action-button return-button" @click="returnItem(item.id)">Return</button>
-                        <button class="action-button extend-button" @click="extendLoan(item.id)">Extend</button>
+                        <button class="action-button return-button" @click="returnItem(item.id)">Loan</button>
+                        <button class="action-button extend-button" @click="extendLoan(item.id)">Hold</button>
                     </td>
                 </tr>
             </table>
+
+            <div v-else>
+                <p>Loading media..</p>
+            </div>
         </div>
 
         <div class="inventory-section">
             <h3>Books</h3>
-            <table class="inventory-table">
+            <table v-if="books.length != 0" table class="inventory-table">
+                <th>Title</th>
+                <th>ISBN</th>
+                <th>Condition</th>
+                <th>Edition</th>
+                <th>Release Year</th>
+                <th>Actions</th>
                 <tr v-for="book in books" :key="book.id">
                     <td>{{ book.title }}</td>
                     <td>{{ book.isbn }}</td>
+                    <td> {{ book.condition }}</td>
+                    <td> {{ book.edition }}</td>
+                    <td> {{ book.release_year }}</td>
                     <td>
-                        <button class="action-button return-button" @click="returnItem(book.id)">Return</button>
-                        <button class="action-button extend-button" @click="extendLoan(book.id)">Extend</button>
+                        <button class="action-button return-button" @click="returnItem(book.id)">Loan</button>
+                        <button class="action-button extend-button" @click="extendLoan(book.id)">Hold</button>
                     </td>
                 </tr>
             </table>
+            <div v-else>
+                <p>Loading the books..</p>
+            </div>
         </div>
 
         <div class="inventory-section">
             <h3>Devices</h3>
-            <table class="inventory-table">
+            <table v-if="devices.length != 0" class="inventory-table">
                 <tr v-for="device in devices" :key="device.id">
                     <td>{{ device.device_name }}</td>
                     <td>{{ device.device_type }}</td>
                     <td>
-                        <button class="action-button return-button" @click="returnItem(device.id)">Return</button>
-                        <button class="action-button extend-button" @click="extendLoan(device.id)">Extend</button>
+                        <button class="action-button return-button" @click="returnItem(device.id)">Loan</button>
+                        <button class="action-button extend-button" @click="extendLoan(device.id)">Hold</button>
                     </td>
                 </tr>
             </table>
+
+            <div v-else>
+                <p>Loading devices..</p>
+            </div>
         </div>
     </div>
 </template>
