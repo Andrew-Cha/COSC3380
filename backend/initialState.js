@@ -69,6 +69,7 @@ CREATE TABLE book_to_customer(
         book_id integer REFERENCES book(id),
         loaned_at date,
         loaned_until date
+        returned_at date
     );
 INSERT INTO book_to_customer(customer_id, book_id, loaned_at, loaned_until)
 VALUES
@@ -106,6 +107,7 @@ create table media_to_customer(
         media_id integer references media(id),
         loaned_at date,
         loaned_until date
+        returned_at date
     );
 insert into media_to_customer(customer_id, media_id, loaned_at, loaned_until)
 VALUES(1, 1, '2023-01-02', '2023-01-09'),
@@ -197,8 +199,9 @@ create table device_to_customer(
         id serial primary key,
         customer_id integer references customer(id),
         device_id integer references device(id),
-        held_at date,
-        held_until date
+        loaned_at date,
+        loaned_until date
+        returned_at date
     );
 insert into device_to_customer(customer_id, device_id, held_at, held_until)
 values(1, 1, '2022-04-22', '2022-05-02'),
