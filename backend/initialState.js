@@ -130,6 +130,7 @@ CREATE TABLE fine(
         id serial PRIMARY KEY,
         customer_id INTEGER REFERENCES customer(id),
         fine_amount DECIMAL
+        fined_at DATE
     );
 INSERT INTO fine(customer_id, fine_amount)
 VALUES(1, 25.50),
