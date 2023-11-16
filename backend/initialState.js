@@ -68,13 +68,13 @@ CREATE TABLE book_to_customer(
         customer_id integer REFERENCES customer(id),
         book_id integer REFERENCES book(id),
         loaned_at date,
-        loaned_until date
+        loaned_until date,
         returned_at date
     );
-INSERT INTO book_to_customer(customer_id, book_id, loaned_at, loaned_until)
+INSERT INTO book_to_customer(customer_id, book_id, loaned_at, loaned_until, returned_at)
 VALUES
-    (1, 2, '2023-06-15', '2023-07-15'),
-    (3, 2, '2023-08-08', '2023-10-01');
+    (1, 2, '2023-06-15', '2023-07-15', '2023-06-18'),
+    (3, 2, '2023-08-08', '2023-10-01', '2023-09-05');
 
 
 CREATE table media(
@@ -106,12 +106,12 @@ create table media_to_customer(
         customer_id integer REFERENCES customer(id),
         media_id integer references media(id),
         loaned_at date,
-        loaned_until date
+        loaned_until date,
         returned_at date
     );
-insert into media_to_customer(customer_id, media_id, loaned_at, loaned_until)
-VALUES(1, 1, '2023-01-02', '2023-01-09'),
-    (2, 2, '2023-02-02', '2023-02-09');
+insert into media_to_customer(customer_id, media_id, loaned_at, loaned_until, returned_at)
+VALUES(1, 1, '2023-01-02', '2023-01-09', '2023-01-05'),
+    (2, 2, '2023-02-02', '2023-02-09', '2023-02-04');
 
 
 create table hold_to_media(
@@ -129,13 +129,13 @@ values(1, 1, '2023-04-02', '2023-04-09'),
 CREATE TABLE fine(
         id serial PRIMARY KEY,
         customer_id INTEGER REFERENCES customer(id),
-        fine_amount DECIMAL
+        fine_amount DECIMAL,
         fined_at DATE
     );
-INSERT INTO fine(customer_id, fine_amount)
-VALUES(1, 25.50),
-    (2, 15.75),
-    (3, 30.00);
+INSERT INTO fine(customer_id, fine_amount, fined_at)
+VALUES(1, 25.50, '2023-05-01'),
+    (2, 15.75, '2023-06-25'),
+    (3, 30.00, '2023-07-15');
  
 
 CREATE TABLE fine_to_book(
@@ -201,12 +201,12 @@ create table device_to_customer(
         customer_id integer references customer(id),
         device_id integer references device(id),
         loaned_at date,
-        loaned_until date
+        loaned_until date,
         returned_at date
     );
-insert into device_to_customer(customer_id, device_id, held_at, held_until)
-values(1, 1, '2022-04-22', '2022-05-02'),
-    (2, 2, '2023-07-25', '2023-08-14');
+insert into device_to_customer(customer_id, device_id, loaned_at, loaned_until, returned_at)
+values(1, 1, '2022-04-22', '2022-05-02', '2022-05-01'),
+    (2, 2, '2023-07-25', '2023-08-14', '2023-07-28');
 
 
 CREATE TABLE fine_to_device(
