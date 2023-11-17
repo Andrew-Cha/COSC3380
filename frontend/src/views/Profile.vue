@@ -2,6 +2,7 @@
 import { useMainStore } from '@/stores/main';
 import { storeToRefs } from 'pinia';
 import { ref, onMounted } from 'vue';
+import axios from 'axios'
 
 const mainStore = useMainStore()
 const { user } = storeToRefs(mainStore)
@@ -11,14 +12,16 @@ const selectedPeriod = ref(periods[0]);
 const totalFines = ref(0);
 const pastLoansData = ref(0);
 
+const apiUrl = `http://${import.meta.env.VITE_SERVER_URL}:3000/api`;
+
 const fetchFinesReport = async () => {
+  console.log("A")
   try {
-    const response = await axios.get('/api/reports/fines', {
+    const response = await axios.get(`${apiUrl}/reports/fines`, {
       params: {
         period: selectedPeriod.value,
       },
     });
-
     totalFines.value = response.data.total_fines;
   } catch (error) {
     console.error('Error fetching fines report:', error);
@@ -26,13 +29,13 @@ const fetchFinesReport = async () => {
 };
 
 const fetchPastLoans = async () => {
+  console.log("B")
   try {
-    const response = await axios.get('/api/reports/pastLoans', {
+    const response = await axios.get(`${apiUrl}/reports/pastLoans`, {
       params: {
         period: selectedPeriod.value,
       },
     });
-
     pastLoansData.value = response.data;
   } catch (error) {
     console.error('Error fetching pastLoans report:', error);
@@ -49,28 +52,28 @@ onMounted(() => {
 
 
 <template>
-    <div class="user-profile-page">
-      <h2 class="page-title">Your Information</h2>
-      <div class="user-information">
-        <div class="user-detail">
-          <strong>First Name:</strong>
-          <p>{{ user.first_name }}</p>
-        </div>
-        <div class="user-detail">
-          <strong>Last Name:</strong>
-          <p>{{ user.last_name }}</p>
-        </div>
-        <div class="user-detail">
-          <strong>Registration Date:</strong>
-          <p>{{ user.registration_date }}</p>
-        </div>
-        <div class="user-detail">
-          <strong>Role:</strong>
-          <p v-if="user.role_id === 1">Customer</p>
-          <p v-else-if="user.role_id === 2">Faculty</p>
-          <p v-else-if="user.role_id === 3">Admin</p>
-        </div>
-  
+  <div class="user-profile-page">
+    <h2 class="page-title">Your Information</h2>
+    <div class="user-information">
+      <div class="user-detail">
+        <strong>First Name:</strong>
+        <p>{{ user.first_name }}</p>
+      </div>
+      <div class="user-detail">
+        <strong>Last Name:</strong>
+        <p>{{ user.last_name }}</p>
+      </div>
+      <div class="user-detail">
+        <strong>Registration Date:</strong>
+        <p>{{ user.registration_date }}</p>
+      </div>
+      <div class="user-detail">
+        <strong>Role:</strong>
+        <p v-if="user.role_id === 1">Customer</p>
+        <p v-else-if="user.role_id === 2">Faculty</p>
+        <p v-else-if="user.role_id === 3">Admin</p>
+      </div>
+
       <!-- Fines Report Section -->
       <div v-if="user.role_id === 3" class="report-section">
         <div class="user-detail">
@@ -96,7 +99,8 @@ onMounted(() => {
         <div class="user-detail">
           <strong>Past Loans Information:</strong>
           <div v-for="loan in pastLoansData" :key="loan.id">
-            <p>{{ loan.customer_name }} loaned {{ loan.item_type }} '{{ loan.item_name }}' and returned on {{ loan.date }}</p>
+            <p>{{ loan.customer_name }} loaned {{ loan.item_type }} '{{ loan.item_name }}' and returned on {{ loan.date }}
+            </p>
           </div>
         </div>
       </div>
@@ -105,56 +109,56 @@ onMounted(() => {
 </template>
 
 <style scoped>
-  .user-profile-page {
-    text-align: center;
-    margin: 20px;
-  }
+.user-profile-page {
+  text-align: center;
+  margin: 20px;
+}
 
-  .page-title {
-    font-size: 24px;
-    margin-bottom: 20px;
-  }
+.page-title {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
 
-  .user-information {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    border: 1px solid #ccc;
-    padding: 20px;
-    margin: 20px;
-    background-color: #f5f5f5;
-    border-radius: 8px;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-  }
+.user-information {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 1px solid #ccc;
+  padding: 20px;
+  margin: 20px;
+  background-color: #f5f5f5;
+  border-radius: 8px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
 
-  .user-detail {
-    margin: 10px 0;
-    text-align: left;
-  }
+.user-detail {
+  margin: 10px 0;
+  text-align: left;
+}
 
-  .user-detail strong {
-    font-weight: bold;
-    margin-right: 5px;
-    color: #007BFF;
-  }
+.user-detail strong {
+  font-weight: bold;
+  margin-right: 5px;
+  color: #007BFF;
+}
 
-  .user-detail p {
-    margin: 0;
-  }
+.user-detail p {
+  margin: 0;
+}
 
-  .report-section {
-    margin-top: 20px;
-  }
+.report-section {
+  margin-top: 20px;
+}
 
-  .report-section select {
-    padding: 8px;
-    font-size: 14px;
-    margin-left: 10px;
-  }
+.report-section select {
+  padding: 8px;
+  font-size: 14px;
+  margin-left: 10px;
+}
 
-  .report-section p {
-    font-weight: bold;
-    color: #007BFF;
-  }
+.report-section p {
+  font-weight: bold;
+  color: #007BFF;
+}
 </style>
   
