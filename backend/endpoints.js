@@ -299,3 +299,80 @@ app.listen(3000, process.env.VITE_SERVER_URL, async () => {
     await pool.query(initializeQuery);
     console.log(`Server is running on http://${process.env.VITE_SERVER_URL}:3000`);
 });
+
+app.get('/api/rentBooks', async (req, res) => {
+    try {
+        const result = await pool.query(`SELECT 
+        b.id,
+        b.title,
+        b.isbn,
+        b.edition,
+        b2c.loaned_at,
+        b2c.loaned_until,
+        b2c.returned_at
+
+    FROM
+        book_to_customer AS b2c
+    JOIN
+        customer ON b2c.customer_id = c.id
+    JOIN
+        book ON b2c.book_id = b.id
+    WHERE
+        b2c.returned_at >= $1;`);
+        res.status(200).json(result.rows);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Database error' });
+    }
+});
+app.get('/api/rentMedia', async (req, res) => {
+    try {
+        const result = await pool.query(`SELECT 
+        m.id,
+        m.title,
+        m.author,
+        m.file_link,
+        m2c.loaned_at,
+        m2c.loaned_until,
+        m2c.returned_at
+
+    FROM
+        media_to_customer AS m2c
+    JOIN
+        customer ON m2c.customer_id = c.id
+    JOIN
+        book ON m2c.book_id = m.id
+    WHERE
+        m2c.returned_at >= $1;`);
+        res.status(200).json(result.rows);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Database error' });
+    }
+});
+
+app.get('/api/rentDevices', async (req, res) => {
+    try {
+        const result = await pool.query(`SELECT 
+        d.id,
+        d.device_name,
+        d.device_type,
+        d.serial_number,
+        d2c.loaned_at,
+        d2c.loaned_until,
+        d2c.returned_at
+
+    FROM
+        device_to_customer AS d2c
+    JOIN
+        customer ON d2c.customer_id = c.id
+    JOIN
+        device ON d2c.book_id = d.id
+    WHERE
+        d2c.returned_at >= $1;`);
+        res.status(200).json(result.rows);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Database error' });
+    }
+});

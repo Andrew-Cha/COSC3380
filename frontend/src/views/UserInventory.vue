@@ -1,146 +1,180 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, onMounted } from 'vue'
+import axios from 'axios'
 
-const filteredcheckouts = ref([])
-const checkouts = ref([
-  { id: 1, user: 'John Doe', book: 'The Lightning Thief', checkoutDate: '10-12-2023', dueDate: '10-26-2023', device: 'calculator', checkoutDate: '10-12-2023', dueDate: '10-26-2023' },
-  { id: 2, user: 'Jane Doe', book: 'The Hunger Games', checkoutDate: '10-11-2023', dueDate: '10-25-2023', media: 'Movie', checkoutDate: '10-12-2023', dueDate: '10-26-2023' },
-  { id: 3, user: 'Jason Doe', book: 'Databases V2 Textbook', checkoutDate: '10-07-2023', dueDate: '10-21-2023' },
-  { id: 4, user: 'Jordan Doe', book: 'Captain Underpants', checkoutDate: '10-08-2023', dueDate: '10-22-2023' },
-  // ... more checkouts
-])
-const showUsersDropdown = ref(false)
-const showNamesDropdown = ref(false)
+const apiUrl = `http://${import.meta.env.VITE_SERVER_URL}:3000/api`;
 
+const rentMedia = ref([]);
+const rentBooks = ref([]);
+const rentDevices = ref([]);
 
-const uniqueUsers = computed(() => {
-  return [...new Set(checkouts.value.map(checkout => ({ id: checkout.id, name: checkout.user })))];
-})
+onMounted(async () => {
+  try {
+    const itemsResponse = await axios.get(`${apiUrl}/rentMedia`);
+    media.value = itemsResponse.data;
+    const booksResponse = await axios.get(`${apiUrl}/rentBooks`);
+    books.value = booksResponse.data;
+    const devicesResponse = await axios.get(`${apiUrl}/rentDevices`);
+    devices.value = devicesResponse.data;
+  } catch (error) {
+    console.error('Error fetching data:', error);
+  }
+});
 
-const uniqueNames = computed(() => {
-  return [...new Set(checkouts.value.map(checkout => checkout.user))];
-})
-
-function filterByUserId(id) {
-  filteredcheckouts.value = checkouts.value.filter(checkout => checkout.id === id);
+async function returnItem(id) {
+  try {
+    await axios.post(`${apiUrl}/return`, { id });
+  } catch (error) {
+    console.error('Error returning the item:', error);
+  }
 }
-function filterByName(name) {
-  filteredcheckouts.value = checkouts.value.filter(checkout => checkout.user === name);
-}
-function resetFilter() {
-  filteredcheckouts.value = checkouts;
-  showUsersDropdown.value = false;
-  showNamesDropdown.value = false;
+
+async function extendLoan(id) {
+  try {
+    await axios.post(`${apiUrl}/extend`, { id });
+  } catch (error) {
+    console.error('Error returning the item:', error);
+  }
 }
 </script>
-
 <template>
-  <div class="checkouts-page">
-    <h1>Currently Checked Out</h1>
-    <div class="filters">
-      <button @click="showUsersDropdown = !showUsersDropdown">User ID</button>
-      <div v-if="showUsersDropdown" class="dropdown">
-        <button v-for="user in uniqueUsers" :key="user.id" @click="filterByUserId(user.id)">
-          {{ user.id }}
-        </button>
-        <button @click="resetFilter">Back</button>
-      </div>
+  <div class="inventory-page">
+    <h2 class="page-title">My Inventory</h2>
 
-      <button @click="showNamesDropdown = !showNamesDropdown">Name</button>
-      <div v-if="showNamesDropdown" class="dropdown">
-        <button v-for="name in uniqueNames" :key="name" @click="filterByName(name)">
-          {{ name }}
-        </button>
-        <button @click="resetFilter">Back</button>
+    <div class="inventory-section">
+      <h3>Books</h3>
+      <table v-if="rentBooks.length != 0" table class="inventory-table">
+        <th>Title</th>
+        <th>ISBN</th>
+        <th>Edition</th>
+        <th>Loan Date</th>
+        <th>Loan Until</th>
+        <th>Returned Date</th>
+        <tr v-for="book in books" :key="book.id">
+          <td>{{ book.title }}</td>
+          <td>{{ book.isbn }}</td>
+          <td> {{ book.edition }}</td>
+          <td> {{ book.loaned_at }}</td>
+          <td> {{ book.loaned_until }}</td>
+          <td> {{ book.returned_at }}</td>
+          <td>
+            <button class="action-button return-button" @click="returnItem(book.id)">Return</button>
+            <button class="action-button extend-button" @click="extendLoan(book.id)">Extend</button>
+          </td>
+        </tr>
+      </table>
+      <div v-else>
+        <p>You do not have any book to check out.</p>
       </div>
     </div>
 
-    <div v-if="filteredcheckouts.length > 0">
-      <div class="checkout" v-for="checkout in filteredcheckouts" :key="checkout.id">
-        <h3>{{ checkout.user }}</h3>
-        <p>Book: {{ checkout.book }}</p>
-        <p>Device: {{ checkout.device }}</p>
-        <p>Media: {{ checkout.media }}</p>
-        <p>Checked Out On: {{ checkout.checkoutDate }}</p>
-        <p>Due Date: {{ checkout.dueDate }}</p>
+    <div class="inventory-section">
+      <h3>Devices</h3>
+      <table v-if="rentDevices.length != 0" class="inventory-table">
+        <th>Name</th>
+        <th>Type</th>
+        <th>Serial Number</th>
+        <th>Loan Date</th>
+        <th>Loan Until</th>
+        <th>Returned Date</th>
+        <tr v-for="device in devices" :key="device.id">
+          <td>{{ device.device_name }}</td>
+          <td>{{ device.device_type }}</td>
+          <td> {{ device.serial_number }}</td>
+          <td> {{ device.loaned_at }}</td>
+          <td> {{ device.loaned_until }}</td>
+          <td> {{ device.returned_at }}</td>
+          <td>
+            <button class="action-button return-button" @click="returnItem(device.id)">Return</button>
+            <button class="action-button extend-button" @click="extendLoan(device.id)">Extend</button>
+          </td>
+        </tr>
+      </table>
+
+      <div v-else>
+        <p>You do not have any device to check out.</p>
       </div>
     </div>
-    <div v-else>
-      <p>No checkouts to display</p>
-    </div>
-    <div class="library-image">
+
+    <div class="inventory-section">
+      <h3>Media</h3>
+      <table v-if="rentMedia.length != 0" class="inventory-table">
+        <th>Title</th>
+        <th>Author</th>
+        <th>Media Link</th>
+        <th>Loan Date</th>
+        <th>Loan Until</th>
+        <th>Returned Date</th>
+        <tr v-for="item in media" :key="item.id">
+          <td>{{ item.title }}</td>
+          <td>{{ item.author }}</td>
+          <td>{{ item.file_link }}</td>
+          <td>{{ item.loaned_at }}</td>
+          <td>{{ item.loaned_until }}</td>
+          <td>{{ item.returned_at }}</td>
+          <td>
+            <button class="action-button return-button" @click="returnItem(item.id)">Return</button>
+            <button class="action-button extend-button" @click="extendLoan(item.id)">Extend</button>
+          </td>
+        </tr>
+      </table>
+
+      <div v-else>
+        <p>You do not have any media to check out.</p>
+      </div>
     </div>
   </div>
 </template>
   
 <style scoped>
-.checkouts-page {
-  max-width: 600px;
-  margin: 0 auto;
-  padding: 20px;
-  text-align: center;
-}
-
-.checkout {
-  margin-bottom: 20px;
-  padding: 15px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-}
-
-.library-image {
-  margin-top: 20px;
-  text-align: center;
-}
-
-img {
-  max-width: 100%;
-  height: auto;
-  border-radius: 8px;
-}
-
-form {
+.inventory-page {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
 }
 
-.login-section {
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center;
-  padding: 40px 20px;
-  border-radius: 8px;
-  color: #fff;
-}
-
-.filters {
-  display: flex;
-  justify-content: space-around;
+.page-title {
+  font-size: 24px;
   margin-bottom: 20px;
 }
 
-.dropdown {
-  position: absolute;
-  background-color: #f9f9f9;
-  min-width: 160px;
-  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-  padding: 12px 16px;
-  z-index: 1;
+.inventory-section {
+  width: 80%;
+  margin-bottom: 20px;
 }
 
-.login-header,
-.login-label {
-  font-weight: bold;
-  color: #000;
+.inventory-table {
+  width: 100%;
+  border-collapse: collapse;
 }
 
-.login-bg-image {
-  margin-top: 20px;
-  max-width: 100%;
-  height: auto;
-  border-radius: 8px;
+td {
+  border: 1px solid #ccc;
+  padding: 8px;
+  text-align: left;
+}
+
+.action-button {
+  background-color: #007BFF;
+  color: white;
+  padding: 5px 10px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.return-button {
+  margin-right: 5px;
+}
+
+.action-button:hover {
+  background-color: #0056b3;
+}
+
+table,
+th,
+td {
+  border: 1px solid;
 }
 </style>
   
