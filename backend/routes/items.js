@@ -83,14 +83,56 @@ router.post('/extendDevice', async (req, res) => {
 })
 
 router.post('/createBook', async (req, res) => {
+    const { condition_book, isbn, book_title, year_book, edition, genre } = req.body;
 
+    const query = {
+        text: 'INSERT INTO Book(condition_book, isbn, title, year_book, edition, genre) VALUES($1, $2, $3, $4, $5, $6)',
+        values: [condition_book, isbn, book_title, year_book, edition, genre],
+    };
+
+    await pool.query(query, (error, results) => {
+        if (error) {
+            console.error('Error executing query:', error);
+            res.status(500).json({ error: 'An error occurred while inserting the data.' });
+        } else {
+            res.status(201).json({ message: "Book added successfully." })
+        }
+    });
 })
 
-router.post('/createBook', async (req, res) => {
-    
+router.post('/createMedia', async (req, res) => {
+    const { media_title, file_link, file_type, author, file_size } = req.body;
+
+    const query = {
+        text: 'INSERT INTO media(title, file_link, file_type, author, upload_day, file_size) VALUES($1, $2, $3, $4, current_date, $5)',
+        values: [media_title, file_link, file_type, author, file_size],
+    };
+
+    await pool.query(query, (error, results) => {
+        if (error) {
+            console.error('Error executing query:', error);
+            res.status(500).json({ error: 'An error occurred while inserting the data.' });
+        } else {
+            res.status(201).json({ message: "Media added successfully." })
+        }
+    });
 })
 
-router.post('/createBook', async (req, res) => {
-    
+router.post('/createDevice', async (req, res) => {
+    const { device_type, device_name, manufacturer, year_publish, serial_number, operating_system, maintenance_history } = req.body;
+
+    const query = {
+        text: 'INSERT INTO device(device_type, device_name, manufacturer, year_publish, serial_number, operating_system, maintenance_history) VALUES($1, $2, $3, $4, $5, $6, $7)',
+        values: [device_type, device_name, manufacturer, year_publish, serial_number, operating_system, maintenance_history],
+    };
+
+    await pool.query(query, (error, results) => {
+        if (error) {
+            console.error('Error executing query:', error);
+            res.status(500).json({ error: 'An error occurred while inserting the data.' });
+        } else {
+            res.status(201).json({ message: "Device added successfully." })
+        }
+    });
 })
 module.exports = router
