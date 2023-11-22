@@ -53,8 +53,8 @@ onMounted(() => {
 
 <template>
   <div class="user-profile-page">
-    <h2 class="page-title">Your Information</h2>
     <div class="user-information">
+      <h2 class="page-title">Your Information</h2>
       <div class="user-detail">
         <strong>First Name:</strong>
         <p>{{ user.first_name }}</p>
@@ -74,6 +74,7 @@ onMounted(() => {
         <p v-else-if="user.role_id === 3">Admin</p>
       </div>
 
+      <h2 v-if="user.role_id === 3">Admin Section</h2>
       <!-- Fines Report Section -->
       <div v-if="user.role_id === 3" class="report-section">
         <div class="user-detail">
