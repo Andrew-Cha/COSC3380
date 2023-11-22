@@ -67,9 +67,9 @@ CREATE TABLE book_to_customer(
         id serial PRIMARY key,
         customer_id integer REFERENCES customer(id),
         book_id integer REFERENCES book(id),
-        loaned_at date,
-        loaned_until date,
-        returned_at date
+        loaned_at timestamp,
+        loaned_until timestamp,
+        returned_at timestamp
     );
 INSERT INTO book_to_customer(customer_id, book_id, loaned_at, loaned_until, returned_at)
 VALUES
@@ -84,58 +84,58 @@ CREATE table media(
         file_link varchar,
         file_type varchar,
         author varchar,
-        upload_day date,
+        upload_day timestamp,
         file_size numeric
     );
 insert into media(publisher_id, title, file_link, file_type, author, upload_day, file_size)
-VALUES (1, 'Tech Insights with Sarah', 'https://sample.edu/tech-insights', '.MP3', 'Sarah Johnson', '2022-02-15', '45'),
-    (2, 'Ancient Civilizations Documentary', 'https://btm.edu/documentary', '.MP4', 'Emily Turner', '2022-02-18', '75'),
-    (1, 'Healthy Living Tips', 'https://sample.edu/health-tips', '.PDF', 'Dr. Smith', '2022-03-05', '20'),
-    (2, 'Space Exploration Podcast', 'https://btm.edu/space-podcast', '.MP3', 'Astronaut Mike', '2022-03-10', '55'),
-    (1, 'Cooking with Chef Amanda', 'https://sample.edu/cooking-show', '.AVI', 'Chef Amanda', '2022-04-01', '40'),
-    (2, 'Travel Adventures with Alex', 'https://btm.edu/travel-adventures', '.MP4', 'Alexandra Roberts', '2022-05-20', '65'),
-    (1, 'Fitness Challenge Video', 'https://sample.edu/fitness-challenge', '.MOV', 'John Fitness', '2022-06-02', '30'),
-    (2, 'History Uncovered: Ancient Rome', 'https://btm.edu/history-rome', '.MP4', 'Professor Davis', '2022-06-15', '80'),
-    (1, 'Gaming Tips and Tricks', 'https://sample.edu/gaming-tips', '.MP4', 'GamerX', '2022-10-05', '50'),
-    (2, 'DIY Home Improvement Series', 'https://btm.edu/diy-home', '.AVI', 'HomeExpert', '2022-11-12', '45'),
-    (1, 'Financial Planning Seminar', 'https://sample.edu/financial-seminar', '.PDF', 'FinancialAdvisor', '2022-12-01', '25');
+VALUES (1, 'Tech Insights with Sarah', 'https://sample.edu/tech-insights', '.MP3', 'Sarah Johnson', '2022-02-15 10:00:00', '45'),
+    (2, 'Ancient Civilizations Documentary', 'https://btm.edu/documentary', '.MP4', 'Emily Turner', '2022-02-18 10:00:00', '75'),
+    (1, 'Healthy Living Tips', 'https://sample.edu/health-tips', '.PDF', 'Dr. Smith', '2022-03-05 10:00:00', '20'),
+    (2, 'Space Exploration Podcast', 'https://btm.edu/space-podcast', '.MP3', 'Astronaut Mike', '2022-03-10 10:00:00', '55'),
+    (1, 'Cooking with Chef Amanda', 'https://sample.edu/cooking-show', '.AVI', 'Chef Amanda', '2022-04-01 10:00:00', '40'),
+    (2, 'Travel Adventures with Alex', 'https://btm.edu/travel-adventures', '.MP4', 'Alexandra Roberts', '2022-05-20 10:00:00', '65'),
+    (1, 'Fitness Challenge Video', 'https://sample.edu/fitness-challenge', '.MOV', 'John Fitness', '2022-06-02 10:00:00', '30'),
+    (2, 'History Uncovered: Ancient Rome', 'https://btm.edu/history-rome', '.MP4', 'Professor Davis', '2022-06-15 10:00:00', '80'),
+    (1, 'Gaming Tips and Tricks', 'https://sample.edu/gaming-tips', '.MP4', 'GamerX', '2022-10-05 10:00:00', '50'),
+    (2, 'DIY Home Improvement Series', 'https://btm.edu/diy-home', '.AVI', 'HomeExpert', '2022-11-12 10:00:00', '45'),
+    (1, 'Financial Planning Seminar', 'https://sample.edu/financial-seminar', '.PDF', 'FinancialAdvisor', '2022-12-01 10:00:00', '25');
 
 
 create table media_to_customer(
         id serial primary key,
         customer_id integer REFERENCES customer(id),
         media_id integer references media(id),
-        loaned_at date,
-        loaned_until date,
-        returned_at date
+        loaned_at timestamp,
+        loaned_until timestamp,
+        returned_at timestamp
     );
 insert into media_to_customer(customer_id, media_id, loaned_at, loaned_until, returned_at)
-VALUES(1, 1, '2023-01-02', '2023-01-09', '2023-01-05'),
-    (2, 2, '2023-02-02', '2023-02-09', '2023-02-04');
+VALUES(1, 1, '2023-01-02', '2023-01-09 10:00:00', '2023-01-05 10:00:00'),
+    (2, 2, '2023-02-02', '2023-02-09 10:00:00', '2023-02-04 10:00:00');
 
 
 create table hold_to_media(
         id serial primary key,
         customer_id integer references customer(id),
         media_id integer references media(id),
-        held_at date,
-        held_until date
+        held_at timestamp,
+        held_until timestamp
     );
 insert into hold_to_media(customer_id, media_id, held_at, held_until)
-values(1, 1, '2023-04-02', '2023-04-09'),
-    (2, 2, '2023-05-02', '2023-05-09');
+values(1, 1, '2023-04-02 10:00:00', '2023-04-09 10:00:00'),
+    (2, 2, '2023-05-02 10:00:00', '2023-05-09 10:00:00');
 
 
 CREATE TABLE fine(
         id serial PRIMARY KEY,
         customer_id INTEGER REFERENCES customer(id),
         fine_amount DECIMAL,
-        fined_at DATE
+        fined_at timestamp
     );
 INSERT INTO fine(customer_id, fine_amount, fined_at)
-VALUES(1, 25.50, '2023-05-01'),
-    (2, 15.75, '2023-06-25'),
-    (3, 30.00, '2023-07-15');
+VALUES(1, 25.50, '2023-05-01 10:00:00'),
+    (2, 15.75, '2023-06-25 10:00:00'),
+    (3, 30.00, '2023-07-15 10:00:00');
  
 
 CREATE TABLE fine_to_book(
@@ -178,7 +178,7 @@ create table device(
         device_type varchar,
         device_name varchar,
         manufacturer varchar,
-        year_publish date,
+        year_publish timestamp,
         serial_number varchar,
         operating_system varchar,
         maintenance_history varchar
@@ -200,13 +200,13 @@ create table device_to_customer(
         id serial primary key,
         customer_id integer references customer(id),
         device_id integer references device(id),
-        loaned_at date,
-        loaned_until date,
-        returned_at date
+        loaned_at timestamp,
+        loaned_until timestamp,
+        returned_at timestamp
     );
 insert into device_to_customer(customer_id, device_id, loaned_at, loaned_until, returned_at)
-values(1, 1, '2022-04-22', '2022-05-02', '2022-05-01'),
-    (2, 2, '2023-07-25', '2023-08-14', '2023-07-28');
+values(1, 1, '2022-04-22', '2022-05-02 10:00:00', '2022-05-01 10:00:00'),
+    (2, 2, '2023-07-25', '2023-08-14 10:00:00', '2023-07-28 10:00:00');
 
 
 CREATE TABLE fine_to_device(
@@ -223,20 +223,20 @@ CREATE TABLE hold_to_book(
         id serial PRIMARY KEY,
         customer_id INTEGER REFERENCES customer(id),
         book_id INTEGER REFERENCES book(id),
-        held_at DATE,
-        held_until DATE
+        held_at timestamp,
+        held_until timestamp
     );
-INSERT INTO hold_to_book(customer_id, book_id, held_at, held_until) VALUES(1, 1, '2022-01-01', '2022-01-31');
+INSERT INTO hold_to_book(customer_id, book_id, held_at, held_until) VALUES(1, 1, '2022-01-01 10:00:00', '2022-01-31 10:00:00');
 
 
 CREATE TABLE hold_to_device(
         id serial PRIMARY KEY,
         customer_id INTEGER REFERENCES customer(id),
         device_id INTEGER REFERENCES book(id),
-        held_at DATE,
-        held_until DATE
+        held_at timestamp,
+        held_until timestamp
     );
-INSERT INTO hold_to_device(customer_id, device_id, held_at, held_until) VALUES(1, 1, '2022-01-01', '2022-01-31');
+INSERT INTO hold_to_device(customer_id, device_id, held_at, held_until) VALUES(1, 1, '2022-01-01 10:00:00', '2022-01-31 10:00:00');
 `
 
 module.exports = initializeQuery

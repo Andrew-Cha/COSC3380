@@ -5,7 +5,8 @@ const router = express.Router()
 router.get('/media', async (req, res) => {
     try {
         const result = await pool.query('SELECT * FROM Media');
-        res.status(200).json(result.rows);
+        const items = result.rows.map(obj => ({ ...obj, is_available: true }))
+        res.status(200).json(items);
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Database error' });
@@ -16,7 +17,8 @@ router.get('/media', async (req, res) => {
 router.get('/books', async (req, res) => {
     try {
         const result = await pool.query('SELECT * FROM Book');
-        res.status(200).json(result.rows);
+        const items = result.rows.map(obj => ({ ...obj, is_available: true }))
+        res.status(200).json(items);
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Database error' });
@@ -26,62 +28,91 @@ router.get('/books', async (req, res) => {
 router.get('/devices', async (req, res) => {
     try {
         const result = await pool.query('SELECT * FROM Device');
-        res.status(200).json(result.rows);
+        const items = result.rows.map(obj => ({ ...obj, is_available: true }))
+        res.status(200).json(items);
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Database error' });
     }
 });
 
+// Loan
 router.post('/loanBook', async (req, res) => {
-
+    const { userId, bookId } = req.body
+    const query = {
+        text: 'INSERT INTO book_to_customer(customer_id, book_id, loaned_at, loaned_until, returned_at) VALUES($1, $2, current_timestamp, current_timestamp + interval \'30 seconds\', NULL)',
+        values: [userId, bookId],
+    };
+    await pool.query(query, (error, results) => {
+        if (error) {
+            console.error('Error executing query:', error);
+            res.status(500).json({ error: 'An error occurred while inserting the data.' });
+        } else {
+            res.status(201).json({ message: "Book loaned successfully." })
+        }
+    });
 })
 
 router.post('/loanMedia', async (req, res) => {
-
+    res.status(200).json({ message: "OK " })
 })
 
 router.post('/loanDevice', async (req, res) => {
-
+    res.status(200).json({ message: "OK " })
 })
 
-
+// Hold
 router.post('/holdBook', async (req, res) => {
-
+    const { userId, bookId } = req.body
+    const query = {
+        text: 'INSERT INTO hold_to_book(customer_id, book_id, held_at, held_until) VALUES($1, $2, current_timestamp, current_timestamp + interval \'30 seconds\')',
+        values: [userId, bookId],
+    };
+    await pool.query(query, (error, results) => {
+        if (error) {
+            console.error('Error executing query:', error);
+            res.status(500).json({ error: 'An error occurred while inserting the data.' });
+        } else {
+            res.status(201).json({ message: "Book held successfully." })
+        }
+    });
 })
 
 router.post('/holdMedia', async (req, res) => {
-
+    res.status(200).json({ message: "OK " })
 })
 
 router.post('/holdDevice', async (req, res) => {
-
+    res.status(200).json({ message: "OK " })
 })
 
+// Return
 router.post('/returnBook', async (req, res) => {
-
+    res.status(200).json({ message: "OK " })
 })
 
 router.post('/returnMedia', async (req, res) => {
-
+    res.status(200).json({ message: "OK " })
 })
 
 router.post('/returnDevice', async (req, res) => {
-
+    res.status(200).json({ message: "OK " })
 })
 
+// Extend
 router.post('/extendBook', async (req, res) => {
-
+    res.status(200).json({ message: "OK " })
 })
 
 router.post('/extendMedia', async (req, res) => {
-
+    res.status(200).json({ message: "OK " })
 })
 
 router.post('/extendDevice', async (req, res) => {
-
+    res.status(200).json({ message: "OK " })
 })
 
+// Create
 router.post('/createBook', async (req, res) => {
     const { condition_book, isbn, book_title, year_book, edition, genre } = req.body;
 
