@@ -81,4 +81,16 @@ router.post('/extendMedia', async (req, res) => {
 router.post('/extendDevice', async (req, res) => {
 
 })
+
+router.post('/createBook', async (req, res) => {
+
+})
+
+router.post('/createBook', async (req, res) => {
+    
+})
+
+router.post('/createBook', async (req, res) => {
+    
+})
 module.exports = router
