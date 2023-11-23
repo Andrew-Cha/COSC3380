@@ -15,7 +15,6 @@ const pastLoansData = ref(0);
 const apiUrl = `http://${import.meta.env.VITE_SERVER_URL}:3000/api`;
 
 const fetchFinesReport = async () => {
-  console.log("A")
   try {
     const response = await axios.get(`${apiUrl}/reports/fines`, {
       params: {
@@ -29,7 +28,6 @@ const fetchFinesReport = async () => {
 };
 
 const fetchPastLoans = async () => {
-  console.log("B")
   try {
     const response = await axios.get(`${apiUrl}/reports/pastLoans`, {
       params: {

@@ -15,16 +15,28 @@ const devices = ref([]);
 
 onMounted(async () => {
     try {
-        const itemsResponse = await axios.get(`${apiUrl}/items/media`);
-        media.value = itemsResponse.data;
-        const booksResponse = await axios.get(`${apiUrl}/items/books`);
-        books.value = booksResponse.data;
-        const devicesResponse = await axios.get(`${apiUrl}/items/devices`);
-        devices.value = devicesResponse.data;
+        getBooks()
+        getDevices()
+        getMedia()
     } catch (error) {
         console.error('Error fetching data:', error);
     }
 });
+
+async function getMedia() {
+    const itemsResponse = await axios.get(`${apiUrl}/items/media`);
+    media.value = itemsResponse.data;
+}
+
+async function getDevices() {
+    const devicesResponse = await axios.get(`${apiUrl}/items/devices`);
+    devices.value = devicesResponse.data;
+}
+
+async function getBooks() {
+    const booksResponse = await axios.get(`${apiUrl}/items/books`);
+    books.value = booksResponse.data;
+}
 
 async function loanBook(id) {
     const request = {
@@ -32,11 +44,7 @@ async function loanBook(id) {
         bookId: id
     }
     await axios.post(`${apiUrl}/items/loanBook`, request)
-    for (const item of books.value) {
-        if (item.id != id) continue
-        item.is_available = false
-        break
-    }
+    getBooks()
 }
 
 async function holdBook(id) {
@@ -45,11 +53,7 @@ async function holdBook(id) {
         bookId: id
     }
     await axios.post(`${apiUrl}/items/holdBook`, request)
-    for (const item of books.value) {
-        if (item.id != id) continue
-        item.is_available = false
-        break
-    }
+    getBooks()
 }
 
 async function loanMedia(id) {
@@ -58,11 +62,7 @@ async function loanMedia(id) {
         mediaId: id
     }
     await axios.post(`${apiUrl}/items/loanMedia`, request)
-    for (const item of media.value) {
-        if (item.id != id) continue
-        item.is_available = false
-        break
-    }
+    getMedia()
 }
 
 async function holdMedia(id) {
@@ -71,11 +71,7 @@ async function holdMedia(id) {
         mediaId: id
     }
     await axios.post(`${apiUrl}/items/holdMedia`, request)
-    for (const item of media.value) {
-        if (item.id != id) continue
-        item.is_available = false
-        break
-    }
+    getMedia()
 }
 
 async function loanDevice(id) {
@@ -84,11 +80,7 @@ async function loanDevice(id) {
         deviceId: id
     }
     await axios.post(`${apiUrl}/items/loanDevice`, request)
-    for (const item of devices.value) {
-        if (item.id != id) continue
-        item.is_available = false
-        break
-    }
+    getDevices()
 }
 
 async function holdDevice(id) {
@@ -97,11 +89,7 @@ async function holdDevice(id) {
         deviceId: id
     }
     await axios.post(`${apiUrl}/items/holdDevice`, request)
-    for (const item of devices.value) {
-        if (item.id != id) continue
-        item.is_available = false
-        break
-    }
+    getDevices()
 }
 </script>
 <template>
@@ -125,14 +113,14 @@ async function holdDevice(id) {
                     <td> {{ book.release_year }}</td>
                     <td>
                         <button class="action-button return-button" @click="loanBook(book.id)"
-                            :disabled="isLoggedIn === false || book.is_available === false">Loan</button>
+                            :disabled="isLoggedIn === false">Loan</button>
                         <button class="action-button extend-button" @click="holdBook(book.id)"
-                            :disabled="isLoggedIn === false || book.is_available == false">Hold</button>
+                            :disabled="isLoggedIn === false">Hold</button>
                     </td>
                 </tr>
             </table>
             <div v-else>
-                <p>Loading the books..</p>
+                <p>No books left!</p>
             </div>
         </div>
 
@@ -157,15 +145,15 @@ async function holdDevice(id) {
                     <td> {{ device.year_publish }}</td>
                     <td>
                         <button class="action-button return-button" @click="loanDevice(device.id)"
-                            :disabled="isLoggedIn === false || device.is_available === false">Loan</button>
+                            :disabled="isLoggedIn === false">Loan</button>
                         <button class="action-button extend-button" @click="holdDevice(device.id)"
-                            :disabled="isLoggedIn === false || device.is_available === false">Hold</button>
+                            :disabled="isLoggedIn === false">Hold</button>
                     </td>
                 </tr>
             </table>
 
             <div v-else>
-                <p>Loading devices..</p>
+                <p>No devices left!</p>
             </div>
         </div>
 
@@ -184,15 +172,15 @@ async function holdDevice(id) {
                     <td>{{ item.file_size }}</td>
                     <td>
                         <button class="action-button return-button" @click="loanMedia(item.id)"
-                            :disabled="isLoggedIn === false || item.is_available === false">Loan</button>
+                            :disabled="isLoggedIn === false">Loan</button>
                         <button class="action-button extend-button" @click="holdMedia(item.id)"
-                            :disabled="isLoggedIn === false || item.is_available === false">Hold</button>
+                            :disabled="isLoggedIn === false">Hold</button>
                     </td>
                 </tr>
             </table>
 
             <div v-else>
-                <p>Loading media..</p>
+                <p>No media left!</p>
             </div>
         </div>
     </div>
@@ -247,6 +235,10 @@ table,
 th,
 td {
     border: 1px solid;
+}
+
+table {
+    background-color: white;
 }
 
 button:disabled {

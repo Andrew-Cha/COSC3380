@@ -1,56 +1,128 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { useMainStore } from '@/stores/main';
+import { storeToRefs } from 'pinia';
+import { ref, onMounted } from 'vue';
 import axios from 'axios'
+
+const mainStore = useMainStore()
+const { user } = storeToRefs(mainStore)
 
 const apiUrl = `http://${import.meta.env.VITE_SERVER_URL}:3000/api`;
 
-const rentMedia = ref([]);
-const rentBooks = ref([]);
-const rentDevices = ref([]);
+const loanedMedia = ref([]);
+const loanedBooks = ref([]);
+const loanedDevices = ref([]);
+
+const heldDevices = ref([]);
+const heldBooks = ref([]);
+const heldMedia = ref([]);
 
 onMounted(async () => {
   try {
-    const itemsResponse = await axios.get(`${apiUrl}/rentMedia`);
-    media.value = itemsResponse.data;
-    const booksResponse = await axios.get(`${apiUrl}/rentBooks`);
-    books.value = booksResponse.data;
-    const devicesResponse = await axios.get(`${apiUrl}/rentDevices`);
-    devices.value = devicesResponse.data;
+    getLoanedBooks()
+    getLoanedMedia()
+    getLoanedDevices()
+    getHeldBooks()
+    getHeldMedia()
+    getHeldDevices()
   } catch (error) {
     console.error('Error fetching data:', error);
   }
 });
 
-async function returnItem(id) {
-  try {
-    await axios.post(`${apiUrl}/return`, { id });
-  } catch (error) {
-    console.error('Error returning the item:', error);
-  }
+async function getLoanedMedia() {
+  const mediaResponse = await axios.get(`${apiUrl}/items/loanedMedia/${user.value.id}`);
+  loanedMedia.value = mediaResponse.data;
 }
 
-async function extendLoan(id) {
-  try {
-    await axios.post(`${apiUrl}/extend`, { id });
-  } catch (error) {
-    console.error('Error returning the item:', error);
-  }
+async function getLoanedBooks() {
+  const booksResponse = await axios.get(`${apiUrl}/items/loanedBooks/${user.value.id}`);
+  loanedBooks.value = booksResponse.data;
+}
+
+async function getLoanedDevices() {
+  const devicesResponse = await axios.get(`${apiUrl}/items/loanedDevices/${user.value.id}`);
+  loanedDevices.value = devicesResponse.data;
+}
+
+async function getHeldMedia() {
+  const mediaResponse = await axios.get(`${apiUrl}/items/heldMedia/${user.value.id}`)
+  heldMedia.value = mediaResponse.data
+}
+
+async function getHeldBooks() {
+  const bookResponse = await axios.get(`${apiUrl}/items/heldBooks/${user.value.id}`)
+  heldBooks.value = bookResponse.data
+}
+
+async function getHeldDevices() {
+  const devicesResponse = await axios.get(`${apiUrl}/items/heldDevices/${user.value.id}`)
+  heldDevices.value = devicesResponse.data
+}
+
+async function returnBook() {
+  await axios.post(`${apiUrl}/items/returnBook`)
+  getLoanedBooks()
+}
+
+async function returnMedia() {
+  await axios.post(`${apiUrl}/items/returnMedia`)
+  getLoanedMedia()
+}
+
+async function returnDevice() {
+  await axios.post(`${apiUrl}/items/returnDevice`)
+  getLoanedDevices()
+}
+
+async function loanBook() {
+  await axios.post(`${apiUrl}/items/loanBook`)
+  getLoanedBooks()
+  get
+}
+
+async function loanMedia() {
+  await axios.post(`${apiUrl}/items/loanMedia`)
+  getLoanedMedia()
+  getHeldMedia()
+}
+
+async function loanDevice() {
+  await axios.post(`${apiUrl}/items/loanDevice`)
+  getLoanedDevices()
+  getHeldMedia()
+}
+
+async function extendBook() {
+  await axios.post(`${apiUrl}/items/extendBook`)
+  getLoanedBooks()
+}
+
+async function extendDevice() {
+  await axios.post(`${apiUrl}/items/extendDevice`)
+  getLoanedDevices()
+}
+
+async function extendMedia() {
+  await axios.post(`${apiUrl}/items/extendMedia`)
+  getLoanedMedia()
 }
 </script>
+
 <template>
   <div class="inventory-page">
-    <h2 class="page-title">My Inventory</h2>
+    <h2 class="page-title">Loaned Items</h2>
 
     <div class="inventory-section">
       <h3>Books</h3>
-      <table v-if="rentBooks.length != 0" table class="inventory-table">
+      <table v-if="loanedBooks.length != 0" table class="inventory-table">
         <th>Title</th>
         <th>ISBN</th>
         <th>Edition</th>
         <th>Loan Date</th>
         <th>Loan Until</th>
         <th>Returned Date</th>
-        <tr v-for="book in books" :key="book.id">
+        <tr v-for="book in loanedBooks" :key="book.id">
           <td>{{ book.title }}</td>
           <td>{{ book.isbn }}</td>
           <td> {{ book.edition }}</td>
@@ -58,26 +130,26 @@ async function extendLoan(id) {
           <td> {{ book.loaned_until }}</td>
           <td> {{ book.returned_at }}</td>
           <td>
-            <button class="action-button return-button" @click="returnItem(book.id)">Return</button>
-            <button class="action-button extend-button" @click="extendLoan(book.id)">Extend</button>
+            <button class="action-button return-button" @click="returnBook(book.id)">Return</button>
+            <button class="action-button extend-button" @click="extendBook(book.id)">Extend</button>
           </td>
         </tr>
       </table>
       <div v-else>
-        <p>You do not have any book to check out.</p>
+        <p>You do not have any books to check out.</p>
       </div>
     </div>
 
     <div class="inventory-section">
       <h3>Devices</h3>
-      <table v-if="rentDevices.length != 0" class="inventory-table">
+      <table v-if="loanedDevices.length != 0" class="inventory-table">
         <th>Name</th>
         <th>Type</th>
         <th>Serial Number</th>
         <th>Loan Date</th>
         <th>Loan Until</th>
         <th>Returned Date</th>
-        <tr v-for="device in devices" :key="device.id">
+        <tr v-for="device in loanedDevices" :key="device.id">
           <td>{{ device.device_name }}</td>
           <td>{{ device.device_type }}</td>
           <td> {{ device.serial_number }}</td>
@@ -85,27 +157,27 @@ async function extendLoan(id) {
           <td> {{ device.loaned_until }}</td>
           <td> {{ device.returned_at }}</td>
           <td>
-            <button class="action-button return-button" @click="returnItem(device.id)">Return</button>
-            <button class="action-button extend-button" @click="extendLoan(device.id)">Extend</button>
+            <button class="action-button return-button" @click="returnDevice(device.id)">Return</button>
+            <button class="action-button extend-button" @click="extendDevice(device.id)">Extend</button>
           </td>
         </tr>
       </table>
 
       <div v-else>
-        <p>You do not have any device to check out.</p>
+        <p>You do not have any devices to check out.</p>
       </div>
     </div>
 
     <div class="inventory-section">
       <h3>Media</h3>
-      <table v-if="rentMedia.length != 0" class="inventory-table">
+      <table v-if="loanedMedia.length != 0" class="inventory-table">
         <th>Title</th>
         <th>Author</th>
         <th>Media Link</th>
         <th>Loan Date</th>
         <th>Loan Until</th>
         <th>Returned Date</th>
-        <tr v-for="item in media" :key="item.id">
+        <tr v-for="item in loanedMedia" :key="item.id">
           <td>{{ item.title }}</td>
           <td>{{ item.author }}</td>
           <td>{{ item.file_link }}</td>
@@ -113,14 +185,95 @@ async function extendLoan(id) {
           <td>{{ item.loaned_until }}</td>
           <td>{{ item.returned_at }}</td>
           <td>
-            <button class="action-button return-button" @click="returnItem(item.id)">Return</button>
-            <button class="action-button extend-button" @click="extendLoan(item.id)">Extend</button>
+            <button class="action-button return-button" @click="returnMedia(item.id)">Return</button>
+            <button class="action-button extend-button" @click="extendMedia(item.id)">Extend</button>
           </td>
         </tr>
       </table>
 
       <div v-else>
         <p>You do not have any media to check out.</p>
+      </div>
+    </div>
+
+    <h2 class="page-title">Held Items</h2>
+    <div class="inventory-section">
+      <h3>Books</h3>
+      <table v-if="heldBooks.length != 0" table class="inventory-table">
+        <th>Title</th>
+        <th>ISBN</th>
+        <th>Edition</th>
+        <th>Loan Date</th>
+        <th>Loan Until</th>
+        <th>Returned Date</th>
+        <tr v-for="book in heldBooks" :key="book.id">
+          <td>{{ book.title }}</td>
+          <td>{{ book.isbn }}</td>
+          <td> {{ book.edition }}</td>
+          <td> {{ book.loaned_at }}</td>
+          <td> {{ book.loaned_until }}</td>
+          <td> {{ book.returned_at }}</td>
+          <td>
+            <button class="action-button return-button" @click="loanBook(book.id)">Loan</button>
+          </td>
+        </tr>
+      </table>
+      <div v-else>
+        <p>You do not have any held books to loan.</p>
+      </div>
+    </div>
+
+    <div class="inventory-section">
+      <h3>Devices</h3>
+      <table v-if="heldDevices.length != 0" class="inventory-table">
+        <th>Name</th>
+        <th>Type</th>
+        <th>Serial Number</th>
+        <th>Loan Date</th>
+        <th>Loan Until</th>
+        <th>Returned Date</th>
+        <tr v-for="device in heldDevices" :key="device.id">
+          <td>{{ device.device_name }}</td>
+          <td>{{ device.device_type }}</td>
+          <td> {{ device.serial_number }}</td>
+          <td> {{ device.loaned_at }}</td>
+          <td> {{ device.loaned_until }}</td>
+          <td> {{ device.returned_at }}</td>
+          <td>
+            <button class="action-button return-button" @click="loanMedia(device.id)">Loan</button>
+          </td>
+        </tr>
+      </table>
+
+      <div v-else>
+        <p>You do not have any held devices to loan.</p>
+      </div>
+    </div>
+
+    <div class="inventory-section">
+      <h3>Media</h3>
+      <table v-if="heldMedia.length != 0" class="inventory-table">
+        <th>Title</th>
+        <th>Author</th>
+        <th>Media Link</th>
+        <th>Loan Date</th>
+        <th>Loan Until</th>
+        <th>Returned Date</th>
+        <tr v-for="item in heldMedia" :key="item.id">
+          <td>{{ item.title }}</td>
+          <td>{{ item.author }}</td>
+          <td>{{ item.file_link }}</td>
+          <td>{{ item.loaned_at }}</td>
+          <td>{{ item.loaned_until }}</td>
+          <td>{{ item.returned_at }}</td>
+          <td>
+            <button class="action-button return-button" @click="loanMedia(item.id)">Loan</button>
+          </td>
+        </tr>
+      </table>
+
+      <div v-else>
+        <p>You do not have any held media to loan.</p>
       </div>
     </div>
   </div>
@@ -175,6 +328,10 @@ table,
 th,
 td {
   border: 1px solid;
+}
+
+table {
+  background-color: white;
 }
 </style>
   
