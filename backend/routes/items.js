@@ -2,6 +2,7 @@ const pool = require('../database')
 const express = require('express')
 const router = express.Router()
 
+// All devices
 router.get('/media', async (req, res) => {
     try {
         const result = await pool.query('SELECT * FROM Media');
@@ -79,11 +80,35 @@ router.post('/holdBook', async (req, res) => {
 })
 
 router.post('/holdMedia', async (req, res) => {
-    res.status(200).json({ message: "OK " })
+    const { userId, mediaId } = req.body
+    const query = {
+        text: 'INSERT INTO hold_to_media(customer_id, media_id, held_at, held_until) VALUES($1, $2, current_timestamp, current_timestamp + interval \'30 seconds\')',
+        values: [userId, mediaId],
+    };
+    await pool.query(query, (error, results) => {
+        if (error) {
+            console.error('Error executing query:', error);
+            res.status(500).json({ error: 'An error occurred while inserting the data.' });
+        } else {
+            res.status(201).json({ message: "Book held successfully." })
+        }
+    });
 })
 
 router.post('/holdDevice', async (req, res) => {
-    res.status(200).json({ message: "OK " })
+    const { userId, deviceId } = req.body
+    const query = {
+        text: 'INSERT INTO hold_to_device(customer_id, device_id, held_at, held_until) VALUES($1, $2, current_timestamp, current_timestamp + interval \'30 seconds\')',
+        values: [userId, deviceId],
+    };
+    await pool.query(query, (error, results) => {
+        if (error) {
+            console.error('Error executing query:', error);
+            res.status(500).json({ error: 'An error occurred while inserting the data.' });
+        } else {
+            res.status(201).json({ message: "Book held successfully." })
+        }
+    });
 })
 
 // Return
@@ -109,6 +134,30 @@ router.post('/extendMedia', async (req, res) => {
 })
 
 router.post('/extendDevice', async (req, res) => {
+    res.status(200).json({ message: "OK " })
+})
+
+router.get('/loanedBooks', async (req, res) => {
+    res.status(200).json({ message: "OK " })
+})
+
+router.get('/loanedDevices', async (req, res) => {
+    res.status(200).json({ message: "OK " })
+})
+
+router.get('/loanedMedia', async (req, res) => {
+    res.status(200).json({ message: "OK " })
+})
+
+router.get('/heldBooks', async (req, res) => {
+    res.status(200).json({ message: "OK " })
+})
+
+router.get('/heldDevices', async (req, res) => {
+    res.status(200).json({ message: "OK " })
+})
+
+router.get('/heldMedia', async (req, res) => {
     res.status(200).json({ message: "OK " })
 })
 

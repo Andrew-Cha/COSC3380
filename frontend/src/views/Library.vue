@@ -28,7 +28,7 @@ onMounted(async () => {
 
 async function loanBook(id) {
     const request = {
-        userId: user.id,
+        userId: user.value.id,
         bookId: id
     }
     await axios.post(`${apiUrl}/items/loanBook`, request)
@@ -41,7 +41,7 @@ async function loanBook(id) {
 
 async function holdBook(id) {
     const request = {
-        userId: user.id,
+        userId: user.value.id,
         bookId: id
     }
     await axios.post(`${apiUrl}/items/holdBook`, request)
@@ -54,7 +54,7 @@ async function holdBook(id) {
 
 async function loanMedia(id) {
     const request = {
-        userId: user.id,
+        userId: user.value.id,
         mediaId: id
     }
     await axios.post(`${apiUrl}/items/loanMedia`, request)
@@ -67,7 +67,7 @@ async function loanMedia(id) {
 
 async function holdMedia(id) {
     const request = {
-        userId: user.id,
+        userId: user.value.id,
         mediaId: id
     }
     await axios.post(`${apiUrl}/items/holdMedia`, request)
@@ -80,7 +80,7 @@ async function holdMedia(id) {
 
 async function loanDevice(id) {
     const request = {
-        userId: user.id,
+        userId: user.value.id,
         deviceId: id
     }
     await axios.post(`${apiUrl}/items/loanDevice`, request)
@@ -93,7 +93,7 @@ async function loanDevice(id) {
 
 async function holdDevice(id) {
     const request = {
-        userId: user.id,
+        userId: user.value.id,
         deviceId: id
     }
     await axios.post(`${apiUrl}/items/holdDevice`, request)
