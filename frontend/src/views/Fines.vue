@@ -1,32 +1,77 @@
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
 import axios from 'axios'
+import { useMainStore } from '@/stores/main';
+import { storeToRefs } from 'pinia';
+
+const mainStore = useMainStore()
+const { user, isLoggedIn } = storeToRefs(mainStore)
 
 const apiUrl = `http://${import.meta.env.VITE_SERVER_URL}:3000/api`;
 
 const fineToBook = ref([])
 const fineToDevice = ref([])
 const fineToMedia = ref([])
+const selectedFine = ref(null);
+const cardNumberInput = ref('');
 
-onMounted(async () => {
+const refreshFines = async () => {
     try {
-        const bookResponse = await axios.get(`${apiUrl}/fineToBook`);
+        const bookResponse = await axios.get(`${apiUrl}/fines/books`);
         fineToBook.value = bookResponse.data;
-        const mediaResponse = await axios.get(`${apiUrl}/fineToMedia`);
+        const mediaResponse = await axios.get(`${apiUrl}/fines/media`);
         fineToMedia.value = mediaResponse.data;
-        const deviceResponse = await axios.get(`${apiUrl}/fineToDevice`);
-        fineTodevice.value = deviceResponse.data;
+        const deviceResponse = await axios.get(`${apiUrl}/fines/devices`);
+        fineToDevice.value = deviceResponse.data;
     } catch (error) {
         console.error('Error fetching data:', error);
     }
-});
-async function payFine(id) {
-    try {
-        await axios.post(`${apiUrl}/pay`, { id });
-    } catch (error) {
-        console.error('Error returning the item:', error);
+};
+
+onMounted(refreshFines);
+
+const payBook = async (id, cardNumber) => {
+    await axios.post(`${apiUrl}/fines/payBook`, { id, cardNumber });
+    await refreshFines();
+};
+
+const payMedia = async (id, cardNumber) => {
+    await axios.post(`${apiUrl}/fines/payMedia`, { id, cardNumber });
+    await refreshFines();
+};
+
+const payDevice = async (id, cardNumber) => {
+    await axios.post(`${apiUrl}/fines/payDevice`, { id, cardNumber });
+    await refreshFines();
+};
+
+const payFine = async (id) => {
+    if (isLoggedIn.value) {
+        try {
+            const { id, type } = selectedFine.value;
+            const cardNumber = cardNumberInput.value;
+
+            switch (type) {
+                case 'book':
+                    await payBook(id, cardNumber);
+                    break;
+                case 'media':
+                    await payMedia(id, cardNumber);
+                    break;
+                case 'device':
+                    await payDevice(id, cardNumber);
+                    break;
+                default:
+                    throw new Error(`Unsupported fine type: ${type}`);
+            }
+
+            selectedFine.value = null;
+            cardNumberInput.value = '';
+        } catch (error) {
+            console.error('Error paying fine:', error);
+        }
     }
-}
+};
 </script>
 
 <template>
@@ -35,16 +80,15 @@ async function payFine(id) {
 
         <div class="table-section">
             <h3>Books</h3>
-            <table v-if="fineToBook.length != 0">
+            <table v-if="fineToBook.length !== 0">
                 <tr v-for="book in fineToBook" :key="book.id">
                     <td>
                         {{ book.id }}
                         {{ book.title }}
                     </td>
                     <td>
-                        <button @click="payFine(book.id)">Pay Fine</button>
+                        <button @click="payFine(book.id, 'book')">Pay Fine</button>
                     </td>
-
                 </tr>
             </table>
 
@@ -55,16 +99,15 @@ async function payFine(id) {
 
         <div class="table-section">
             <h3>Device</h3>
-            <table v-if="fineToDevice.length != 0">
+            <table v-if="fineToDevice.length !== 0">
                 <tr v-for="device in fineToDevice" :key="device.id">
                     <td>
                         {{ device.id }}
                         {{ device.device_name }}
                     </td>
                     <td>
-                        <button @click="payFine(device.id)">Pay Fine</button>
+                        <button @click="payFine(device.id, 'device')">Pay Fine</button>
                     </td>
-
                 </tr>
             </table>
             <div v-else>
@@ -74,25 +117,31 @@ async function payFine(id) {
 
         <div class="table-section">
             <h3>Media</h3>
-            <table v-if="fineToMedia.length != 0">
+            <table v-if="fineToMedia.length !== 0">
                 <tr v-for="media in fineToMedia" :key="media.id">
                     <td>
                         {{ media.id }}
                         {{ media.title }}
                     </td>
                     <td>
-                        <button @click="payFine(media.id)">Pay Fine</button>
+                        <button @click="payFine(media.id, 'media')">Pay Fine</button>
                     </td>
-
                 </tr>
             </table>
             <div v-else>
                 <p>You have no fines for media.</p>
             </div>
         </div>
+
+        <div v-if="selectedFine">
+            <div class="modal">
+                <label for="cardNumber">Card Number:</label>
+                <input type="text" id="cardNumber" v-model="cardNumberInput" />
+                <button @click="payFine(selectedFine.id, selectedFine.type)">Submit Payment</button>
+            </div>
+        </div>
     </div>
 </template>
-
   
 <style scoped>
 .fines-page {
