@@ -60,50 +60,62 @@ async function getHeldDevices() {
   heldDevices.value = devicesResponse.data
 }
 
-async function returnBook() {
-  await axios.post(`${apiUrl}/items/returnBook`)
+async function returnBook(id) {
+  const body = {
+    userId: user.value.id,
+    bookId: id
+  }
+  await axios.post(`${apiUrl}/items/returnBook`, body)
   getLoanedBooks()
 }
 
-async function returnMedia() {
-  await axios.post(`${apiUrl}/items/returnMedia`)
+async function returnMedia(id) {
+  const body = {
+    userId: user.value.id,
+    mediaId: id
+  }
+  await axios.post(`${apiUrl}/items/returnMedia`, body)
   getLoanedMedia()
 }
 
-async function returnDevice() {
-  await axios.post(`${apiUrl}/items/returnDevice`)
+async function returnDevice(id) {
+  const body = {
+    userId: user.value.id,
+    deviceId: id
+  }
+  await axios.post(`${apiUrl}/items/returnDevice`, body)
   getLoanedDevices()
 }
 
-async function loanBook() {
+async function loanBook(id) {
   await axios.post(`${apiUrl}/items/loanBook`)
   getLoanedBooks()
-  get
+  getHeldBooks()
 }
 
-async function loanMedia() {
+async function loanMedia(id) {
   await axios.post(`${apiUrl}/items/loanMedia`)
   getLoanedMedia()
   getHeldMedia()
 }
 
-async function loanDevice() {
+async function loanDevice(id) {
   await axios.post(`${apiUrl}/items/loanDevice`)
   getLoanedDevices()
   getHeldMedia()
 }
 
-async function extendBook() {
+async function extendBook(id) {
   await axios.post(`${apiUrl}/items/extendBook`)
   getLoanedBooks()
 }
 
-async function extendDevice() {
+async function extendDevice(id) {
   await axios.post(`${apiUrl}/items/extendDevice`)
   getLoanedDevices()
 }
 
-async function extendMedia() {
+async function extendMedia(id) {
   await axios.post(`${apiUrl}/items/extendMedia`)
   getLoanedMedia()
 }
@@ -130,8 +142,10 @@ async function extendMedia() {
           <td> {{ book.loaned_until }}</td>
           <td> {{ book.returned_at }}</td>
           <td>
-            <button class="action-button return-button" @click="returnBook(book.id)">Return</button>
-            <button class="action-button extend-button" @click="extendBook(book.id)">Extend</button>
+            <button class="action-button return-button" @click="returnBook(book.book_id)"
+              :disabled="book.returned_at !== null">Return</button>
+            <button class="action-button extend-button" @click="extendBook(book.book_id)"
+              :disabled="book.returned_at !== null">Extend</button>
           </td>
         </tr>
       </table>
@@ -157,8 +171,10 @@ async function extendMedia() {
           <td> {{ device.loaned_until }}</td>
           <td> {{ device.returned_at }}</td>
           <td>
-            <button class="action-button return-button" @click="returnDevice(device.id)">Return</button>
-            <button class="action-button extend-button" @click="extendDevice(device.id)">Extend</button>
+            <button class="action-button return-button" @click="returnDevice(device.device_id)"
+              :disabled="device.returned_at !== null">Return</button>
+            <button class="action-button extend-button" @click="extendDevice(device.device_id)"
+              :disabled="device.returned_at !== null">Extend</button>
           </td>
         </tr>
       </table>
@@ -185,8 +201,10 @@ async function extendMedia() {
           <td>{{ item.loaned_until }}</td>
           <td>{{ item.returned_at }}</td>
           <td>
-            <button class="action-button return-button" @click="returnMedia(item.id)">Return</button>
-            <button class="action-button extend-button" @click="extendMedia(item.id)">Extend</button>
+            <button class="action-button return-button" @click="returnMedia(item.media_id)"
+              :disabled="item.returned_at !== null">Return</button>
+            <button class="action-button extend-button" @click="extendMedia(item.media_id)"
+              :disabled="item.returned_at !== null">Extend</button>
           </td>
         </tr>
       </table>
@@ -214,7 +232,7 @@ async function extendMedia() {
           <td> {{ book.loaned_until }}</td>
           <td> {{ book.returned_at }}</td>
           <td>
-            <button class="action-button return-button" @click="loanBook(book.id)">Loan</button>
+            <button class="action-button return-button" @click="loanBook(book.book_id)">Loan</button>
           </td>
         </tr>
       </table>
@@ -240,7 +258,7 @@ async function extendMedia() {
           <td> {{ device.loaned_until }}</td>
           <td> {{ device.returned_at }}</td>
           <td>
-            <button class="action-button return-button" @click="loanMedia(device.id)">Loan</button>
+            <button class="action-button return-button" @click="loanDevice(device.device_id)">Loan</button>
           </td>
         </tr>
       </table>
@@ -267,7 +285,7 @@ async function extendMedia() {
           <td>{{ item.loaned_until }}</td>
           <td>{{ item.returned_at }}</td>
           <td>
-            <button class="action-button return-button" @click="loanMedia(item.id)">Loan</button>
+            <button class="action-button return-button" @click="loanMedia(item.media_id)">Loan</button>
           </td>
         </tr>
       </table>
@@ -332,6 +350,10 @@ td {
 
 table {
   background-color: white;
+}
+
+button:disabled {
+  background-color: gray;
 }
 </style>
   

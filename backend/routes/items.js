@@ -134,28 +134,64 @@ router.post('/holdDevice', async (req, res) => {
 
 // Return
 router.post('/returnBook', async (req, res) => {
-    res.status(200).json({ message: "OK " })
+    const { userId, bookId } = req.body
+    const query = {
+        text: 'UPDATE book_to_customer SET returned_at = current_timestamp WHERE customer_id=$1 AND book_id=$2 ',
+        values: [userId, bookId],
+    };
+    await pool.query(query, (error, results) => {
+        if (error) {
+            console.error('Error executing query:', error);
+            res.status(500).json({ error: 'An error occurred while inserting the data.' });
+        } else {
+            res.status(201).json({ message: "Book returned successfully." })
+        }
+    });
 })
 
 router.post('/returnMedia', async (req, res) => {
-    res.status(200).json({ message: "OK " })
+    const { userId, mediaId } = req.body
+    const query = {
+        text: 'UPDATE media_to_customer SET returned_at = current_timestamp WHERE customer_id=$1 AND media_id=$2 ',
+        values: [userId, mediaId],
+    };
+    await pool.query(query, (error, results) => {
+        if (error) {
+            console.error('Error executing query:', error);
+            res.status(500).json({ error: 'An error occurred while inserting the data.' });
+        } else {
+            res.status(201).json({ message: "Media returned successfully." })
+        }
+    });
 })
 
 router.post('/returnDevice', async (req, res) => {
-    res.status(200).json({ message: "OK " })
+    const { userId, deviceId } = req.body
+    const query = {
+        text: 'UPDATE device_to_customer SET returned_at = current_timestamp WHERE customer_id=$1 AND device_id=$2 ',
+        values: [userId, deviceId],
+    };
+    await pool.query(query, (error, results) => {
+        if (error) {
+            console.error('Error executing query:', error);
+            res.status(500).json({ error: 'An error occurred while inserting the data.' });
+        } else {
+            res.status(201).json({ message: "Device returned successfully." })
+        }
+    });
 })
 
 // Extend
 router.post('/extendBook', async (req, res) => {
-    res.status(200).json({ message: "OK " })
+    const { userId, bookId } = req.body
 })
 
 router.post('/extendMedia', async (req, res) => {
-    res.status(200).json({ message: "OK " })
+    const { userId, mediaId } = req.body
 })
 
 router.post('/extendDevice', async (req, res) => {
-    res.status(200).json({ message: "OK " })
+    const { userId, deviceId } = req.body
 })
 
 // User's loans
