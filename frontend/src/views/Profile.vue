@@ -155,9 +155,11 @@ async function addItem() {
       </div>
     </div>
 
+
     <h2 v-if="user.role_id === 3">Admin Section</h2>
     <h3 v-if="user.role_id === 3">Fines Report</h3>
-    <div v-if="user.role_id === 3" class="report-section">
+
+    <div v-if="user.role_id === 3" class="user-information report-section">
       <div class="user-detail">
         <strong>Select Period for Fines:</strong>
         <select v-model="selectedFinesPeriod" @change="fetchFinesReport">
@@ -169,8 +171,9 @@ async function addItem() {
         <p>{{ totalFines }}</p>
       </div>
     </div>
+
     <h3 v-if="user.role_id === 3">Loans Report</h3>
-    <div v-if="user.role_id === 3" class="report-section">
+    <div v-if="user.role_id === 3" class="user-information report-section">
       <div class="user-detail">
         <strong>Select Period for Past Loans:</strong>
         <select v-model="selectedPastLoansPeriod" @change="fetchPastLoansReport">
@@ -185,10 +188,12 @@ async function addItem() {
         </div>
       </div>
     </div>
+
     <h3 v-if="user.role_id === 3">Users Report</h3>
+    <div class="user-information">IMPLEMENT ME</div>
 
     <h2 v-if="user.role_id === 4">Publisher Section</h2>
-    <div v-if="user.role_id === 4" class="additem-page">
+    <div v-if="user.role_id === 4" class="user-information additem-page">
       <div class="tab-navigation">
         <button @click="changeTab('Book')">Book</button>
         <button @click="changeTab('Media')">Media</button>

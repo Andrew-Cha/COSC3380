@@ -79,7 +79,7 @@ const payFine = async (id, type) => {
 
         <div>
             <h3>Books</h3>
-            <table v-if="fineToBook.length !== 0" lass="table-section">
+            <table v-if="fineToBook.length !== 0" class="table-section">
                 <th>Book Title</th>
                 <th>Amount Due</th>
                 <th>Fined At</th>
