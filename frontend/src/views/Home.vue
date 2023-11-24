@@ -25,8 +25,6 @@ import { RouterLink } from 'vue-router'
         </section>
 
         <h1>TODO List:</h1>
-        <li>Finish Library Page, add interactive buttons</li>
-        <li>Finish My Items page, add interactive buttons</li>
         <li>Finish My Fines page, add interactive buttons</li>
         <li>Add Admin page to My Profile.</li>
         <li>Reports on Admin page, My Inventory page, My Fines page</li>
