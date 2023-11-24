@@ -22,16 +22,20 @@ CREATE TABLE customer(
         registration_date timestamp,
         role_id integer REFERENCES role(id)
     );
+INSERT INTO customer(id, first_name, last_name, password, registration_date, role_id) VALUES 
+    (1, 'Publisherperson', 'Publisherlast', '123', '2022-02-15 10:00:00', 4),
+    (2, 'First', 'Last', '123', '2022-02-15 10:00:00', 4);
 
 CREATE TABLE publisher(
         id serial PRIMARY KEY,
         city varchar(50),
-        company_name varchar(50)
+        company_name varchar(50),
+        customer_id integer REFERENCES customer(id)
     );
-INSERT INTO publisher(city, company_name)
+INSERT INTO publisher(city, company_name, customer_id)
 values
-    ('San Francisco', 'Chronicle Books'),
-    ('Chicago', 'Amaxon');
+    ('San Francisco', 'Chronicle Books', 1),
+    ('Chicago', 'Amaxon', 2);
 
 
 CREATE TABLE book(

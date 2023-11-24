@@ -341,11 +341,18 @@ router.get('/heldMedia/:id', async (req, res) => {
 
 // Create
 router.post('/createBook', async (req, res) => {
-    const { condition_book, isbn, book_title, year_book, edition, genre } = req.body;
+    const { userId, condition_book, isbn, book_title, year_book, edition, genre } = req.body;
+
+    const queryPublisher = {
+        text: "SELECT * FROM publisher WHERE customer_id = $1",
+        values: [userId]
+    }
+    const results = await (await pool.query(queryPublisher))
+    const publisherId = results.rows[0].id
 
     const query = {
-        text: 'INSERT INTO Book(condition_book, isbn, title, year_book, edition, genre) VALUES($1, $2, $3, $4, $5, $6)',
-        values: [condition_book, isbn, book_title, year_book, edition, genre],
+        text: 'INSERT INTO Book(publisher_id, condition, isbn, title, release_year, edition, genre) VALUES($1, $2, $3, $4, $5, $6, $7)',
+        values: [publisherId, condition_book, isbn, book_title, year_book, edition, genre],
     };
 
     await pool.query(query, (error, results) => {
@@ -359,11 +366,19 @@ router.post('/createBook', async (req, res) => {
 })
 
 router.post('/createMedia', async (req, res) => {
-    const { media_title, file_link, file_type, author, file_size } = req.body;
+    const { userId, media_title, file_link, file_type, author, file_size } = req.body;
+
+    const queryPublisher = {
+        text: "SELECT * FROM publisher WHERE customer_id = $1",
+        values: [userId]
+    }
+    const results = await (await pool.query(queryPublisher))
+    const publisherId = results.rows[0].id
+
 
     const query = {
-        text: 'INSERT INTO media(title, file_link, file_type, author, upload_day, file_size) VALUES($1, $2, $3, $4, current_date, $5)',
-        values: [media_title, file_link, file_type, author, file_size],
+        text: 'INSERT INTO media(publisher_id, title, file_link, file_type, author, upload_day, file_size) VALUES($1, $2, $3, $4, $5, current_date, $6)',
+        values: [publisherId, media_title, file_link, file_type, author, file_size],
     };
 
     await pool.query(query, (error, results) => {
@@ -377,11 +392,18 @@ router.post('/createMedia', async (req, res) => {
 })
 
 router.post('/createDevice', async (req, res) => {
-    const { device_type, device_name, manufacturer, year_publish, serial_number, operating_system, maintenance_history } = req.body;
+    const { userId, device_type, device_name, manufacturer, year_publish, serial_number, operating_system, maintenance_history } = req.body;
+
+    const queryPublisher = {
+        text: "SELECT * FROM publisher WHERE customer_id = $1",
+        values: [userId]
+    }
+    const results = await (await pool.query(queryPublisher))
+    const publisherId = results.rows[0].id
 
     const query = {
-        text: 'INSERT INTO device(device_type, device_name, manufacturer, year_publish, serial_number, operating_system, maintenance_history) VALUES($1, $2, $3, $4, $5, $6, $7)',
-        values: [device_type, device_name, manufacturer, year_publish, serial_number, operating_system, maintenance_history],
+        text: 'INSERT INTO device(publisher_id, device_type, device_name, manufacturer, year_publish, serial_number, operating_system, maintenance_history) VALUES($1, $2, $3, $4, $5, $6, $7, $8)',
+        values: [publisherId, device_type, device_name, manufacturer, year_publish, serial_number, operating_system, maintenance_history],
     };
 
     await pool.query(query, (error, results) => {
