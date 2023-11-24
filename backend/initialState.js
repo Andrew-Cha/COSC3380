@@ -192,6 +192,111 @@ CREATE TABLE hold_to_device(
         held_at timestamp,
         held_until timestamp
     );
+
+    CREATE OR REPLACE FUNCTION calculate_fine() RETURNS TRIGGER AS $$
+    DECLARE
+        overdue_days INTEGER;
+        fine_amount DECIMAL := 2.00;
+    BEGIN
+        overdue_days := GREATEST(EXTRACT(DAY FROM (NEW.loaned_until - NEW.loaned_at)), 0);
+    
+        NEW.fine_amount := fine_amount + (overdue_days * 2.00);
+    
+        IF NEW.fine_amount < 0 THEN
+            NEW.fine_amount := 0;
+        END IF;
+    
+        INSERT INTO fine (customer_id, fine_amount, fined_at)
+        VALUES (NEW.customer_id, NEW.fine_amount, CURRENT_DATE)
+        RETURNING id INTO NEW.fine_id;
+    
+        IF TG_TABLE_NAME = 'book_to_customer' THEN
+            INSERT INTO fine_to_book (fine_id, book_id) VALUES (NEW.fine_id, NEW.book_id);
+        ELSIF TG_TABLE_NAME = 'media_to_customer' THEN
+            INSERT INTO fine_to_media (fine_id, media_id) VALUES (NEW.fine_id, NEW.media_id);
+        ELSIF TG_TABLE_NAME = 'device_to_customer' THEN
+            INSERT INTO fine_to_device (fine_id, device_id) VALUES (NEW.fine_id, NEW.device_id);
+        END IF;
+    
+        RETURN NEW;
+    END;
+    $$ LANGUAGE plpgsql;
+    
+    CREATE TRIGGER book_fine_trigger
+    AFTER INSERT OR UPDATE ON book_to_customer
+    FOR EACH ROW EXECUTE FUNCTION calculate_fine();
+    
+    CREATE TRIGGER media_fine_trigger
+    AFTER INSERT OR UPDATE ON media_to_customer
+    FOR EACH ROW EXECUTE FUNCTION calculate_fine();
+    
+    CREATE TRIGGER device_fine_trigger
+    AFTER INSERT OR UPDATE ON device_to_customer
+    FOR EACH ROW EXECUTE FUNCTION calculate_fine();
+
+    CREATE OR REPLACE FUNCTION check_max_items()
+    RETURNS TRIGGER AS $$
+    DECLARE
+        user_role_name TEXT;
+        max_books INTEGER;
+        max_media INTEGER;
+        max_devices INTEGER;
+        current_books_count INTEGER;
+        current_media_count INTEGER;
+        current_devices_count INTEGER;
+    BEGIN
+    
+        SELECT role_name, max_allowed_books, max_allowed_media, max_allowed_devices
+        INTO user_role_name, max_books, max_media, max_devices
+        FROM customer
+        JOIN role ON customer.role_id = role.id
+        WHERE customer.id = NEW.customer_id;
+    
+    
+        SELECT COUNT(*) INTO current_books_count
+        FROM book_to_customer
+        WHERE customer_id = NEW.customer_id AND returned_at IS NULL;
+    
+        SELECT COUNT(*) INTO current_media_count
+        FROM media_to_customer
+        WHERE customer_id = NEW.customer_id AND returned_at IS NULL;
+    
+        SELECT COUNT(*) INTO current_devices_count
+        FROM device_to_customer
+        WHERE customer_id = NEW.customer_id AND returned_at IS NULL;
+    
+    
+        IF (user_role_name = 'Customer' AND current_books_count >= max_books) OR
+           (user_role_name = 'Customer' AND current_media_count >= max_media) OR
+           (user_role_name = 'Customer' AND current_devices_count >= max_devices) OR
+           (user_role_name = 'Faculty' AND current_books_count >= max_books) OR
+           (user_role_name = 'Faculty' AND current_media_count >= max_media) OR
+           (user_role_name = 'Faculty' AND current_devices_count >= max_devices) OR
+           (user_role_name = 'Admin' AND current_books_count >= max_books) OR
+           (user_role_name = 'Admin' AND current_media_count >= max_media) OR
+           (user_role_name = 'Admin' AND current_devices_count >= max_devices) OR
+           (user_role_name = 'Publisher' AND current_books_count >= max_books) OR
+           (user_role_name = 'Publisher' AND current_media_count >= max_media) OR
+           (user_role_name = 'Publisher' AND current_devices_count >= max_devices) THEN
+            RAISE EXCEPTION 'User is exceeding the maximum allowed items for their role';
+        END IF;
+    
+        RETURN NEW;
+    END;
+    $$ LANGUAGE plpgsql;
+    
+    
+    CREATE TRIGGER check_max_books
+    BEFORE INSERT ON book_to_customer
+    FOR EACH ROW EXECUTE FUNCTION check_max_items();
+    
+    CREATE TRIGGER check_max_media
+    BEFORE INSERT ON media_to_customer
+    FOR EACH ROW EXECUTE FUNCTION check_max_items();
+    
+    CREATE TRIGGER check_max_devices
+    BEFORE INSERT ON device_to_customer
+    FOR EACH ROW EXECUTE FUNCTION check_max_items();
 `
 
 module.exports = initializeQuery
