@@ -22,12 +22,6 @@ CREATE TABLE customer(
         registration_date timestamp,
         role_id integer REFERENCES role(id)
     );
-INSERT INTO customer(first_name, last_name, password, registration_date, role_id)
-VALUES
-    ('John', 'Doe', 'password1', '2023-01-15 10:00:00', 1),
-    ('Jane', 'Smith', 'password2', '2023-02-20 14:30:00', 2),
-    ('Alice', 'Johnson', 'password3', '2023-03-25 16:45:00', 3);
-
 
 CREATE TABLE publisher(
         id serial PRIMARY KEY,
@@ -72,11 +66,6 @@ CREATE TABLE book_to_customer(
         loaned_until timestamp,
         returned_at timestamp
     );
-INSERT INTO book_to_customer(customer_id, book_id, loaned_at, loaned_until, returned_at)
-VALUES
-    (1, 2, '2023-06-15', '2023-07-15', '2023-06-18'),
-    (3, 2, '2023-08-08', '2023-10-01', '2023-09-05');
-
 
 CREATE table media(
         id serial primary key,
@@ -110,10 +99,6 @@ create table media_to_customer(
         loaned_until timestamp,
         returned_at timestamp
     );
-insert into media_to_customer(customer_id, media_id, loaned_at, loaned_until, returned_at)
-VALUES(1, 1, '2023-01-02', '2023-01-09 10:00:00', '2023-01-05 10:00:00'),
-    (2, 2, '2023-02-02', '2023-02-09 10:00:00', '2023-02-04 10:00:00');
-
 
 create table hold_to_media(
         id serial primary key,
@@ -122,10 +107,6 @@ create table hold_to_media(
         held_at timestamp,
         held_until timestamp
     );
-insert into hold_to_media(customer_id, media_id, held_at, held_until)
-values(1, 1, '2023-04-02 10:00:00', '2023-04-09 10:00:00'),
-    (2, 2, '2023-05-02 10:00:00', '2023-05-09 10:00:00');
-
 
 CREATE TABLE fine(
         id serial PRIMARY KEY,
@@ -133,33 +114,18 @@ CREATE TABLE fine(
         fine_amount DECIMAL,
         fined_at timestamp
     );
-INSERT INTO fine(customer_id, fine_amount, fined_at)
-VALUES(1, 25.50, '2023-05-01 10:00:00'),
-    (2, 15.75, '2023-06-25 10:00:00'),
-    (3, 30.00, '2023-07-15 10:00:00');
- 
 
 CREATE TABLE fine_to_book(
         id serial PRIMARY KEY,
         fine_id INTEGER REFERENCES fine(id),
         book_id INTEGER REFERENCES book(id)
     );
-INSERT INTO fine_to_book(fine_id, book_id)
-VALUES(1, 1),
-    (1, 2),
-    (2, 2);
-
       
 CREATE TABLE fine_to_media(
         id serial PRIMARY KEY,
         fine_id INTEGER REFERENCES fine(id),
         media_id INTEGER REFERENCES media(id)
     );
-INSERT INTO fine_to_media(fine_id, media_id)
-VALUES(1, 1),
-    (2, 2),
-    (3, 1);
-  
 
 CREATE TABLE transaction(
         id serial PRIMARY KEY,
@@ -167,11 +133,6 @@ CREATE TABLE transaction(
         transaction_amount DECIMAL,
         card_number VARCHAR
     );
-INSERT INTO transaction(fine_id, transaction_amount, card_number)
-VALUES(1, 25.50, '1234-5678-9012'),
-    (2, 15.75, '9876-5432-1098'),
-    (3, 30.00, '2468-1357-3579');
-
       
 create table device(
         id serial primary key,
@@ -205,20 +166,12 @@ create table device_to_customer(
         loaned_until timestamp,
         returned_at timestamp
     );
-insert into device_to_customer(customer_id, device_id, loaned_at, loaned_until, returned_at)
-values(1, 1, '2022-04-22', '2022-05-02 10:00:00', '2022-05-01 10:00:00'),
-    (2, 2, '2023-07-25', '2023-08-14 10:00:00', '2023-07-28 10:00:00');
-
 
 CREATE TABLE fine_to_device(
         id serial PRIMARY KEY,
         fine_id INTEGER REFERENCES fine(id),
         device_id INTEGER REFERENCES device(id)
     );
-INSERT INTO fine_to_device(fine_id, device_id)
-VALUES(1, 1),
-    (2, 2),
-    (3, 1);
 
 CREATE TABLE hold_to_book(
         id serial PRIMARY KEY,
@@ -227,8 +180,6 @@ CREATE TABLE hold_to_book(
         held_at timestamp,
         held_until timestamp
     );
-INSERT INTO hold_to_book(customer_id, book_id, held_at, held_until) VALUES(1, 1, '2022-01-01 10:00:00', '2022-01-31 10:00:00');
-
 
 CREATE TABLE hold_to_device(
         id serial PRIMARY KEY,
@@ -237,7 +188,6 @@ CREATE TABLE hold_to_device(
         held_at timestamp,
         held_until timestamp
     );
-INSERT INTO hold_to_device(customer_id, device_id, held_at, held_until) VALUES(1, 1, '2022-01-01 10:00:00', '2022-01-31 10:00:00');
 `
 
 module.exports = initializeQuery
