@@ -72,7 +72,14 @@ onMounted(() => {
         <p v-else-if="user.role_id === 3">Admin</p>
         <p v-else-if="user.role_id === 4">Publisher</p>
       </div>
-
+      <div class="user-detail">
+        <strong>Max Allowed Items:</strong>
+        <p v-if="user.role_id === 1">Books: 1, Media: 1, Devices: 1</p>
+        <p v-else-if="user.role_id === 2">Books: 3, Media: 1, Devices: 1</p>
+        <p v-else-if="user.role_id === 3">Books: 5, Media: 5, Devices: 5</p>
+        <p v-else-if="user.role_id === 4">Books: 0, Media: 0, Devices: 0</p>
+      </div>
+      
       <h2 v-if="user.role_id === 3">Admin Section</h2>
       <!-- Fines Report Section -->
       <div v-if="user.role_id === 3" class="report-section">
