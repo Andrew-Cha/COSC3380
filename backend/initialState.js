@@ -22,9 +22,9 @@ CREATE TABLE customer(
         registration_date timestamp,
         role_id integer REFERENCES role(id)
     );
-INSERT INTO customer(id, first_name, last_name, password, registration_date, role_id) VALUES 
-    (1, 'Publisherperson', 'Publisherlast', '123', '2022-02-15 10:00:00', 4),
-    (2, 'First', 'Last', '123', '2022-02-15 10:00:00', 4);
+INSERT INTO customer(first_name, last_name, password, registration_date, role_id) VALUES 
+    ('Publisherperson', 'Publisherlast', '123', '2022-02-15 10:00:00', 4),
+    ('First', 'Last', '123', '2022-02-15 10:00:00', 4);
 
 CREATE TABLE publisher(
         id serial PRIMARY KEY,
