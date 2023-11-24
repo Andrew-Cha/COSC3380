@@ -251,8 +251,8 @@ async function loanDevice(id) {
         <th>Title</th>
         <th>ISBN</th>
         <th>Edition</th>
-        <th>Loan Date</th>
-        <th>Loan Until</th>
+        <th>Hold Date</th>
+        <th>Held Until</th>
         <th>Returned Date</th>
         <tr v-for="book in heldBooks" :key="book.id">
           <td>{{ book.title }}</td>
@@ -277,8 +277,8 @@ async function loanDevice(id) {
         <th>Name</th>
         <th>Type</th>
         <th>Serial Number</th>
-        <th>Loan Date</th>
-        <th>Loan Until</th>
+        <th>Hold Date</th>
+        <th>Held Until</th>
         <th>Returned Date</th>
         <tr v-for="device in heldDevices" :key="device.id">
           <td>{{ device.device_name }}</td>
@@ -304,8 +304,8 @@ async function loanDevice(id) {
         <th>Title</th>
         <th>Author</th>
         <th>Media Link</th>
-        <th>Loan Date</th>
-        <th>Loan Until</th>
+        <th>Hold Date</th>
+        <th>Held Until</th>
         <th>Returned Date</th>
         <tr v-for="item in heldMedia" :key="item.id">
           <td>{{ item.title }}</td>
