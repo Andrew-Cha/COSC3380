@@ -203,7 +203,7 @@ CREATE TABLE hold_to_device(
     
         fine_amount := (overdue_seconds);
     
-        IF fine_amount < 0 OR overdue_seconds < 30 THEN
+        IF fine_amount < 0 THEN
             fine_amount := 0;
         END IF;
 

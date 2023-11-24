@@ -202,7 +202,7 @@ router.post('/returnDevice', async (req, res) => {
 router.post('/extendBook', async (req, res) => {
     const { userId, bookId } = req.body
     const query = {
-        text: 'UPDATE book_to_customer SET loaned_until = current_timestamp + interval \'30 seconds\' WHERE customer_id=$1 AND book_id=$2 ',
+        text: 'UPDATE book_to_customer SET loaned_until = loaned_until + interval \'30 seconds\' WHERE customer_id=$1 AND book_id=$2 ',
         values: [userId, bookId],
     };
     await pool.query(query, (error, results) => {
@@ -218,7 +218,7 @@ router.post('/extendBook', async (req, res) => {
 router.post('/extendMedia', async (req, res) => {
     const { userId, mediaId } = req.body
     const query = {
-        text: 'UPDATE media_to_customer SET loaned_until = current_timestamp + interval \'30 seconds\' WHERE customer_id=$1 AND media_id=$2 ',
+        text: 'UPDATE media_to_customer SET loaned_until = loaned_until + interval \'30 seconds\' WHERE customer_id=$1 AND media_id=$2 ',
         values: [userId, mediaId],
     };
     await pool.query(query, (error, results) => {
@@ -234,7 +234,7 @@ router.post('/extendMedia', async (req, res) => {
 router.post('/extendDevice', async (req, res) => {
     const { userId, deviceId } = req.body
     const query = {
-        text: 'UPDATE device_to_customer SET loaned_until = current_timestamp + interval \'30 seconds\' WHERE customer_id=$1 AND device_id=$2 ',
+        text: 'UPDATE device_to_customer SET loaned_until = loaned_until + interval \'30 seconds\' WHERE customer_id=$1 AND device_id=$2 ',
         values: [userId, deviceId],
     };
     await pool.query(query, (error, results) => {
