@@ -8,9 +8,10 @@ CREATE TABLE role(
 );
 INSERT INTO role(role_name, max_allowed_books, max_allowed_media, max_allowed_devices)
 VALUES
-    ('customer', 1, 1, 1),
+    ('Customer', 1, 1, 1),
     ('Faculty', 3, 1, 1),
-    ('Admin', 5, 5, 5);
+    ('Admin', 5, 5, 5),
+    ('Publisher', 0, 0, 0);
 
    
 CREATE TABLE customer(

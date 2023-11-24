@@ -17,6 +17,7 @@ const roleId = ref(1)
 
 function setUserRole(event) {
     const roleChosen = event.target.value
+    if (roleChosen === "publisher") roleId.value = 4
     if (roleChosen === "admin") roleId.value = 3
     if (roleChosen === "faculty") roleId.value = 2
     if (roleChosen === "customer") roleId.value = 1
@@ -82,6 +83,7 @@ function signup() {
                     <option value="customer">Customer</option>
                     <option value="faculty">Faculty</option>
                     <option value="admin">Admin</option>
+                    <option value="publisher">Publisher</option>
                 </select>
                 <button class="submit-button" type="submit">Register</button>
             </form>

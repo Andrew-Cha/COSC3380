@@ -70,6 +70,7 @@ onMounted(() => {
         <p v-if="user.role_id === 1">Customer</p>
         <p v-else-if="user.role_id === 2">Faculty</p>
         <p v-else-if="user.role_id === 3">Admin</p>
+        <p v-else-if="user.role_id === 4">Publisher</p>
       </div>
 
       <h2 v-if="user.role_id === 3">Admin Section</h2>
