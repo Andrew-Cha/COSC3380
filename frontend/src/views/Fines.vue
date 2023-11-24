@@ -77,9 +77,9 @@ const payFine = async (id, type) => {
     <div class="fines-page">
         <h1>Fines Page</h1>
 
-        <div class="table-section">
+        <div>
             <h3>Books</h3>
-            <table v-if="fineToBook.length !== 0">
+            <table v-if="fineToBook.length !== 0" lass="table-section">
                 <th>Book Title</th>
                 <th>Amount Due</th>
                 <th>Fined At</th>
@@ -99,9 +99,9 @@ const payFine = async (id, type) => {
             </div>
         </div>
 
-        <div class="table-section">
+        <div>
             <h3>Device</h3>
-            <table v-if="fineToDevice.length !== 0">
+            <table v-if="fineToDevice.length !== 0" class="table-section">
                 <th>Device Name</th>
                 <th>Amount Due</th>
                 <th>Fined At</th>
@@ -120,9 +120,9 @@ const payFine = async (id, type) => {
             </div>
         </div>
 
-        <div class="table-section">
+        <div>
             <h3>Media</h3>
-            <table v-if="fineToMedia.length !== 0">
+            <table v-if="fineToMedia.length !== 0" class="table-section">
                 <th>Media Name</th>
                 <th>Amount Due</th>
                 <th>Fined At</th>
