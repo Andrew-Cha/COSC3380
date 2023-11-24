@@ -196,28 +196,31 @@ CREATE TABLE hold_to_device(
     CREATE OR REPLACE FUNCTION calculate_fine() RETURNS TRIGGER AS $$
     DECLARE
         overdue_days INTEGER;
-        fine_amount DECIMAL := 2.00;
+        fine_amount DECIMAL := 0.00;
+        new_fine_id INTEGER;
     BEGIN
-        overdue_days := GREATEST(EXTRACT(DAY FROM (NEW.loaned_until - NEW.loaned_at)), 0);
+        overdue_days := GREATEST(EXTRACT(SECONDS FROM (NEW.loaned_until - NEW.loaned_at)), 0);
     
-        NEW.fine_amount := fine_amount + (overdue_days * 2.00);
+        fine_amount := fine_amount + (overdue_days * 2.00);
     
-        IF NEW.fine_amount < 0 THEN
-            NEW.fine_amount := 0;
+        IF fine_amount < 0 THEN
+            fine_amount := 0;
         END IF;
     
         INSERT INTO fine (customer_id, fine_amount, fined_at)
-        VALUES (NEW.customer_id, NEW.fine_amount, CURRENT_DATE)
-        RETURNING id INTO NEW.fine_id;
-    
-        IF TG_TABLE_NAME = 'book_to_customer' THEN
-            INSERT INTO fine_to_book (fine_id, book_id) VALUES (NEW.fine_id, NEW.book_id);
-        ELSIF TG_TABLE_NAME = 'media_to_customer' THEN
-            INSERT INTO fine_to_media (fine_id, media_id) VALUES (NEW.fine_id, NEW.media_id);
-        ELSIF TG_TABLE_NAME = 'device_to_customer' THEN
-            INSERT INTO fine_to_device (fine_id, device_id) VALUES (NEW.fine_id, NEW.device_id);
+        VALUES (NEW.customer_id, fine_amount, current_timestamp)
+        RETURNING id INTO new_fine_id;
+
+        IF fine_amount > 0 THEN
+            IF TG_TABLE_NAME = 'book_to_customer' THEN
+                INSERT INTO fine_to_book (fine_id, book_id) VALUES (new_fine_id, NEW.book_id);
+            ELSIF TG_TABLE_NAME = 'media_to_customer' THEN
+                INSERT INTO fine_to_media (fine_id, media_id) VALUES (new_fine_id, NEW.media_id);
+            ELSIF TG_TABLE_NAME = 'device_to_customer' THEN
+                INSERT INTO fine_to_device (fine_id, device_id) VALUES (new_fine_id, NEW.device_id);
+            END IF;
         END IF;
-    
+
         RETURN NEW;
     END;
     $$ LANGUAGE plpgsql;
