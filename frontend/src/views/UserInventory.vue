@@ -87,37 +87,61 @@ async function returnDevice(id) {
   getLoanedDevices()
 }
 
+async function extendBook(id) {
+  const body = {
+    userId: user.value.id,
+    bookId: id
+  }
+  await axios.post(`${apiUrl}/items/extendBook`, body)
+  getLoanedBooks()
+}
+
+async function extendDevice(id) {
+  const body = {
+    userId: user.value.id,
+    deviceId: id
+  }
+  await axios.post(`${apiUrl}/items/extendDevice`, body)
+  getLoanedDevices()
+}
+
+async function extendMedia(id) {
+  const body = {
+    userId: user.value.id,
+    mediaId: id
+  }
+  await axios.post(`${apiUrl}/items/extendMedia`, body)
+  getLoanedMedia()
+}
+
 async function loanBook(id) {
-  await axios.post(`${apiUrl}/items/loanBook`)
+  const body = {
+    userId: user.value.id,
+    bookId: id
+  }
+  await axios.post(`${apiUrl}/items/loanBook`, body)
   getLoanedBooks()
   getHeldBooks()
 }
 
 async function loanMedia(id) {
-  await axios.post(`${apiUrl}/items/loanMedia`)
+  const body = {
+    userId: user.value.id,
+    mediaId: id
+  }
+  await axios.post(`${apiUrl}/items/loanMedia`, body)
   getLoanedMedia()
   getHeldMedia()
 }
 
 async function loanDevice(id) {
-  await axios.post(`${apiUrl}/items/loanDevice`)
+  const body = {
+    userId: user.value.id,
+    deviceId: id
+  }
+  await axios.post(`${apiUrl}/items/loanDevice`, body)
   getLoanedDevices()
   getHeldMedia()
-}
-
-async function extendBook(id) {
-  await axios.post(`${apiUrl}/items/extendBook`)
-  getLoanedBooks()
-}
-
-async function extendDevice(id) {
-  await axios.post(`${apiUrl}/items/extendDevice`)
-  getLoanedDevices()
-}
-
-async function extendMedia(id) {
-  await axios.post(`${apiUrl}/items/extendMedia`)
-  getLoanedMedia()
 }
 </script>
 

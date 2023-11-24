@@ -13,7 +13,6 @@ router.get('/media', async (req, res) => {
     }
 });
 
-
 router.get('/books', async (req, res) => {
     try {
         const result = await pool.query('SELECT * FROM book WHERE book.id NOT IN (select book_id from book_to_customer where returned_at is NULL) AND book.id NOT IN (select book_id from hold_to_book WHERE held_until > current_timestamp)')
@@ -49,6 +48,12 @@ router.post('/loanBook', async (req, res) => {
             res.status(201).json({ message: "Book loaned successfully." })
         }
     });
+
+    const checkIfHeldQuery = {
+        text: 'DELETE FROM hold_to_book WHERE customer_id = $1 AND book_id = $2',
+        values: [userId, bookId]
+    }
+    await pool.query(checkIfHeldQuery)
 })
 
 router.post('/loanMedia', async (req, res) => {
@@ -65,6 +70,12 @@ router.post('/loanMedia', async (req, res) => {
             res.status(201).json({ message: "Media loaned successfully." })
         }
     });
+
+    const checkIfHeldQuery = {
+        text: 'DELETE FROM hold_to_media WHERE customer_id = $1 AND media_id = $2',
+        values: [userId, mediaId]
+    }
+    await pool.query(checkIfHeldQuery)
 })
 
 router.post('/loanDevice', async (req, res) => {
@@ -81,6 +92,12 @@ router.post('/loanDevice', async (req, res) => {
             res.status(201).json({ message: "Device loaned successfully." })
         }
     });
+
+    const checkIfHeldQuery = {
+        text: 'DELETE FROM hold_to_device WHERE customer_id = $1 AND device_id = $2',
+        values: [userId, deviceId]
+    }
+    await pool.query(checkIfHeldQuery)
 })
 
 // Hold
@@ -184,14 +201,50 @@ router.post('/returnDevice', async (req, res) => {
 // Extend
 router.post('/extendBook', async (req, res) => {
     const { userId, bookId } = req.body
+    const query = {
+        text: 'UPDATE book_to_customer SET loaned_until = current_timestamp + interval \'30 seconds\' WHERE customer_id=$1 AND book_id=$2 ',
+        values: [userId, bookId],
+    };
+    await pool.query(query, (error, results) => {
+        if (error) {
+            console.error('Error executing query:', error);
+            res.status(500).json({ error: 'An error occurred while inserting the data.' });
+        } else {
+            res.status(201).json({ message: "Book extended successfully." })
+        }
+    });
 })
 
 router.post('/extendMedia', async (req, res) => {
     const { userId, mediaId } = req.body
+    const query = {
+        text: 'UPDATE media_to_customer SET loaned_until = current_timestamp + interval \'30 seconds\' WHERE customer_id=$1 AND media_id=$2 ',
+        values: [userId, mediaId],
+    };
+    await pool.query(query, (error, results) => {
+        if (error) {
+            console.error('Error executing query:', error);
+            res.status(500).json({ error: 'An error occurred while inserting the data.' });
+        } else {
+            res.status(201).json({ message: "Media extended successfully." })
+        }
+    });
 })
 
 router.post('/extendDevice', async (req, res) => {
     const { userId, deviceId } = req.body
+    const query = {
+        text: 'UPDATE device_to_customer SET loaned_until = current_timestamp + interval \'30 seconds\' WHERE customer_id=$1 AND device_id=$2 ',
+        values: [userId, deviceId],
+    };
+    await pool.query(query, (error, results) => {
+        if (error) {
+            console.error('Error executing query:', error);
+            res.status(500).json({ error: 'An error occurred while inserting the data.' });
+        } else {
+            res.status(201).json({ message: "Device extended successfully." })
+        }
+    });
 })
 
 // User's loans
@@ -243,7 +296,7 @@ router.get('/loanedMedia/:id', async (req, res) => {
 // User's holds
 router.get('/heldBooks/:id', async (req, res) => {
     const query = {
-        text: 'SELECT * FROM book JOIN hold_to_book ON hold_to_book.book_id=book.id WHERE hold_to_book.customer_id = $1',
+        text: 'SELECT * FROM book JOIN hold_to_book ON hold_to_book.book_id=book.id WHERE hold_to_book.customer_id = $1 AND held_until > current_timestamp',
         values: [req.params.id],
     };
     await pool.query(query, (error, results) => {
@@ -258,7 +311,7 @@ router.get('/heldBooks/:id', async (req, res) => {
 
 router.get('/heldDevices/:id', async (req, res) => {
     const query = {
-        text: 'SELECT * FROM device JOIN hold_to_device ON hold_to_device.device_id=device.id WHERE hold_to_device.customer_id = $1',
+        text: 'SELECT * FROM device JOIN hold_to_device ON hold_to_device.device_id=device.id WHERE hold_to_device.customer_id = $1 AND held_until > current_timestamp',
         values: [req.params.id],
     };
     await pool.query(query, (error, results) => {
@@ -273,7 +326,7 @@ router.get('/heldDevices/:id', async (req, res) => {
 
 router.get('/heldMedia/:id', async (req, res) => {
     const query = {
-        text: 'SELECT * FROM media JOIN hold_to_media ON hold_to_media.media_id=media.id WHERE hold_to_media.customer_id = $1',
+        text: 'SELECT * FROM media JOIN hold_to_media ON hold_to_media.media_id=media.id WHERE hold_to_media.customer_id = $1 AND held_until > current_timestamp',
         values: [req.params.id],
     };
     await pool.query(query, (error, results) => {
