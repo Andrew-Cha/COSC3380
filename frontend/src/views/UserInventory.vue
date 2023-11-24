@@ -119,7 +119,9 @@ async function loanBook(id) {
     userId: user.value.id,
     bookId: id
   }
-  await axios.post(`${apiUrl}/items/loanBook`, body)
+  await axios.post(`${apiUrl}/items/loanBook`, body).catch(() => {
+    alert("You are at your max limit of books.")
+  })
   getLoanedBooks()
   getHeldBooks()
 }
@@ -129,7 +131,9 @@ async function loanMedia(id) {
     userId: user.value.id,
     mediaId: id
   }
-  await axios.post(`${apiUrl}/items/loanMedia`, body)
+  await axios.post(`${apiUrl}/items/loanMedia`, body).catch(() => {
+    alert("You are at your max limit of books.")
+  })
   getLoanedMedia()
   getHeldMedia()
 }
@@ -139,7 +143,9 @@ async function loanDevice(id) {
     userId: user.value.id,
     deviceId: id
   }
-  await axios.post(`${apiUrl}/items/loanDevice`, body)
+  await axios.post(`${apiUrl}/items/loanDevice`, body).catch(() => {
+    alert("You are at your max limit of books.")
+  })
   getLoanedDevices()
   getHeldMedia()
 }

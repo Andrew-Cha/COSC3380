@@ -43,7 +43,9 @@ async function loanBook(id) {
         userId: user.value.id,
         bookId: id
     }
-    await axios.post(`${apiUrl}/items/loanBook`, request)
+    await axios.post(`${apiUrl}/items/loanBook`, request).catch(() => {
+        alert("You are at your max limit of books.")
+    })
     getBooks()
 }
 
@@ -61,7 +63,9 @@ async function loanMedia(id) {
         userId: user.value.id,
         mediaId: id
     }
-    await axios.post(`${apiUrl}/items/loanMedia`, request)
+    await axios.post(`${apiUrl}/items/loanMedia`, request).catch(() => {
+        alert("You are at your max limit of media.")
+    })
     getMedia()
 }
 
@@ -79,7 +83,9 @@ async function loanDevice(id) {
         userId: user.value.id,
         deviceId: id
     }
-    await axios.post(`${apiUrl}/items/loanDevice`, request)
+    await axios.post(`${apiUrl}/items/loanDevice`, request).catch(() => {
+        alert("You are at your max limit of devices.")
+    })
     getDevices()
 }
 
