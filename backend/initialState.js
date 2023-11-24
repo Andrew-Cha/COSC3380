@@ -237,8 +237,7 @@ CREATE TABLE hold_to_device(
     AFTER UPDATE ON device_to_customer
     FOR EACH ROW EXECUTE FUNCTION calculate_fine();
 
-    CREATE OR REPLACE FUNCTION check_max_items()
-    RETURNS TRIGGER AS $$
+    CREATE OR REPLACE FUNCTION check_max_items() RETURNS TRIGGER AS $$
     DECLARE
         user_role_name TEXT;
         max_books INTEGER;
@@ -248,45 +247,53 @@ CREATE TABLE hold_to_device(
         current_media_count INTEGER;
         current_devices_count INTEGER;
     BEGIN
-    
         SELECT role_name, max_allowed_books, max_allowed_media, max_allowed_devices
         INTO user_role_name, max_books, max_media, max_devices
         FROM customer
         JOIN role ON customer.role_id = role.id
         WHERE customer.id = NEW.customer_id;
     
+        IF TG_TABLE_NAME = 'book_to_customer' THEN
+            SELECT COUNT(*) INTO current_books_count
+            FROM book_to_customer
+            WHERE customer_id = NEW.customer_id AND returned_at IS NULL;
     
-        SELECT COUNT(*) INTO current_books_count
-        FROM book_to_customer
-        WHERE customer_id = NEW.customer_id AND returned_at IS NULL;
+            IF (user_role_name = 'Customer' AND current_books_count >= max_books) OR
+               (user_role_name = 'Faculty' AND current_books_count >= max_books) OR
+               (user_role_name = 'Admin' AND current_books_count >= max_books) OR
+               (user_role_name = 'Publisher' AND current_books_count >= max_books) THEN
+                RAISE EXCEPTION 'User is exceeding the maximum allowed books for their role';
+            END IF;
     
-        SELECT COUNT(*) INTO current_media_count
-        FROM media_to_customer
-        WHERE customer_id = NEW.customer_id AND returned_at IS NULL;
+        ELSIF TG_TABLE_NAME = 'media_to_customer' THEN
+            SELECT COUNT(*) INTO current_media_count
+            FROM media_to_customer
+            WHERE customer_id = NEW.customer_id AND returned_at IS NULL;
     
-        SELECT COUNT(*) INTO current_devices_count
-        FROM device_to_customer
-        WHERE customer_id = NEW.customer_id AND returned_at IS NULL;
+            IF (user_role_name = 'Customer' AND current_media_count >= max_media) OR
+               (user_role_name = 'Faculty' AND current_media_count >= max_media) OR
+               (user_role_name = 'Admin' AND current_media_count >= max_media) OR
+               (user_role_name = 'Publisher' AND current_media_count >= max_media) THEN
+                RAISE EXCEPTION 'User is exceeding the maximum allowed media for their role';
+            END IF;
     
+        ELSIF TG_TABLE_NAME = 'device_to_customer' THEN
+            SELECT COUNT(*) INTO current_devices_count
+            FROM device_to_customer
+            WHERE customer_id = NEW.customer_id AND returned_at IS NULL;
     
-        IF (user_role_name = 'Customer' AND current_books_count >= max_books) OR
-           (user_role_name = 'Customer' AND current_media_count >= max_media) OR
-           (user_role_name = 'Customer' AND current_devices_count >= max_devices) OR
-           (user_role_name = 'Faculty' AND current_books_count >= max_books) OR
-           (user_role_name = 'Faculty' AND current_media_count >= max_media) OR
-           (user_role_name = 'Faculty' AND current_devices_count >= max_devices) OR
-           (user_role_name = 'Admin' AND current_books_count >= max_books) OR
-           (user_role_name = 'Admin' AND current_media_count >= max_media) OR
-           (user_role_name = 'Admin' AND current_devices_count >= max_devices) OR
-           (user_role_name = 'Publisher' AND current_books_count >= max_books) OR
-           (user_role_name = 'Publisher' AND current_media_count >= max_media) OR
-           (user_role_name = 'Publisher' AND current_devices_count >= max_devices) THEN
-            RAISE EXCEPTION 'User is exceeding the maximum allowed items for their role';
+            IF (user_role_name = 'Customer' AND current_devices_count >= max_devices) OR
+               (user_role_name = 'Faculty' AND current_devices_count >= max_devices) OR
+               (user_role_name = 'Admin' AND current_devices_count >= max_devices) OR
+               (user_role_name = 'Publisher' AND current_devices_count >= max_devices) THEN
+                RAISE EXCEPTION 'User is exceeding the maximum allowed devices for their role';
+            END IF;
         END IF;
     
         RETURN NEW;
     END;
     $$ LANGUAGE plpgsql;
+    
     
     
     CREATE TRIGGER check_max_books
