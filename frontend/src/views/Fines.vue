@@ -17,11 +17,15 @@ const cardNumberInput = ref('');
 
 const refreshFines = async () => {
     try {
-        const bookResponse = await axios.get(`${apiUrl}/fines/books`);
+        const body = {
+            userId: user.value.id
+        }
+
+        const bookResponse = await axios.post(`${apiUrl}/fines/books`, body);
         fineToBook.value = bookResponse.data;
-        const mediaResponse = await axios.get(`${apiUrl}/fines/media`);
+        const mediaResponse = await axios.post(`${apiUrl}/fines/media`, body);
         fineToMedia.value = mediaResponse.data;
-        const deviceResponse = await axios.get(`${apiUrl}/fines/devices`);
+        const deviceResponse = await axios.post(`${apiUrl}/fines/devices`, body);
         fineToDevice.value = deviceResponse.data;
     } catch (error) {
         console.error('Error fetching data:', error);

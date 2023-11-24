@@ -2,20 +2,15 @@ const pool = require('../database')
 const express = require('express')
 const router = express.Router()
 
-router.get('/books', async (req, res) => {
+router.post('/books', async (req, res) => {
   try {
-    const userId = req.user.value.id;
-    const query = `
-          SELECT f.id, f.fine_amount
-          FROM fine f
-          JOIN customer c ON f.customer_id = c.id
-          LEFT JOIN fine_to_book ftb ON f.id = ftb.fine_id
-          LEFT JOIN transaction t ON f.id = t.fine_id
-          WHERE c.id = $1 AND t.id IS NULL;
-      `;
+    const { userId } = req.body
+    const query = {
+      text: 'SELECT f.id, f.fine_amount FROM fine f JOIN customer c ON f.customer_id = c.id LEFT JOIN fine_to_book ftb ON f.id = ftb.fine_id LEFT JOIN transaction t ON f.id = t.fine_id WHERE c.id = $1 AND t.id IS NULL;',
+      values: [userId]
+    }
 
     const { rows } = await pool.query(query, [userId]);
-
     res.status(200).json(rows);
   } catch (error) {
     console.error('Error fetching fines for books:', error);
@@ -23,19 +18,15 @@ router.get('/books', async (req, res) => {
   }
 });
 
-router.get('/media', async (req, res) => {
+router.post('/media', async (req, res) => {
   try {
-    const userId = req.user.value.id;
-    const query = `
-          SELECT f.id, f.fine_amount
-          FROM fine f
-          JOIN customer c ON f.customer_id = c.id
-          LEFT JOIN fine_to_media ftm ON f.id = ftm.fine_id
-          LEFT JOIN transaction t ON f.id = t.fine_id
-          WHERE c.id = $1 AND t.id IS NULL;
-      `;
+    const { userId } = req.body
+    const query = {
+      text: 'SELECT f.id, f.fine_amount FROM fine f JOIN customer c ON f.customer_id = c.id LEFT JOIN fine_to_media ftm ON f.id = ftm.fine_id LEFT JOIN transaction t ON f.id = t.fine_id WHERE c.id = $1 AND t.id IS NULL;',
+      values: [userId]
+    }
 
-    const { rows } = await pool.query(query, [userId]);
+    const { rows } = await pool.query(query);
     res.status(200).json(rows);
   } catch (error) {
     console.error('Error fetching fines for media:', error);
@@ -43,20 +34,15 @@ router.get('/media', async (req, res) => {
   }
 });
 
-router.get('/devices', async (req, res) => {
+router.post('/devices', async (req, res) => {
   try {
-    const userId = req.user.value.id;
-    const query = `
-          SELECT f.id, f.fine_amount
-          FROM fine f
-          JOIN customer c ON f.customer_id = c.id
-          LEFT JOIN fine_to_device ftd ON f.id = ftd.fine_id
-          LEFT JOIN transaction t ON f.id = t.fine_id
-          WHERE c.id = $1 AND t.id IS NULL;
-      `;
+    const { userId } = req.body
+    const query = {
+      text: 'SELECT f.id, f.fine_amount FROM fine f JOIN customer c ON f.customer_id = c.id LEFT JOIN fine_to_device ftd ON f.id = ftd.fine_id LEFT JOIN transaction t ON f.id = t.fine_id WHERE c.id = $1 AND t.id IS NULL;',
+      values: [userId]
+    }
 
-    const { rows } = await pool.query(query, [userId]);
-
+    const { rows } = await pool.query(query)
     res.status(200).json(rows);
   } catch (error) {
     console.error('Error fetching fines for devices:', error);
