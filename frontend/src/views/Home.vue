@@ -25,7 +25,7 @@ import { RouterLink } from 'vue-router'
         </section>
 
         <h1>TODO List:</h1>
-        <li>Reports on Admin page, My Inventory page, My Fines page</li>
+        <li>3x Reports on Admin page</li>
     </div>
 </template>
   

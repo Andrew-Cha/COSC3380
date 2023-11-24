@@ -65,7 +65,7 @@ function signup() {
                 <h1>Login</h1>
                 <input type="text" placeholder="First Name" required="true" v-model="firstName" />
                 <input type="text" placeholder="Last Name" required="true" v-model="lastName" />
-                <input type="password" placeholder="Password - STORED AS PLAIN TEXT!" required="true" v-model="password" />
+                <input type="password" placeholder="Password" required="true" v-model="password" />
                 <button class="submit-button" type="submit">Login</button>
             </form>
             <button class="submit-button" @click="isLoggingIn = false">Create an account?</button>
@@ -76,7 +76,7 @@ function signup() {
                 <h1>Sign Up</h1>
                 <input type="text" placeholder="First Name" required="true" v-model="firstName" />
                 <input type="text" placeholder="Last Name" required="true" v-model="lastName" />
-                <input type="password" placeholder="Password - STORED AS PLAIN TEXT!" required="true" v-model="password" />
+                <input type="password" placeholder="Password" required="true" v-model="password" />
                 <p>Please select your role. Be truthful. This really doesn't let you do much except see more fake generated
                     database data and take out more items.</p>
                 <select required="true" @input="setUserRole">
