@@ -153,7 +153,7 @@ router.post('/holdDevice', async (req, res) => {
 router.post('/returnBook', async (req, res) => {
     const { userId, bookId } = req.body
     const query = {
-        text: 'UPDATE book_to_customer SET returned_at = current_timestamp WHERE customer_id=$1 AND book_id=$2 ',
+        text: 'UPDATE book_to_customer SET returned_at = current_timestamp WHERE customer_id=$1 AND book_id=$2 AND returned_at IS NULL ',
         values: [userId, bookId],
     };
     await pool.query(query, (error, results) => {
@@ -169,7 +169,7 @@ router.post('/returnBook', async (req, res) => {
 router.post('/returnMedia', async (req, res) => {
     const { userId, mediaId } = req.body
     const query = {
-        text: 'UPDATE media_to_customer SET returned_at = current_timestamp WHERE customer_id=$1 AND media_id=$2 ',
+        text: 'UPDATE media_to_customer SET returned_at = current_timestamp WHERE customer_id=$1 AND media_id=$2 AND returned_at IS NULL',
         values: [userId, mediaId],
     };
     await pool.query(query, (error, results) => {
@@ -185,7 +185,7 @@ router.post('/returnMedia', async (req, res) => {
 router.post('/returnDevice', async (req, res) => {
     const { userId, deviceId } = req.body
     const query = {
-        text: 'UPDATE device_to_customer SET returned_at = current_timestamp WHERE customer_id=$1 AND device_id=$2 ',
+        text: 'UPDATE device_to_customer SET returned_at = current_timestamp WHERE customer_id=$1 AND device_id=$2 AND returned_at IS NULL',
         values: [userId, deviceId],
     };
     await pool.query(query, (error, results) => {

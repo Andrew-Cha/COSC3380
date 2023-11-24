@@ -195,23 +195,23 @@ CREATE TABLE hold_to_device(
 
     CREATE OR REPLACE FUNCTION calculate_fine() RETURNS TRIGGER AS $$
     DECLARE
-        overdue_days INTEGER;
+        overdue_seconds INTEGER;
         fine_amount DECIMAL := 0.00;
         new_fine_id INTEGER;
     BEGIN
-        overdue_days := GREATEST(EXTRACT(SECONDS FROM (NEW.loaned_until - NEW.loaned_at)), 0);
+        overdue_seconds := GREATEST(EXTRACT(SECONDS FROM (current_timestamp - NEW.loaned_until)), 0);
     
-        fine_amount := fine_amount + (overdue_days * 2.00);
+        fine_amount := (overdue_seconds);
     
-        IF fine_amount < 0 THEN
+        IF fine_amount < 0 OR overdue_seconds < 30 THEN
             fine_amount := 0;
         END IF;
-    
-        INSERT INTO fine (customer_id, fine_amount, fined_at)
-        VALUES (NEW.customer_id, fine_amount, current_timestamp)
-        RETURNING id INTO new_fine_id;
 
         IF fine_amount > 0 THEN
+            INSERT INTO fine (customer_id, fine_amount, fined_at)
+            VALUES (NEW.customer_id, fine_amount, current_timestamp)
+            RETURNING id INTO new_fine_id;
+
             IF TG_TABLE_NAME = 'book_to_customer' THEN
                 INSERT INTO fine_to_book (fine_id, book_id) VALUES (new_fine_id, NEW.book_id);
             ELSIF TG_TABLE_NAME = 'media_to_customer' THEN
@@ -226,15 +226,15 @@ CREATE TABLE hold_to_device(
     $$ LANGUAGE plpgsql;
     
     CREATE TRIGGER book_fine_trigger
-    AFTER INSERT OR UPDATE ON book_to_customer
+    AFTER UPDATE ON book_to_customer
     FOR EACH ROW EXECUTE FUNCTION calculate_fine();
     
     CREATE TRIGGER media_fine_trigger
-    AFTER INSERT OR UPDATE ON media_to_customer
+    AFTER UPDATE ON media_to_customer
     FOR EACH ROW EXECUTE FUNCTION calculate_fine();
     
     CREATE TRIGGER device_fine_trigger
-    AFTER INSERT OR UPDATE ON device_to_customer
+    AFTER UPDATE ON device_to_customer
     FOR EACH ROW EXECUTE FUNCTION calculate_fine();
 
     CREATE OR REPLACE FUNCTION check_max_items()
