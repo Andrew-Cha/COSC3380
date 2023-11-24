@@ -12,8 +12,6 @@ const apiUrl = `http://${import.meta.env.VITE_SERVER_URL}:3000/api`;
 const fineToBook = ref([])
 const fineToDevice = ref([])
 const fineToMedia = ref([])
-const selectedFine = ref(null);
-const cardNumberInput = ref('');
 
 const refreshFines = async () => {
     try {
@@ -49,11 +47,10 @@ const payDevice = async (id, cardNumber) => {
     await refreshFines();
 };
 
-const payFine = async (id) => {
+const payFine = async (id, type) => {
     if (isLoggedIn.value) {
         try {
-            const { id, type } = selectedFine.value;
-            const cardNumber = cardNumberInput.value;
+            const cardNumber = prompt("Please give me your card number")
 
             switch (type) {
                 case 'book':
@@ -68,9 +65,7 @@ const payFine = async (id) => {
                 default:
                     throw new Error(`Unsupported fine type: ${type}`);
             }
-
-            selectedFine.value = null;
-            cardNumberInput.value = '';
+            alert("Paid successfully, thank you for your money.")
         } catch (error) {
             console.error('Error paying fine:', error);
         }
@@ -85,13 +80,16 @@ const payFine = async (id) => {
         <div class="table-section">
             <h3>Books</h3>
             <table v-if="fineToBook.length !== 0">
+                <th>Book Title</th>
+                <th>Amount Due</th>
+                <th>Fined At</th>
                 <tr v-for="book in fineToBook" :key="book.id">
+                    <td>{{ book.title }}</td>
+                    <td>${{ book.fine_amount }}</td>
+                    <td>{{ book.fined_at }}</td>
                     <td>
-                        {{ book.id }}
-                        {{ book.title }}
-                    </td>
-                    <td>
-                        <button @click="payFine(book.id, 'book')">Pay Fine</button>
+                        <button @click="payFine(book.id, 'book')" :disabled="book.transaction_amount != null">Pay
+                            Fine</button>
                     </td>
                 </tr>
             </table>
@@ -104,13 +102,16 @@ const payFine = async (id) => {
         <div class="table-section">
             <h3>Device</h3>
             <table v-if="fineToDevice.length !== 0">
+                <th>Device Name</th>
+                <th>Amount Due</th>
+                <th>Fined At</th>
                 <tr v-for="device in fineToDevice" :key="device.id">
+                    <td>{{ device.device_name }}</td>
+                    <td>${{ device.fine_amount }}</td>
+                    <td>{{ device.fined_at }}</td>
                     <td>
-                        {{ device.id }}
-                        {{ device.device_name }}
-                    </td>
-                    <td>
-                        <button @click="payFine(device.id, 'device')">Pay Fine</button>
+                        <button @click="payFine(device.id, 'device')" :disabled="device.transaction_amount != null">Pay
+                            Fine</button>
                     </td>
                 </tr>
             </table>
@@ -122,26 +123,21 @@ const payFine = async (id) => {
         <div class="table-section">
             <h3>Media</h3>
             <table v-if="fineToMedia.length !== 0">
+                <th>Media Name</th>
+                <th>Amount Due</th>
+                <th>Fined At</th>
                 <tr v-for="media in fineToMedia" :key="media.id">
+                    <td>{{ media.title }}</td>
+                    <td>${{ media.fine_amount }}</td>
+                    <td>{{ media.fined_at }}</td>
                     <td>
-                        {{ media.id }}
-                        {{ media.title }}
-                    </td>
-                    <td>
-                        <button @click="payFine(media.id, 'media')">Pay Fine</button>
+                        <button @click="payFine(media.id, 'media')" :disabled="media.transaction_amount != null">Pay
+                            Fine</button>
                     </td>
                 </tr>
             </table>
             <div v-else>
                 <p>You have no fines for media.</p>
-            </div>
-        </div>
-
-        <div v-if="selectedFine">
-            <div class="modal">
-                <label for="cardNumber">Card Number:</label>
-                <input type="text" id="cardNumber" v-model="cardNumberInput" />
-                <button @click="payFine(selectedFine.id, selectedFine.type)">Submit Payment</button>
             </div>
         </div>
     </div>
@@ -158,6 +154,7 @@ const payFine = async (id) => {
 .table-section {
     margin-bottom: 20px;
     width: 80%;
+    background-color: white;
 }
 
 table {
@@ -215,6 +212,10 @@ img {
     box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
     padding: 12px 16px;
     z-index: 1;
+}
+
+button:disabled {
+    background-color: gray;
 }
 </style>
   

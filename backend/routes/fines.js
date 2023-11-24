@@ -6,7 +6,7 @@ router.post('/books', async (req, res) => {
   try {
     const { userId } = req.body
     const query = {
-      text: 'SELECT f.id, f.fine_amount FROM fine f JOIN customer c ON f.customer_id = c.id LEFT JOIN fine_to_book ftb ON f.id = ftb.fine_id LEFT JOIN transaction t ON f.id = t.fine_id JOIN book ON ftb.book_id = book.id WHERE c.id = $1 AND t.id IS NULL;',
+      text: 'SELECT f.id, f.fine_amount, book.title, f.fined_at, t.transaction_amount FROM fine f JOIN customer c ON f.customer_id = c.id LEFT JOIN fine_to_book ftb ON f.id = ftb.fine_id LEFT JOIN transaction t ON f.id = t.fine_id JOIN book ON ftb.book_id = book.id WHERE c.id = $1;',
       values: [userId]
     }
 
@@ -22,7 +22,7 @@ router.post('/media', async (req, res) => {
   try {
     const { userId } = req.body
     const query = {
-      text: 'SELECT f.id, f.fine_amount FROM fine f JOIN customer c ON f.customer_id = c.id LEFT JOIN fine_to_media ftm ON f.id = ftm.fine_id LEFT JOIN transaction t ON f.id = t.fine_id JOIN media ON ftm.media_id = media.id WHERE c.id = $1 AND t.id IS NULL;',
+      text: 'SELECT f.id, f.fine_amount, media.title, f.fined_at, t.transaction_amount FROM fine f JOIN customer c ON f.customer_id = c.id LEFT JOIN fine_to_media ftm ON f.id = ftm.fine_id LEFT JOIN transaction t ON f.id = t.fine_id JOIN media ON ftm.media_id = media.id WHERE c.id = $1;',
       values: [userId]
     }
 
@@ -38,7 +38,7 @@ router.post('/devices', async (req, res) => {
   try {
     const { userId } = req.body
     const query = {
-      text: 'SELECT f.id, f.fine_amount FROM fine f JOIN customer c ON f.customer_id = c.id LEFT JOIN fine_to_device ftd ON f.id = ftd.fine_id LEFT JOIN transaction t ON f.id = t.fine_id JOIN device ON ftd.device_id = device.id WHERE c.id = $1 AND t.id IS NULL;',
+      text: 'SELECT f.id, f.fine_amount, device.device_name, f.fined_at, t.transaction_amount FROM fine f JOIN customer c ON f.customer_id = c.id LEFT JOIN fine_to_device ftd ON f.id = ftd.fine_id LEFT JOIN transaction t ON f.id = t.fine_id JOIN device ON ftd.device_id = device.id WHERE c.id = $1',
       values: [userId]
     }
 
