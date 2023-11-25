@@ -50,7 +50,11 @@ const payDevice = async (id, cardNumber) => {
 const payFine = async (id, type) => {
     if (isLoggedIn.value) {
         try {
-            const cardNumber = prompt("Please enter your card number:")
+            let cardNumber = prompt("Please enter your card number:");
+            if (!cardNumber || !/\d/.test(cardNumber)) {
+                alert("Please input a correct card number.");
+                return;
+            }
 
             switch (type) {
                 case 'book':
