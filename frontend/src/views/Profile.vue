@@ -21,7 +21,7 @@ const includeMedia = ref(false);
 const includeDevices = ref(false);
 const currentLoansData = ref([]);
 
-const apiUrl = `http://${import.meta.env.VITE_SERVER_URL}:3000/api`;
+const apiUrl = `http://${import.meta.env.VITE_SERVER_URL}:3000/api/fines`;
 
 const fetchFinesReport = async () => {
   try {
@@ -30,7 +30,7 @@ const fetchFinesReport = async () => {
         period: selectedPeriod.value,
       },
     });
-    totalFines.value = response.data.total_fines;
+    totalFines.value = response.data;
   } catch (error) {
     console.error('Error fetching fines report:', error);
   }
@@ -75,7 +75,7 @@ const fetchCurrentLoansReport = async () => {
 onMounted(() => {
   if (user.value.role_id === 3) {
     fetchFinesReport();
-    fetchPastLoans();
+    fetchPastLoansReport();
     fetchCurrentLoansReport();
   }
 });
@@ -195,13 +195,13 @@ async function addItem() {
     <div v-if="user.role_id === 3" class="user-information report-section">
       <div class="user-detail">
         <strong>Select Period for Fines:</strong>
-        <select v-model="selectedFinesPeriod" @change="fetchFinesReport">
+        <select @change="fetchFinesReport">
           <option v-for="period in periods" :key="period" :value="period">{{ period }}</option>
         </select>
       </div>
       <div class="user-detail">
         <strong>Total Fines Collected:</strong>
-        <p>{{ totalFines }}</p>
+        <p>${{ totalFines[0].total_fines }}</p>
       </div>
     </div>
 
@@ -317,7 +317,7 @@ async function addItem() {
         <p v-else>This user has no devices.</p>
       </div>
     </div>
-    
+
     <h2 v-if="user.role_id === 4">Publisher Section</h2>
     <div v-if="user.role_id === 4" class="user-information additem-page">
       <div class="tab-navigation">
