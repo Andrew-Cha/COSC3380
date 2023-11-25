@@ -10,7 +10,16 @@ const { user } = storeToRefs(mainStore)
 const periods = ['lastDay', 'lastWeek', 'lastMonth', 'lastYear'];
 const selectedPeriod = ref(periods[0]);
 const totalFines = ref(0);
-const pastLoansData = ref(0);
+
+const pastLoansData = ref([]);
+const selectedStartDate = ref(null);
+const selectedEndDate = ref(null);
+
+const selectedCustomerId = ref(null);
+const includeBooks = ref(false);
+const includeMedia = ref(false);
+const includeDevices = ref(false);
+const currentLoansData = ref([]);
 
 const apiUrl = `http://${import.meta.env.VITE_SERVER_URL}:3000/api`;
 
@@ -27,11 +36,12 @@ const fetchFinesReport = async () => {
   }
 };
 
-const fetchPastLoans = async () => {
+const fetchPastLoansReport = async () => {
   try {
     const response = await axios.get(`${apiUrl}/reports/pastLoans`, {
       params: {
-        period: selectedPeriod.value,
+        startDate: selectedStartDate.value,
+        endDate: selectedEndDate.value,
       },
     });
     pastLoansData.value = response.data;
@@ -40,10 +50,33 @@ const fetchPastLoans = async () => {
   }
 };
 
+
+const fetchCurrentLoansReport = async () => {
+  try {
+    if (includeBooks.value) {
+      const booksResponse = await axios.get(`${apiUrl}/reports/currentbooks/${selectedCustomerId.value}`);
+      currentLoansData.value = currentLoansData.value.concat(booksResponse.data);
+    }
+
+    if (includeMedia.value) {
+      const mediaResponse = await axios.get(`${apiUrl}/reports/currentmedia/${selectedCustomerId.value}`);
+      currentLoansData.value = currentLoansData.value.concat(mediaResponse.data);
+    }
+
+    if (includeDevices.value) {
+      const devicesResponse = await axios.get(`${apiUrl}/reports/currentdevices/${selectedCustomerId.value}`);
+      currentLoansData.value = currentLoansData.value.concat(devicesResponse.data);
+    }
+  } catch (error) {
+    console.error('Error fetching current loans report:', error);
+  }
+};
+
 onMounted(() => {
   if (user.value.role_id === 3) {
     fetchFinesReport();
     fetchPastLoans();
+    fetchCurrentLoansReport();
   }
 });
 
@@ -176,22 +209,115 @@ async function addItem() {
     <div v-if="user.role_id === 3" class="user-information report-section">
       <div class="user-detail">
         <strong>Select Period for Past Loans:</strong>
-        <select v-model="selectedPastLoansPeriod" @change="fetchPastLoansReport">
-          <option v-for="period in periods" :key="period" :value="period">{{ period }}</option>
-        </select>
+        <div>
+          <label for="startDate">Start Date:</label>
+          <input type="date" id="startDate" v-model="selectedStartDate">
+        </div>
+        <div>
+          <label for="endDate">End Date:</label>
+          <input type="date" id="endDate" v-model="selectedEndDate">
+        </div>
+        <button @click="fetchPastLoansReport">Run</button>
       </div>
       <div class="user-detail">
         <strong>Past Loans Information:</strong>
         <div v-for="loan in pastLoansData" :key="loan.id">
-          <p>{{ loan.customer_name }} loaned {{ loan.item_type }} '{{ loan.item_name }}' and returned on {{ loan.date }}
+          <p>{{ loan.customer_name }} loaned {{ loan.item_type }} '{{ loan.item_name }}' and returned on {{
+            loan.returned_at }}
           </p>
         </div>
       </div>
     </div>
 
-    <h3 v-if="user.role_id === 3">Users Report</h3>
-    <div class="user-information">IMPLEMENT ME</div>
+    <h3 v-if="user.role_id === 3">Current Loans Report</h3>
+    <div v-if="user.role_id === 3" class="user-information report-section">
+      <div class="user-detail">
+        <strong>Select Customer for Current Loans:</strong>
+        <input type="text" v-model="selectedCustomerId" placeholder="Enter Customer ID" />
+      </div>
+      <div class="user-detail">
+        <strong>Include in Report:</strong>
+        <label>
+          <input type="checkbox" v-model="includeBooks" /> Books
+        </label>
+        <label>
+          <input type="checkbox" v-model="includeMedia" /> Media
+        </label>
+        <label>
+          <input type="checkbox" v-model="includeDevices" /> Devices
+        </label>
+      </div>
+      <button @click="fetchCurrentLoansReport">Run</button>
+    </div>
 
+    <div v-if="user.role_id === 3">
+      <div v-if="includeBooks">
+        <h3>Books</h3>
+        <template v-if="currentLoansData.length !== 0">
+          <table class="currentLoans-table">
+            <th>Title</th>
+            <th>ISBN</th>
+            <th>Edition</th>
+            <th>Loan Date</th>
+            <th>Loan Until</th>
+            <th>Returned Date</th>
+            <tr v-for="book in currentLoansData" :key="book.id">
+              <td>{{ book.title }}</td>
+              <td>{{ book.isbn }}</td>
+              <td>{{ book.edition }}</td>
+              <td>{{ book.loaned_at }}</td>
+              <td>{{ book.loaned_until }}</td>
+            </tr>
+          </table>
+        </template>
+        <p v-else>This user has no books.</p>
+      </div>
+
+      <div v-if="includeMedia">
+        <h3>Media</h3>
+        <template v-if="currentLoansData.length !== 0">
+          <table class="currentLoans-table">
+            <th>Title</th>
+            <th>Author</th>
+            <th>Media Link</th>
+            <th>Loan Date</th>
+            <th>Loan Until</th>
+            <th>Returned Date</th>
+            <tr v-for="media in currentLoansData" :key="media.id">
+              <td>{{ media.title }}</td>
+              <td>{{ media.author }}</td>
+              <td>{{ media.file_link }}</td>
+              <td>{{ media.loaned_at }}</td>
+              <td>{{ media.loaned_until }}</td>
+            </tr>
+          </table>
+        </template>
+        <p v-else>This user has no media.</p>
+      </div>
+
+      <div v-if="includeDevices">
+        <h3>Devices</h3>
+        <template v-if="currentLoansData.length !== 0">
+          <table class="currentLoans-table">
+            <th>Name</th>
+            <th>Type</th>
+            <th>Serial Number</th>
+            <th>Loan Date</th>
+            <th>Loan Until</th>
+            <th>Returned Date</th>
+            <tr v-for="device in currentLoansData" :key="device.id">
+              <td>{{ device.device_name }}</td>
+              <td>{{ device.device_type }}</td>
+              <td>{{ device.serial_number }}</td>
+              <td>{{ device.loaned_at }}</td>
+              <td>{{ device.loaned_until }}</td>
+            </tr>
+          </table>
+        </template>
+        <p v-else>This user has no devices.</p>
+      </div>
+    </div>
+    
     <h2 v-if="user.role_id === 4">Publisher Section</h2>
     <div v-if="user.role_id === 4" class="user-information additem-page">
       <div class="tab-navigation">

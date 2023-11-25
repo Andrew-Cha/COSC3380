@@ -124,112 +124,105 @@ async function getFineAmount(id) {
 }
 
 router.get('/reports/fines', async (req, res) => {
-  try {
-    const { period } = req.query;
-    let startDate;
+  const { period } = req.query;
+  let startDate;
 
-    if (period === 'lastDay') {
-      startDate = new Date();
-      startDate.setDate(startDate.getDate() - 1);
-    } else if (period === 'lastWeek') {
-      startDate = new Date();
-      startDate.setDate(startDate.getDate() - 7);
-    } else if (period === 'lastMonth') {
-      startDate = new Date();
-      startDate.setMonth(startDate.getMonth() - 1);
-    } else if (period === 'lastYear') {
-      startDate = new Date();
-      startDate.setFullYear(startDate.getFullYear() - 1);
-    } else {
-      return res.status(400).json({ error: 'Invalid period' });
-    }
-
-    const query = `
-        SELECT SUM(fine_amount) AS total_fines
-        FROM fine
-        WHERE fined_at >= $1;
-      `;
-
-    const result = await pool.query(query, [startDate]);
-
-    res.status(200).json(result.rows[0]);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Internal server error' });
+  if (period === 'lastDay') {
+    startDate = new Date();
+    startDate.setDate(startDate.getDate() - 1);
+  } else if (period === 'lastWeek') {
+    startDate = new Date();
+    startDate.setDate(startDate.getDate() - 7);
+  } else if (period === 'lastMonth') {
+    startDate = new Date();
+    startDate.setMonth(startDate.getMonth() - 1);
+  } else if (period === 'lastYear') {
+    startDate = new Date();
+    startDate.setFullYear(startDate.getFullYear() - 1);
+  } else {
+    return res.status(400).json({ error: 'Invalid period' });
   }
-});
+
+  const query = {
+    text: 'SELECT SUM(transaction.transaction_amount) AS total_fines FROM transaction JOIN fine ON fine.id = transaction.fine_id WHERE fine.fined_at >= $1',
+    values: [startDate],
+  };
+  await pool.query(query, (error, results) => {
+    if (error) {
+      console.error('Error executing query:', error);
+      res.status(500).json({ error: 'An error occurred while retrieving the data.' });
+    } else {
+      res.status(201).json(results.rows)
+    }
+  });
+})
 
 router.get('/reports/pastLoans', async (req, res) => {
-  try {
-    const { period } = req.query;
-    let startDate;
+  const { startDate, endDate } = req.query;
 
-    if (period === 'lastDay') {
-      startDate = new Date();
-      startDate.setDate(startDate.getDate() - 1);
-    } else if (period === 'lastWeek') {
-      startDate = new Date();
-      startDate.setDate(startDate.getDate() - 7);
-    } else if (period === 'lastMonth') {
-      startDate = new Date();
-      startDate.setMonth(startDate.getMonth() - 1);
-    } else if (period === 'lastYear') {
-      startDate = new Date();
-      startDate.setFullYear(startDate.getFullYear() - 1);
-    } else {
-      return res.status(400).json({ error: 'Invalid period' });
-    }
 
-    const query = `
-      SELECT
-        c.first_name || ' ' || c.last_name AS customer_name,
-        'book' AS item_type,
-        b.title AS item_name,
-        b2c.returned_at AS date
-      FROM
-        book_to_customer b2c
-      JOIN
-        customer c ON b2c.customer_id = c.id
-      JOIN
-        book b ON b2c.book_id = b.id
-      WHERE
-        b2c.returned_at >= $1
-      UNION
-      SELECT
-        c.first_name || ' ' || c.last_name AS customer_name,
-        'media' AS item_type,
-        m.title AS item_name,
-        m2c.returned_at AS date
-      FROM
-        media_to_customer m2c
-      JOIN
-        customer c ON m2c.customer_id = c.id
-      JOIN
-        media m ON m2c.media_id = m.id
-      WHERE
-        m2c.returned_at >= $1
-      UNION
-      SELECT
-        c.first_name || ' ' || c.last_name AS customer_name,
-        'device' AS item_type,
-        d.device_name AS item_name,
-        d2c.returned_at AS date
-      FROM
-        device_to_customer d2c
-      JOIN
-        customer c ON d2c.customer_id = c.id
-      JOIN
-        device d ON d2c.device_id = d.id
-      WHERE
-        d2c.returned_at >= $1;
-    `;
-
-    const result = await pool.query(query, [startDate]);
-
-    res.status(200).json(result.rows[0]);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Internal server error' });
+  if (!startDate || !endDate) {
+    return res.status(400).json({ error: 'Both startDate and endDate are required' });
   }
-});
+
+  const query = {
+    text: `SELECT c.first_name || ' ' || c.last_name AS customer_name, 'book' AS item_type, b.title AS item_name, b2c.returned_at AS date FROM book_to_customer b2c JOIN customer c ON b2c.customer_id = c.id JOIN book b ON b2c.book_id = b.id WHERE b2c.returned_at BETWEEN $1 AND $2 UNION SELECT c.first_name || ' ' || c.last_name AS customer_name, 'media' AS item_type, m.title AS item_name, m2c.returned_at AS date FROM media_to_customer m2c JOIN customer c ON m2c.customer_id = c.id JOIN media m ON m2c.media_id = m.id WHERE m2c.returned_at BETWEEN $1 AND $2 UNION SELECT c.first_name || ' ' || c.last_name AS customer_name, 'device' AS item_type, d.device_name AS item_name, d2c.returned_at AS date FROM device_to_customer d2c JOIN customer c ON d2c.customer_id = c.id JOIN device d ON d2c.device_id = d.id WHERE d2c.returned_at BETWEEN $1 AND $2`,
+    values: [startDate, endDate]
+  }
+
+  await pool.query(query, (error, results) => {
+    if (error) {
+      console.error('Error executing query:', error);
+      res.status(500).json({ error: 'An error occurred while retrieving the data.' });
+    } else {
+      res.status(201).json(results.rows)
+    }
+  });
+})
+
+router.get('/reports/currentbooks/:id', async (req, res) => {
+  const query = {
+    text: 'SELECT * FROM book JOIN book_to_customer ON book_to_customer.book_id=book.id WHERE book_to_customer.customer_id = $1 AND returned_at IS NULL',
+    values: [req.params.id],
+  };
+  await pool.query(query, (error, results) => {
+    if (error) {
+      console.error('Error executing query:', error);
+      res.status(500).json({ error: 'An error occurred while retrieving the data.' });
+    } else {
+      res.status(201).json(results.rows)
+    }
+  });
+})
+
+router.get('/reports/currentdevices/:id', async (req, res) => {
+  const query = {
+    text: 'SELECT * FROM device JOIN device_to_customer ON device_to_customer.device_id=device.id WHERE device_to_customer.customer_id = $1 AND returned_at IS NULL',
+    values: [req.params.id],
+  };
+  await pool.query(query, (error, results) => {
+    if (error) {
+      console.error('Error executing query:', error);
+      res.status(500).json({ error: 'An error occurred while retrieving the data.' });
+    } else {
+      res.status(201).json(results.rows)
+    }
+  });
+})
+
+router.get('/reports/currentmedia/:id', async (req, res) => {
+  const query = {
+    text: 'SELECT * FROM media JOIN media_to_customer ON media_to_customer.media_id=media.id WHERE media_to_customer.customer_id = $1 AND returned_at IS NULL',
+    values: [req.params.id],
+  };
+  await pool.query(query, (error, results) => {
+    if (error) {
+      console.error('Error executing query:', error);
+      res.status(500).json({ error: 'An error occurred while retrieving the data.' });
+    } else {
+      res.status(201).json(results.rows)
+    }
+  });
+})
+
 module.exports = router
