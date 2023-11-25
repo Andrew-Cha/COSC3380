@@ -48,33 +48,41 @@ const payDevice = async (id, cardNumber) => {
 };
 
 const payFine = async (id, type) => {
-    if (isLoggedIn.value) {
-        try {
-            let cardNumber = prompt("Please enter your card number:");
-            if (!cardNumber || !/\d/.test(cardNumber)) {
-                alert("Please input a correct card number.");
+    if (!isLoggedIn.value) return;
+    try {
+        let cardNumber = "";
+        while (true) {
+            cardNumber = prompt("Please enter your card number:");
+            if (cardNumber === null) {
+                alert("Payment cancelled.");
                 return;
             }
-
-            switch (type) {
-                case 'book':
-                    await payBook(id, cardNumber);
-                    break;
-                case 'media':
-                    await payMedia(id, cardNumber);
-                    break;
-                case 'device':
-                    await payDevice(id, cardNumber);
-                    break;
-                default:
-                    throw new Error(`Unsupported fine type: ${type}`);
+            if (/\d/.test(cardNumber)) {
+                break;
             }
-            alert("Your fine has been paid successfully, thank you.")
-        } catch (error) {
-            console.error('There has been an error paying your fine:', error);
+
+            alert("Invalid card number.");
         }
+
+        switch (type) {
+            case 'book':
+                await payBook(id, cardNumber);
+                break;
+            case 'media':
+                await payMedia(id, cardNumber);
+                break;
+            case 'device':
+                await payDevice(id, cardNumber);
+                break;
+            default:
+                throw new Error(`Unsupported fine type: ${type}`);
+        }
+        alert("Your fine has been paid successfully, thank you.")
+    } catch (error) {
+        console.error('There has been an error paying your fine:', error);
     }
 };
+
 </script>
 
 <template>
