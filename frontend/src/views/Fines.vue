@@ -50,7 +50,7 @@ const payDevice = async (id, cardNumber) => {
 const payFine = async (id, type) => {
     if (isLoggedIn.value) {
         try {
-            const cardNumber = prompt("Please give me your card number")
+            const cardNumber = prompt("Please enter your card number:")
 
             switch (type) {
                 case 'book':
@@ -65,9 +65,9 @@ const payFine = async (id, type) => {
                 default:
                     throw new Error(`Unsupported fine type: ${type}`);
             }
-            alert("Paid successfully, thank you for your money.")
+            alert("Your fine has been paid successfully, thank you.")
         } catch (error) {
-            console.error('Error paying fine:', error);
+            console.error('There has been an error paying your fine:', error);
         }
     }
 };
