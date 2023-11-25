@@ -23,7 +23,7 @@ router.post('/login', async (req, res) => {
 })
 
 router.post('/create', async (req, res) => {
-    const { firstName, lastName, password, roleId } = req.body
+    const { firstName, lastName, password, roleId, city, companyName } = req.body
 
     const existing_user_query = {
         text: 'SELECT * FROM customer WHERE first_name = $1 AND last_name = $2',
@@ -36,7 +36,7 @@ router.post('/create', async (req, res) => {
     }
 
     const query = {
-        text: 'INSERT INTO customer(first_name, last_name, password, registration_date, role_id) VALUES($1, $2, $3, current_timestamp, $4)',
+        text: 'INSERT INTO customer(first_name, last_name, password, registration_date, role_id) VALUES($1, $2, $3, current_timestamp, $4) RETURNING *',
         values: [firstName, lastName, password, roleId],
     };
     await pool.query(query, (error, results) => {
@@ -44,6 +44,14 @@ router.post('/create', async (req, res) => {
             console.error('Error executing query:', error);
             res.status(500).json({ error: 'An error occurred while inserting the data.' });
         } else {
+            console.log(results.rows)
+            if (roleId == 4) {
+                const createCompanyQuery = {
+                    text: "INSERT INTO publisher(city, company_name, customer_id) VALUES($1, $2, $3);",
+                    values: [city, companyName, results.rows[0].id]
+                }
+                pool.query(createCompanyQuery)
+            }
             res.status(201).json({ message: "User created successfully." })
         }
     });

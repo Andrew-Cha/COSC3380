@@ -14,6 +14,9 @@ const password = ref("")
 const isLoggingIn = ref(true)
 const roleId = ref(1)
 
+const city = ref("")
+const companyName = ref("")
+
 
 function setUserRole(event) {
     const roleChosen = event.target.value
@@ -28,6 +31,8 @@ async function login() {
         firstName: firstName.value,
         lastName: lastName.value,
         password: password.value,
+        city: city.value,
+        companyName: companyName.value
     }
 
     axios.post(`http://${import.meta.env.VITE_SERVER_URL}:3000/api/customers/login`, customer)
@@ -77,6 +82,8 @@ function signup() {
                 <input type="text" placeholder="First Name" required="true" v-model="firstName" />
                 <input type="text" placeholder="Last Name" required="true" v-model="lastName" />
                 <input type="password" placeholder="Password" required="true" v-model="password" />
+                <input v-if="roleId === 4" type="text" placeholder="City Name" required="true" v-model="city" />
+                <input v-if="roleId === 4" type="text" placeholder="Company Name" required="true" v-model="companyName" />
                 <p>Please select your role. Be truthful. This really doesn't let you do much except see more fake generated
                     database data and take out more items.</p>
                 <select required="true" @input="setUserRole">

@@ -31,6 +31,7 @@ const fetchFinesReport = async () => {
       },
     });
     totalFines.value = response.data;
+    totalFines.value = totalFines.value[0].total_fines
   } catch (error) {
     console.error('Error fetching fines report:', error);
   }
@@ -201,7 +202,7 @@ async function addItem() {
       </div>
       <div class="user-detail">
         <strong>Total Fines Collected:</strong>
-        <p>${{ totalFines[0].total_fines }}</p>
+        <p> ${{ totalFines }}</p>
       </div>
     </div>
 
