@@ -13,21 +13,42 @@ const fineToBook = ref([])
 const fineToDevice = ref([])
 const fineToMedia = ref([])
 
-const refreshFines = async () => {
-    try {
-        const body = {
-            userId: user.value.id
-        }
+const formatTimestamp = (isoString) => {
+  const date = new Date(isoString);
+  return date.toLocaleDateString('en-US', {
+    month: '2-digit',
+    day: '2-digit',
+    year: 'numeric'
+  }) + ' ' + date.toLocaleTimeString('en-US', {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false
+  });
+};
 
-        const bookResponse = await axios.post(`${apiUrl}/fines/books`, body);
-        fineToBook.value = bookResponse.data;
-        const mediaResponse = await axios.post(`${apiUrl}/fines/media`, body);
-        fineToMedia.value = mediaResponse.data;
-        const deviceResponse = await axios.post(`${apiUrl}/fines/devices`, body);
-        fineToDevice.value = deviceResponse.data;
-    } catch (error) {
-        console.error('Error fetching data:', error);
-    }
+const refreshFines = async () => {
+  try {
+    const body = {
+      userId: user.value.id
+    };
+    const bookResponse = await axios.post(`${apiUrl}/fines/books`, body);
+    fineToBook.value = bookResponse.data.map((book) => ({
+      ...book,
+      fined_at: formatTimestamp(book.fined_at)
+    }));
+    const mediaResponse = await axios.post(`${apiUrl}/fines/media`, body);
+    fineToMedia.value = mediaResponse.data.map((media) => ({
+      ...media,
+      fined_at: formatTimestamp(media.fined_at)
+    }));
+    const deviceResponse = await axios.post(`${apiUrl}/fines/devices`, body);
+    fineToDevice.value = deviceResponse.data.map((device) => ({
+      ...device,
+      fined_at: formatTimestamp(device.fined_at)
+    }));
+  } catch (error) {
+    console.error('Error fetching data:', error);
+  }
 };
 
 onMounted(refreshFines);
