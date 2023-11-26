@@ -415,4 +415,59 @@ router.post('/createDevice', async (req, res) => {
         }
     });
 })
+
+// Delete
+router.delete('/deleteBook/:id', async (req, res) => {
+    const bookId = req.params.id;
+  
+      const query = {
+        text: 'DELETE FROM book WHERE id = $1',
+        values: [bookId],
+      };
+  
+      await pool.query(query, (error, results) => {
+        if (error) {
+            console.error('Error executing query:', error);
+            res.status(500).json({ error: 'An error occurred while deleting the data.' });
+        } else {
+            res.status(201).json({ message: "Book deleted successfully." })
+        }
+    });
+})
+
+  router.delete('/deleteDevice/:id', async (req, res) => {
+    const deviceId = req.params.id;
+  
+      const query = {
+        text: 'DELETE FROM device WHERE id = $1',
+        values: [deviceId],
+      };
+  
+      await pool.query(query, (error, results) => {
+        if (error) {
+            console.error('Error executing query:', error);
+            res.status(500).json({ error: 'An error occurred while deleting the data.' });
+        } else {
+            res.status(201).json({ message: "Device deleted successfully." })
+        }
+    });
+})
+
+  router.delete('/deleteMedia/:id', async (req, res) => {
+    const mediaId = req.params.id;
+  
+      const query = {
+        text: 'DELETE FROM media WHERE id = $1',
+        values: [mediaId],
+      };
+  
+      await pool.query(query, (error, results) => {
+        if (error) {
+            console.error('Error executing query:', error);
+            res.status(500).json({ error: 'An error occurred while deleting the data.' });
+        } else {
+            res.status(201).json({ message: "Media deleted successfully." })
+        }
+    });
+})
 module.exports = router
