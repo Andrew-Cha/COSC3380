@@ -335,12 +335,12 @@ async function addItem() {
             <th>Loan Date</th>
             <th>Loan Until</th>
             <th>Returned Date</th>
-            <tr v-for="media in currentLoansData" :key="media.id">
-              <td>{{ media.title }}</td>
-              <td>{{ media.author }}</td>
-              <td>{{ media.file_link }}</td>
-              <td>{{ media.loaned_at }}</td>
-              <td>{{ media.loaned_until }}</td>
+            <tr v-for="item in currentLoansData" :key="item.id">
+              <td>{{ item.title }}</td>
+              <td>{{ item.author }}</td>
+              <td>{{ item.file_link }}</td>
+              <td>{{ item.loaned_at }}</td>
+              <td>{{ item.loaned_until }}</td>
             </tr>
           </table>
         </template>
