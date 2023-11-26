@@ -306,13 +306,12 @@ async function addItem() {
       <div v-if="includeBooks">
         <h3>Books</h3>
         <template v-if="currentLoansData.length !== 0">
-          <table class="currentLoans-table">
+          <table class="currentLoansBook-table">
             <th>Title</th>
             <th>ISBN</th>
             <th>Edition</th>
             <th>Loan Date</th>
             <th>Loan Until</th>
-            <th>Returned Date</th>
             <tr v-for="book in currentLoansData" :key="book.id">
               <td>{{ book.title }}</td>
               <td>{{ book.isbn }}</td>
@@ -328,13 +327,12 @@ async function addItem() {
       <div v-if="includeMedia">
         <h3>Media</h3>
         <template v-if="currentLoansData.length !== 0">
-          <table class="currentLoans-table">
+          <table class="currentLoansMedia-table">
             <th>Title</th>
             <th>Author</th>
             <th>Media Link</th>
             <th>Loan Date</th>
             <th>Loan Until</th>
-            <th>Returned Date</th>
             <tr v-for="item in currentLoansData" :key="item.id">
               <td>{{ item.title }}</td>
               <td>{{ item.author }}</td>
@@ -350,13 +348,12 @@ async function addItem() {
       <div v-if="includeDevices">
         <h3>Devices</h3>
         <template v-if="currentLoansData.length !== 0">
-          <table class="currentLoans-table">
+          <table class="currentLoansDevice-table">
             <th>Name</th>
             <th>Type</th>
             <th>Serial Number</th>
             <th>Loan Date</th>
             <th>Loan Until</th>
-            <th>Returned Date</th>
             <tr v-for="device in currentLoansData" :key="device.id">
               <td>{{ device.device_name }}</td>
               <td>{{ device.device_type }}</td>
@@ -567,7 +564,9 @@ async function addItem() {
 }
 
 .loan-table,
-.currentLoans-table {
+.currentLoansBook-table,
+.currentLoansMedia-table,
+.currentLoansDevice-table {
 
   width: 100%;
   border-collapse: collapse;
@@ -576,14 +575,21 @@ async function addItem() {
 
 .loan-table th,
 .loan-table td,
-.currentLoans-table th,
-.currentLoans-table td {
+.currentLoansBook-table th,
+.currentLoansBook-table td,
+.currentLoansMedia-table th,
+.currentLoansMedia-table td,
+.currentLoansDevice-table th,
+.currentLoansDevice-table td {
   border: 1px solid #ddd;
   padding: 8px;
   text-align: left;
 }
 
-.loan-table th .currentLoans-table th {
+.loan-table th,
+.currentLoansBook-table th,
+.currentLoansMedia-table th,
+.currentLoansDevice-table th {
   background-color: #f2f2f2;
 }
 </style>
