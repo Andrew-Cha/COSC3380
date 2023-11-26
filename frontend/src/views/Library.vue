@@ -97,6 +97,43 @@ async function holdDevice(id) {
     await axios.post(`${apiUrl}/items/holdDevice`, request)
     getDevices()
 }
+    
+async function deleteBook(id) {
+    await axios.delete(`${apiUrl}/items/deleteBook/${id}`)
+    getBooks()
+}
+
+async function deleteDevice(id) {
+    await axios.delete(`${apiUrl}/items/deleteDevice/${id}`)
+    getDevices()
+}
+
+async function deleteMedia(id) {
+    await axios.delete(`${apiUrl}/items/deleteMedia/${id}`)
+    getMedia()
+}
+
+async function confirmDeleteBook(id) {
+  const isConfirmed = window.confirm("Are you sure you want to delete this Book?");
+  if (isConfirmed) {
+    await deleteBook(id);
+  }
+}
+
+async function confirmDeleteDevice(id) {
+  const isConfirmed = window.confirm("Are you sure you want to delete this Device?");
+  if (isConfirmed) {
+    await deleteDevice(id);
+  }
+}
+
+async function confirmDeleteMedia(id) {
+  const isConfirmed = window.confirm("Are you sure you want to delete this Media?");
+  if (isConfirmed) {
+    await deleteMedia(id);
+  }
+}
+
 </script>
 <template>
     <div class="inventory-page">
@@ -122,6 +159,8 @@ async function holdDevice(id) {
                             :disabled="isLoggedIn === false">Loan</button>
                         <button class="action-button extend-button" @click="holdBook(book.id)"
                             :disabled="isLoggedIn === false">Hold</button>
+                        <button v-if="user.role_id === 3" class="action-button delete-button" @click="confirmDeleteBook(book.id)"
+                            :disabled="isLoggedIn === false">Delete</button>
                     </td>
                 </tr>
             </table>
@@ -154,6 +193,8 @@ async function holdDevice(id) {
                             :disabled="isLoggedIn === false">Loan</button>
                         <button class="action-button extend-button" @click="holdDevice(device.id)"
                             :disabled="isLoggedIn === false">Hold</button>
+                        <button v-if="user.role_id === 3" class="action-button delete-button" @click="confirmDeleteDevice(device.id)"
+                            :disabled="isLoggedIn === false">Delete</button>
                     </td>
                 </tr>
             </table>
@@ -181,6 +222,8 @@ async function holdDevice(id) {
                             :disabled="isLoggedIn === false">Loan</button>
                         <button class="action-button extend-button" @click="holdMedia(item.id)"
                             :disabled="isLoggedIn === false">Hold</button>
+                        <button v-if="user.role_id === 3" class="action-button delete-button" @click="confirmDeleteMedia(item.id)"
+                            :disabled="isLoggedIn === false">Delete</button>
                     </td>
                 </tr>
             </table>
