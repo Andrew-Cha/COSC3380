@@ -10,11 +10,14 @@ const { user } = storeToRefs(mainStore)
 const periods = ['lastDay', 'lastWeek', 'lastMonth', 'lastYear'];
 const selectedPeriod = ref(periods[0]);
 const totalFines = ref(0);
+const selectedRoleId = ref(null);
 
 const pastLoansData = ref([]);
 const selectedStartDate = ref(null);
 const selectedEndDate = ref(null);
 
+const roles = ref([]);
+const customers = ref([]);
 const selectedCustomerId = ref(null);
 const includeBooks = ref(false);
 const includeMedia = ref(false);
@@ -28,6 +31,7 @@ const fetchFinesReport = async () => {
     const response = await axios.get(`${apiUrl}/reports/fines`, {
       params: {
         period: selectedPeriod.value,
+        roleId: selectedRoleId.value,
       },
     });
     totalFines.value = response.data;
@@ -73,11 +77,31 @@ const fetchCurrentLoansReport = async () => {
   }
 };
 
+const fetchCustomers = async () => {
+  try {
+    const response = await axios.get(`${apiUrl}/reports/customers`);
+    customers.value = response.data;
+  } catch (error) {
+    console.error('Error fetching customers:', error);
+  }
+};
+
+const fetchRoles = async () => {
+  try {
+    const response = await axios.get(`${apiUrl}/reports/roles`);
+    roles.value = response.data;
+  } catch (error) {
+    console.error('Error fetching customers:', error);
+  }
+};
+
 onMounted(() => {
   if (user.value.role_id === 3) {
     fetchFinesReport();
     fetchPastLoansReport();
     fetchCurrentLoansReport();
+    fetchCustomers();
+    fetchRoles();
   }
 });
 
@@ -196,10 +220,20 @@ async function addItem() {
     <div v-if="user.role_id === 3" class="user-information report-section">
       <div class="user-detail">
         <strong>Select Period for Fines:</strong>
-        <select @change="fetchFinesReport">
+        <select v-model="selectedPeriod">
           <option v-for="period in periods" :key="period" :value="period">{{ period }}</option>
         </select>
       </div>
+
+      <div class="user-detail">
+        <strong>Select Role:</strong>
+        <select v-model="selectedRoleId">
+          <option v-for="role in roles" :key="role.id" :value="role.id">
+            {{ role.role_name }}
+          </option>
+        </select>
+      </div>
+      <button @click="fetchFinesReport">Run</button>
       <div class="user-detail">
         <strong>Total Fines Collected:</strong>
         <p> ${{ totalFines }}</p>
@@ -222,11 +256,24 @@ async function addItem() {
       </div>
       <div class="user-detail">
         <strong>Past Loans Information:</strong>
-        <div v-for="loan in pastLoansData" :key="loan.id">
-          <p>{{ loan.customer_name }} loaned {{ loan.item_type }} '{{ loan.item_name }}' and returned on {{
-            loan.returned_at }}
-          </p>
-        </div>
+        <table class="loan-table">
+          <thead>
+            <tr>
+              <th>Customer Name</th>
+              <th>Item Type</th>
+              <th>Item Name</th>
+              <th>Returned At</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="loan in pastLoansData" :key="loan.id">
+              <td>{{ loan.customer_name }}</td>
+              <td>{{ loan.item_type }}</td>
+              <td>{{ loan.item_name }}</td>
+              <td>{{ loan.returned_at }}</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
 
@@ -234,7 +281,11 @@ async function addItem() {
     <div v-if="user.role_id === 3" class="user-information report-section">
       <div class="user-detail">
         <strong>Select Customer for Current Loans:</strong>
-        <input type="text" v-model="selectedCustomerId" placeholder="Enter Customer ID" />
+        <select v-model="selectedCustomerId">
+          <option v-for="customer in customers" :key="customer.id" :value="customer.id">
+            {{ customer.customer_name }}
+          </option>
+        </select>
       </div>
       <div class="user-detail">
         <strong>Include in Report:</strong>
@@ -513,6 +564,27 @@ async function addItem() {
 
 .tab-content button:hover {
   background-color: #0056b3;
+}
+
+.loan-table,
+.currentLoans-table {
+
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.loan-table th,
+.loan-table td,
+.currentLoans-table th,
+.currentLoans-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.loan-table th .currentLoans-table th {
+  background-color: #f2f2f2;
 }
 </style>
   

@@ -124,7 +124,7 @@ async function getFineAmount(id) {
 }
 
 router.get('/reports/fines', async (req, res) => {
-  const { period } = req.query;
+  const { period, roleId } = req.query;
   let startDate;
 
   if (period === 'lastDay') {
@@ -144,8 +144,8 @@ router.get('/reports/fines', async (req, res) => {
   }
 
   const query = {
-    text: 'SELECT SUM(transaction.transaction_amount) AS total_fines FROM transaction JOIN fine ON fine.id = transaction.fine_id WHERE fine.fined_at >= $1',
-    values: [startDate],
+    text: 'SELECT SUM(transaction.transaction_amount) AS total_fines FROM transaction JOIN fine ON fine.id = transaction.fine_id JOIN customer ON customer.id = fine.customer_id WHERE fine.fined_at >= $1 AND customer.role_id = $2',
+    values: [startDate, roleId],
   };
   await pool.query(query, (error, results) => {
     if (error) {
@@ -225,4 +225,33 @@ router.get('/reports/currentmedia/:id', async (req, res) => {
   });
 })
 
+router.get('/reports/customers', async (req, res) => {
+  const query = {
+    text: `SELECT c.id, c.first_name || ' ' || c.last_name AS customer_name FROM customer c`,
+  };
+
+  await pool.query(query, (error, results) => {
+    if (error) {
+      console.error('Error executing query:', error);
+      res.status(500).json({ error: 'An error occurred while retrieving the data.' });
+    } else {
+      res.status(201).json(results.rows)
+    }
+  });
+})
+
+router.get('/reports/roles', async (req, res) => {
+  const query = {
+    text: `SELECT id, role_name FROM role`,
+  };
+
+  await pool.query(query, (error, results) => {
+    if (error) {
+      console.error('Error executing query:', error);
+      res.status(500).json({ error: 'An error occurred while retrieving the data.' });
+    } else {
+      res.status(201).json(results.rows)
+    }
+  });
+})
 module.exports = router
