@@ -247,6 +247,73 @@ router.post('/extendDevice', async (req, res) => {
     });
 })
 
+router.post('/updateBook', async (req, res) => {
+    const {
+        id,
+        title,
+        isbn,
+        condition,
+        edition,
+        year
+    } = req.body
+    const query = {
+        text: 'UPDATE book SET title = $2, isbn = $3, condition = $4, edition = $5, release_year = $6  WHERE id = $1 ',
+        values: [id, title, isbn, condition, edition, year],
+    };
+    await pool.query(query, (error, results) => {
+        if (error) {
+            console.error('Error executing query:', error);
+            res.status(500).json({ error: 'An error occurred while inserting the data.' });
+        } else {
+            res.status(201).json({ message: "Book updated successfully." })
+        }
+    });
+})
+
+router.post('/updateMedia', async (req, res) => {
+    const {
+        id,
+        title,
+        author,
+        type,
+        size
+    } = req.body
+    const query = {
+        text: 'UPDATE media SET title = $2, author = $3, file_type = $4, file_size = $5 WHERE id = $1 ',
+        values: [id, title, author, type, size],
+    };
+    await pool.query(query, (error, results) => {
+        if (error) {
+            console.error('Error executing query:', error);
+            res.status(500).json({ error: 'An error occurred while inserting the data.' });
+        } else {
+            res.status(201).json({ message: "Book updated successfully." })
+        }
+    });
+})
+
+router.post('/updateDevice', async (req, res) => {
+    const {
+        id,
+        device_name,
+        device_type,
+        maintenance_history,
+        operating_system,
+        serial_number,
+    } = req.body
+    const query = {
+        text: 'UPDATE device SET device_name = $2, device_type = $3, maintenance_history = $4, operating_system = $5, serial_number = $6 WHERE id = $1 ',
+        values: [id, device_name, device_type, maintenance_history, operating_system, serial_number],
+    };
+    await pool.query(query, (error, results) => {
+        if (error) {
+            console.error('Error executing query:', error);
+            res.status(500).json({ error: 'An error occurred while inserting the data.' });
+        } else {
+            res.status(201).json({ message: "Book updated successfully." })
+        }
+    });
+})
 // User's loans
 router.get('/loanedBooks/:id', async (req, res) => {
     const query = {
@@ -419,13 +486,13 @@ router.post('/createDevice', async (req, res) => {
 // Delete
 router.delete('/deleteBook/:id', async (req, res) => {
     const bookId = req.params.id;
-  
-      const query = {
+
+    const query = {
         text: 'DELETE FROM book WHERE id = $1',
         values: [bookId],
-      };
-  
-      await pool.query(query, (error, results) => {
+    };
+
+    await pool.query(query, (error, results) => {
         if (error) {
             console.error('Error executing query:', error);
             res.status(500).json({ error: 'An error occurred while deleting the data.' });
@@ -435,15 +502,15 @@ router.delete('/deleteBook/:id', async (req, res) => {
     });
 })
 
-  router.delete('/deleteDevice/:id', async (req, res) => {
+router.delete('/deleteDevice/:id', async (req, res) => {
     const deviceId = req.params.id;
-  
-      const query = {
+
+    const query = {
         text: 'DELETE FROM device WHERE id = $1',
         values: [deviceId],
-      };
-  
-      await pool.query(query, (error, results) => {
+    };
+
+    await pool.query(query, (error, results) => {
         if (error) {
             console.error('Error executing query:', error);
             res.status(500).json({ error: 'An error occurred while deleting the data.' });
@@ -453,15 +520,15 @@ router.delete('/deleteBook/:id', async (req, res) => {
     });
 })
 
-  router.delete('/deleteMedia/:id', async (req, res) => {
+router.delete('/deleteMedia/:id', async (req, res) => {
     const mediaId = req.params.id;
-  
-      const query = {
+
+    const query = {
         text: 'DELETE FROM media WHERE id = $1',
         values: [mediaId],
-      };
-  
-      await pool.query(query, (error, results) => {
+    };
+
+    await pool.query(query, (error, results) => {
         if (error) {
             console.error('Error executing query:', error);
             res.status(500).json({ error: 'An error occurred while deleting the data.' });

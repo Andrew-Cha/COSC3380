@@ -24,8 +24,13 @@ import { RouterLink } from 'vue-router'
             </ul>
         </section>
 
-        <h1>TODO List:</h1>
-        <li>3x Reports on Admin page</li>
+        <h4>The library will fine you if you do not return an item in 30 seconds.</h4>
+        <h4>Check how many items you can take out in my profile.</h4>
+        <h4>Paying fines is as simple as giving us your card number.</h4>
+        <h4>Holding a book has no consequences, want it a bit later? Hold it!</h4>
+        <h4>Admins have access to reports in their profile.</h4>
+        <h4>Admins can edit and delete items.</h4>
+        <h4>Publishers can create items in their profile.</h4>
     </div>
 </template>
   
