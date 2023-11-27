@@ -4,45 +4,48 @@ import { RouterLink } from 'vue-router'
 
 <template>
     <div class="welcome-page">
-        <h1>Welcome to Our Cool Library!</h1>
-
+      <div class="header-section">
+        <h1 class="main-header">Welcome to Our Cool Library!</h1>
         <section>
-            <p>Check out these features on our website:</p>
-            <ul class="feature-list">
-                <li>
-                    <router-link to="/library" class="big-button">Explore the Library</router-link>
-                </li>
-                <li>
-                    <router-link to="/inventory" class="big-button">My Items</router-link>
-                </li>
-                <li>
-                    <router-link to="/fines" class="big-button">My Fines</router-link>
-                </li>
-                <li>
-                    <router-link to="/profile" class="big-button">My Profile</router-link>
-                </li>
-            </ul>
+          <ul>
+            <li>
+              <router-link to="/library" class="big-button">Explore the Library</router-link>
+            </li>
+          </ul>
         </section>
-
-        <h4>The library will fine you if you do not return an item in 30 seconds.</h4>
-        <h4>Check how many items you can take out in my profile.</h4>
-        <h4>Paying fines is as simple as giving us your card number.</h4>
-        <h4>Holding a book has no consequences, want it a bit later? Hold it!</h4>
-        <h4>Admins have access to reports in their profile.</h4>
-        <h4>Admins can edit and delete items.</h4>
-        <h4>Publishers can create items in their profile.</h4>
-    </div>
-</template>
+      </div>
   
-<style scoped>
-.welcome-page {
+      <div class="info-section">
+        <h4>Important Information:</h4>
+        <ul>
+          <li>The library will fine you if you do not return an item in 30 seconds.</li>
+          <li>Check how many items you can take out in my profile.</li>
+          <li>Paying fines is as simple as giving us your card number.</li>
+          <li>Holding a book has no consequences; want it a bit later? Hold it!</li>
+          <li>Admins have access to reports in their profile.</li>
+          <li>Admins can edit and delete items.</li>
+          <li>Publishers can create items in their profile.</li>
+        </ul>
+      </div>
+    </div>
+  </template>
+  
+  <style scoped>
+  .welcome-page {
     text-align: center;
-}
-
-.feature-list {
-    list-style: none;
-    padding: 0;
-}
+    padding: 20px;
+    font-family: 'Poppins', sans-serif;
+    background-image: url('https://i.pinimg.com/originals/3e/04/73/3e04731b9869cc1e1ea04d3ab72068fb.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 100vh;
+  }
+  
+  .header-section {
+    background-color: rgba(255, 255, 255, 0.6);
+    padding: 50px;
+  }
 
 .big-button {
     display: inline-block;
@@ -59,6 +62,23 @@ import { RouterLink } from 'vue-router'
 
 .big-button:hover {
     background-color: #0056b3;
+}
+
+.info-section {
+    background-color: rgba(224, 224, 224, 0.6);
+    padding: 20px;
+}
+  
+ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+  
+.main-header {
+    font-size: 2.8rem;
+    font-family: 'Poppins', sans-serif;
+    margin-bottom: 10px;
 }
 </style>
   
