@@ -116,6 +116,7 @@ const payFine = async (id, type) => {
                 <th>Book Title</th>
                 <th>Amount Due</th>
                 <th>Fined At</th>
+                <th>Actions</th>
                 <tr v-for="book in fineToBook" :key="book.id">
                     <td>{{ book.title }}</td>
                     <td>${{ book.fine_amount }}</td>
@@ -138,6 +139,7 @@ const payFine = async (id, type) => {
                 <th>Device Name</th>
                 <th>Amount Due</th>
                 <th>Fined At</th>
+                <th>Actions</th>
                 <tr v-for="device in fineToDevice" :key="device.id">
                     <td>{{ device.device_name }}</td>
                     <td>${{ device.fine_amount }}</td>
@@ -159,6 +161,7 @@ const payFine = async (id, type) => {
                 <th>Media Name</th>
                 <th>Amount Due</th>
                 <th>Fined At</th>
+               <th>Actions</th>
                 <tr v-for="media in fineToMedia" :key="media.id">
                     <td>{{ media.title }}</td>
                     <td>${{ media.fine_amount }}</td>
@@ -178,16 +181,21 @@ const payFine = async (id, type) => {
   
 <style scoped>
 .fines-page {
-    max-width: 600px;
     margin: 0 auto;
     padding: 20px;
     text-align: center;
+    font-family: 'Poppins', sans-serif;
+    background-image: url('https://i.pinimg.com/originals/3e/04/73/3e04731b9869cc1e1ea04d3ab72068fb.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 100vh;
 }
 
 .table-section {
     margin-bottom: 20px;
     width: 80%;
-    background-color: white;
+    background-color: rgba(255, 255, 255, 0.9);
 }
 
 table {
@@ -196,9 +204,8 @@ table {
     margin: 10px 0;
 }
 
-td {
-    border: 1px solid #ccc;
-    padding: 8px;
+th, td {
+    border: 1px solid;
 }
 
 button {
@@ -212,39 +219,6 @@ button {
 
 button:hover {
     background-color: #4cae4c;
-}
-
-.fine {
-    margin-bottom: 20px;
-    padding: 15px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-}
-
-.library-image {
-    margin-top: 20px;
-    text-align: center;
-}
-
-img {
-    max-width: 100%;
-    height: auto;
-    border-radius: 8px;
-}
-
-.filters {
-    display: flex;
-    justify-content: space-around;
-    margin-bottom: 20px;
-}
-
-.dropdown {
-    position: absolute;
-    background-color: #f9f9f9;
-    min-width: 160px;
-    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-    padding: 12px 16px;
-    z-index: 1;
 }
 
 button:disabled {
