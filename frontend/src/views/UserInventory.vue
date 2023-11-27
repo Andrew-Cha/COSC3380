@@ -164,6 +164,7 @@ async function loanDevice(id) {
         <th>Loan Date</th>
         <th>Loan Until</th>
         <th>Returned Date</th>
+        <th>Actions</th>
         <tr v-for="book in loanedBooks" :key="book.id">
           <td>{{ book.title }}</td>
           <td>{{ book.isbn }}</td>
@@ -193,6 +194,7 @@ async function loanDevice(id) {
         <th>Loan Date</th>
         <th>Loan Until</th>
         <th>Returned Date</th>
+        <th>Actions</th>
         <tr v-for="device in loanedDevices" :key="device.id">
           <td>{{ device.device_name }}</td>
           <td>{{ device.device_type }}</td>
@@ -223,6 +225,7 @@ async function loanDevice(id) {
         <th>Loan Date</th>
         <th>Loan Until</th>
         <th>Returned Date</th>
+        <th>Actions</th>
         <tr v-for="item in loanedMedia" :key="item.id">
           <td>{{ item.title }}</td>
           <td>{{ item.author }}</td>
@@ -254,6 +257,7 @@ async function loanDevice(id) {
         <th>Hold Date</th>
         <th>Held Until</th>
         <th>Returned Date</th>
+        <th>Actions</th>
         <tr v-for="book in heldBooks" :key="book.id">
           <td>{{ book.title }}</td>
           <td>{{ book.isbn }}</td>
@@ -280,6 +284,7 @@ async function loanDevice(id) {
         <th>Hold Date</th>
         <th>Held Until</th>
         <th>Returned Date</th>
+        <th>Actions</th>
         <tr v-for="device in heldDevices" :key="device.id">
           <td>{{ device.device_name }}</td>
           <td>{{ device.device_type }}</td>
@@ -307,6 +312,7 @@ async function loanDevice(id) {
         <th>Hold Date</th>
         <th>Held Until</th>
         <th>Returned Date</th>
+        <th>Actions</th>
         <tr v-for="item in heldMedia" :key="item.id">
           <td>{{ item.title }}</td>
           <td>{{ item.author }}</td>
@@ -332,6 +338,12 @@ async function loanDevice(id) {
   display: flex;
   flex-direction: column;
   align-items: center;
+  font-family: 'Poppins', sans-serif;
+  background-image: url('https://i.pinimg.com/originals/3e/04/73/3e04731b9869cc1e1ea04d3ab72068fb.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 100vh;
 }
 
 .page-title {
@@ -379,7 +391,7 @@ td {
 }
 
 table {
-  background-color: white;
+  background-color: rgba(255, 255, 255, 0.9);
 }
 
 button:disabled {
