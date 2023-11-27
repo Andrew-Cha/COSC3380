@@ -104,7 +104,12 @@ function signup() {
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 50vh;
+    font-family: 'Poppins', sans-serif;
+    background-image: url('https://i.pinimg.com/originals/3e/04/73/3e04731b9869cc1e1ea04d3ab72068fb.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 100vh;
 }
 
 .auth-form {
