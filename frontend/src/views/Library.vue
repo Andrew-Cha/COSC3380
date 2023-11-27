@@ -260,7 +260,7 @@ async function confirmDeleteMedia(id) {
                             :disabled="isLoggedIn === false">Hold</button>
                         <button v-if="user.role_id === 3" class="action-button delete-button"
                             @click="confirmDeleteBook(book.id)" :disabled="isLoggedIn === false">Delete</button>
-                        <button v-if="user.role_id === 3" class="action-button extend-button"
+                        <button v-if="user.role_id === 3" class="action-button edit-button"
                             @click="editBook(book.id)">Edit</button>
                     </td>
                 </tr>
@@ -273,7 +273,7 @@ async function confirmDeleteMedia(id) {
                     <input type="text" placeholder="Release Year" v-model="editBookYear" required="true" />
                     <input type="text" placeholder="Book Condition" v-model="editBookCondition" required="true" />
                     <input type="text" placeholder="ISBN" required="true" v-model="editBookISBN" />
-                    <button class="submit-button" type="submit">Save</button>
+                    <button class="action-button" type="submit">Save</button>
                 </form>
             </div>
             <div v-else>
@@ -307,7 +307,7 @@ async function confirmDeleteMedia(id) {
                             :disabled="isLoggedIn === false">Hold</button>
                         <button v-if="user.role_id === 3" class="action-button delete-button"
                             @click="confirmDeleteDevice(device.id)" :disabled="isLoggedIn === false">Delete</button>
-                        <button v-if="user.role_id === 3" class="action-button extend-button"
+                        <button v-if="user.role_id === 3" class="action-button edit-button"
                             @click="editDevice(device.id)">Edit</button>
                     </td>
                 </tr>
@@ -321,7 +321,7 @@ async function confirmDeleteMedia(id) {
                     <input type="text" placeholder="Manufacturer" required="true" v-model="editDeviceManufacturer" />
                     <input type="text" placeholder="Operating System" required="true" v-model="editDeviceOS" />
                     <input type="text" placeholder="Serial Number" required="true" v-model="editDeviceSerial" />
-                    <button class="submit-button" type="submit">Save</button>
+                    <button class="action-button" type="submit">Save</button>
                 </form>
             </div>
             <div v-else>
@@ -349,7 +349,7 @@ async function confirmDeleteMedia(id) {
                             :disabled="isLoggedIn === false">Hold</button>
                         <button v-if="user.role_id === 3" class="action-button delete-button"
                             @click="confirmDeleteMedia(item.id)" :disabled="isLoggedIn === false">Delete</button>
-                        <button v-if="user.role_id === 3" class="action-button extend-button"
+                        <button v-if="user.role_id === 3" class="action-button edit-button"
                             @click="editMedia(item.id)">Edit</button>
                     </td>
                 </tr>
@@ -361,7 +361,7 @@ async function confirmDeleteMedia(id) {
                     <input type="text" placeholder="Media Title" required="true" v-model="editMediaTitle" />
                     <input type="text" placeholder="Media File Type" required="true" v-model="editMediaType" />
                     <input type="text" placeholder="Media File Size" required="true" v-model="editMediaSize" />
-                    <button class="submit-button" type="submit">Save</button>
+                    <button class="action-button" type="submit">Save</button>
                 </form>
             </div>
             <div v-else>
@@ -376,6 +376,12 @@ async function confirmDeleteMedia(id) {
     display: flex;
     flex-direction: column;
     align-items: center;
+    font-family: 'Poppins', sans-serif;
+    background-image: url('https://i.pinimg.com/originals/3e/04/73/3e04731b9869cc1e1ea04d3ab72068fb.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 100vh;
 }
 
 .page-title {
@@ -411,7 +417,19 @@ td {
 .return-button {
     margin-right: 5px;
 }
-
+    
+.extend-button {
+    margin-right: 5px;
+}
+    
+.delete-button {
+    margin-right: 5px;
+}
+    
+.edit-button {
+    margin-right: 5px;
+}
+    
 .action-button:hover {
     background-color: #0056b3;
 }
@@ -423,7 +441,7 @@ td {
 }
 
 table {
-    background-color: white;
+    background-color: rgba(255, 255, 255, 0.9);
 }
 
 button:disabled {
