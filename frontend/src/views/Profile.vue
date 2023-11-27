@@ -444,7 +444,12 @@ async function addItem() {
 <style scoped>
 .user-profile-page {
   text-align: center;
-  margin: 20px;
+  font-family: 'Poppins', sans-serif;
+  background-image: url('https://i.pinimg.com/originals/3e/04/73/3e04731b9869cc1e1ea04d3ab72068fb.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 100vh;
 }
 
 .page-title {
@@ -459,7 +464,7 @@ async function addItem() {
   border: 1px solid #ccc;
   padding: 20px;
   margin: 20px;
-  background-color: #f5f5f5;
+  background-color: rgba(255, 255, 255, 0.9);
   border-radius: 8px;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
 }
@@ -497,7 +502,7 @@ async function addItem() {
 .additem-page {
   text-align: center;
   margin: 20px;
-  background-color: white;
+  background-color: rgba(255, 255, 255, 0.9);
   border-radius: 5px;
   border: solid
 }
@@ -590,7 +595,7 @@ async function addItem() {
 .currentLoansBook-table th,
 .currentLoansMedia-table th,
 .currentLoansDevice-table th {
-  background-color: #f2f2f2;
+  background-color: rgba(255, 255, 255, 0.9);
 }
 </style>
   
