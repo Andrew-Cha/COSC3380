@@ -37,6 +37,7 @@ function signOut() {
   text-align: center;
   color: #fff;
   box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+  font-family: 'Poppins', sans-serif;
 }
 
 .main-nav {
