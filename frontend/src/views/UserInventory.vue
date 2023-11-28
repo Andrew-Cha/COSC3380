@@ -122,6 +122,7 @@ async function loanBook(id) {
   await axios.post(`${apiUrl}/items/loanBook`, body).catch(() => {
     alert("You are at your max limit of books.")
   })
+  heldBooks.value = []
   getLoanedBooks()
   getHeldBooks()
 }
@@ -134,6 +135,7 @@ async function loanMedia(id) {
   await axios.post(`${apiUrl}/items/loanMedia`, body).catch(() => {
     alert("You are at your max limit of books.")
   })
+  heldMedia.value = []
   getLoanedMedia()
   getHeldMedia()
 }
@@ -146,6 +148,7 @@ async function loanDevice(id) {
   await axios.post(`${apiUrl}/items/loanDevice`, body).catch(() => {
     alert("You are at your max limit of books.")
   })
+  heldDevices.value = []
   getLoanedDevices()
   getHeldMedia()
 }
@@ -256,15 +259,13 @@ async function loanDevice(id) {
         <th>Edition</th>
         <th>Hold Date</th>
         <th>Held Until</th>
-        <th>Returned Date</th>
         <th>Actions</th>
         <tr v-for="book in heldBooks" :key="book.id">
           <td>{{ book.title }}</td>
           <td>{{ book.isbn }}</td>
           <td> {{ book.edition }}</td>
-          <td> {{ book.loaned_at }}</td>
-          <td> {{ book.loaned_until }}</td>
-          <td> {{ book.returned_at }}</td>
+          <td> {{ book.held_at }}</td>
+          <td> {{ book.held_until }}</td>
           <td>
             <button class="action-button return-button" @click="loanBook(book.book_id)">Loan</button>
           </td>
@@ -283,15 +284,13 @@ async function loanDevice(id) {
         <th>Serial Number</th>
         <th>Hold Date</th>
         <th>Held Until</th>
-        <th>Returned Date</th>
         <th>Actions</th>
         <tr v-for="device in heldDevices" :key="device.id">
           <td>{{ device.device_name }}</td>
           <td>{{ device.device_type }}</td>
           <td> {{ device.serial_number }}</td>
-          <td> {{ device.loaned_at }}</td>
-          <td> {{ device.loaned_until }}</td>
-          <td> {{ device.returned_at }}</td>
+          <td> {{ device.held_at }}</td>
+          <td> {{ device.held_until }}</td>
           <td>
             <button class="action-button return-button" @click="loanDevice(device.device_id)">Loan</button>
           </td>
@@ -311,15 +310,13 @@ async function loanDevice(id) {
         <th>Media Link</th>
         <th>Hold Date</th>
         <th>Held Until</th>
-        <th>Returned Date</th>
         <th>Actions</th>
         <tr v-for="item in heldMedia" :key="item.id">
           <td>{{ item.title }}</td>
           <td>{{ item.author }}</td>
           <td>{{ item.file_link }}</td>
-          <td>{{ item.loaned_at }}</td>
-          <td>{{ item.loaned_until }}</td>
-          <td>{{ item.returned_at }}</td>
+          <td>{{ item.held_at }}</td>
+          <td>{{ item.held_until }}</td>
           <td>
             <button class="action-button return-button" @click="loanMedia(item.media_id)">Loan</button>
           </td>

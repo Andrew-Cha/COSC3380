@@ -124,17 +124,23 @@ async function holdDevice(id) {
 }
 
 async function deleteBook(id) {
-    await axios.delete(`${apiUrl}/items/deleteBook/${id}`)
+    await axios.delete(`${apiUrl}/items/deleteBook/${id}`).catch(() => {
+        alert("Cannot delete the book, it references other records and this would lose historical records.")
+    })
     getBooks()
 }
 
 async function deleteDevice(id) {
-    await axios.delete(`${apiUrl}/items/deleteDevice/${id}`)
+    await axios.delete(`${apiUrl}/items/deleteDevice/${id}`).catch(() => {
+        alert("Cannot delete the device, it references other records and this would lose historical records.")
+    })
     getDevices()
 }
 
 async function deleteMedia(id) {
-    await axios.delete(`${apiUrl}/items/deleteMedia/${id}`)
+    await axios.delete(`${apiUrl}/items/deleteMedia/${id}`).catch(() => {
+        alert("Cannot delete the media, it references other records and this would lose historical records.")
+    })
     getMedia()
 }
 
@@ -418,19 +424,19 @@ td {
 .return-button {
     margin-right: 5px;
 }
-    
+
 .extend-button {
     margin-right: 5px;
 }
-    
+
 .delete-button {
     margin-right: 5px;
 }
-    
+
 .edit-button {
     margin-right: 5px;
 }
-    
+
 .action-button:hover {
     background-color: #0056b3;
 }
