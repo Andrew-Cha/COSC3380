@@ -296,7 +296,7 @@ async function confirmDeleteMedia(id) {
                 <th>Manufacturer</th>
                 <th>Operating System</th>
                 <th>Serial Number</th>
-                <th>Year Released</th>
+                <th>Time Released</th>
                 <th>Actions</th>
                 <tr v-for="device in devices" :key="device.id">
                     <td>{{ device.device_name }}</td>
