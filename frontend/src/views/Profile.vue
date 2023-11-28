@@ -264,7 +264,7 @@ async function addItem() {
       <button @click="fetchFinesReport">Run</button>
       <div class="user-detail">
         <strong>Total Fines Collected:</strong>
-        <p> ${{ totalFines }}</p>
+        <p> ${{ totalFines || "0" }}</p>
       </div>
     </div>
 
