@@ -39,6 +39,7 @@ import { RouterLink } from 'vue-router'
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
+    background-attachment: fixed;
     height: 100vh;
   }
   
