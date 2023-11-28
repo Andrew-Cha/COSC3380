@@ -477,7 +477,8 @@ async function addItem() {
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  min-height: 100vh;
+  background-attachment: fixed;
+  height: 100vh;
 }
 
 .page-title {
@@ -614,7 +615,7 @@ async function addItem() {
 .currentLoansMedia-table td,
 .currentLoansDevice-table th,
 .currentLoansDevice-table td {
-  border: 1px solid #ddd;
+  border: 1px solid;
   padding: 8px;
   text-align: left;
 }
