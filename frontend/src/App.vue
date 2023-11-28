@@ -13,7 +13,7 @@ function signOut() {
 
 <template>
   <div class="application">
-    <header>
+    <header class="main-header">
       <nav class="main-header">
         <RouterLink class="navbutton" to="/">Home</RouterLink>
         <RouterLink class="navbutton" to="/library">Library</RouterLink>
@@ -26,12 +26,18 @@ function signOut() {
 
       </nav>
     </header>
-
-    <RouterView />
+    <div class="content-container">
+      <RouterView />
+    </div>
   </div>
 </template>
 <style scoped>
 .main-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
   background-color: #77CBB9;
   padding: 15px 0;
   text-align: center;
@@ -39,12 +45,11 @@ function signOut() {
   box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
   font-family: 'Poppins', sans-serif;
 }
-
-.main-nav {
-  display: flex;
-  justify-content: center;
+  
+.content-container {
+  margin-top: 55px;
 }
-
+  
 .navbutton {
   text-decoration: none;
   padding: 10px 20px;
