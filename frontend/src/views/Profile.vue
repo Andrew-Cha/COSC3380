@@ -333,14 +333,14 @@ async function addItem() {
     <div v-if="user.role_id === 3">
       <div v-if="includeBooks">
         <h3>Books</h3>
-        <template v-if="currentLoansData.length !== 0">
+        <template v-if="currentBooksData.length !== 0">
           <table class="currentLoansBook-table">
             <th>Title</th>
             <th>ISBN</th>
             <th>Edition</th>
             <th>Loan Date</th>
             <th>Loan Until</th>
-            <tr v-for="book in currentLoansData" :key="book.id">
+            <tr v-for="book in currentBooksData" :key="book.id">
               <td>{{ book.title }}</td>
               <td>{{ book.isbn }}</td>
               <td>{{ book.edition }}</td>
@@ -354,14 +354,14 @@ async function addItem() {
 
       <div v-if="includeMedia">
         <h3>Media</h3>
-        <template v-if="currentLoansData.length !== 0">
+        <template v-if="currentMediaData.length !== 0">
           <table class="currentLoansMedia-table">
             <th>Title</th>
             <th>Author</th>
             <th>Media Link</th>
             <th>Loan Date</th>
             <th>Loan Until</th>
-            <tr v-for="item in currentLoansData" :key="item.id">
+            <tr v-for="item in currentMediaData" :key="item.id">
               <td>{{ item.title }}</td>
               <td>{{ item.author }}</td>
               <td>{{ item.file_link }}</td>
@@ -375,14 +375,14 @@ async function addItem() {
 
       <div v-if="includeDevices">
         <h3>Devices</h3>
-        <template v-if="currentLoansData.length !== 0">
+        <template v-if="currentDevicesData.length !== 0">
           <table class="currentLoansDevice-table">
             <th>Name</th>
             <th>Type</th>
             <th>Serial Number</th>
             <th>Loan Date</th>
             <th>Loan Until</th>
-            <tr v-for="device in currentLoansData" :key="device.id">
+            <tr v-for="device in currentDevicesData" :key="device.id">
               <td>{{ device.device_name }}</td>
               <td>{{ device.device_type }}</td>
               <td>{{ device.serial_number }}</td>
