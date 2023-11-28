@@ -4,10 +4,11 @@ import { useMainStore } from '@/stores/main';
 import { storeToRefs } from 'pinia';
 
 const mainStore = useMainStore()
-const { isLoggedIn } = storeToRefs(mainStore)
+const { isLoggedIn, user } = storeToRefs(mainStore)
 
 function signOut() {
   isLoggedIn.value = false
+  user.value = {}
 }
 </script>
 
@@ -45,11 +46,11 @@ function signOut() {
   box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
   font-family: 'Poppins', sans-serif;
 }
-  
+
 .content-container {
   margin-top: 55px;
 }
-  
+
 .navbutton {
   text-decoration: none;
   padding: 10px 20px;
