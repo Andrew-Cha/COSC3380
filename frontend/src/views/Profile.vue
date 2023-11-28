@@ -122,6 +122,9 @@ onMounted(() => {
     fetchFinesReport();
     fetchPastLoansReport();
     fetchCurrentLoansReport();
+    fetchCurrentBooks();
+    fetchCurrentMedia();
+    fetchCurrentDevices();
     fetchCustomers();
     fetchRoles();
   }
