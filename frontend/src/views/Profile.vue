@@ -36,8 +36,11 @@ const fetchFinesReport = async () => {
         roleId: selectedRoleId.value,
       },
     });
-    totalFines.value = response.data;
-    totalFines.value = totalFines.value[0].total_fines
+    if (response.data.length > 0) {
+      totalFines.value = response.data[0].total_fines;
+    } else {
+      totalFines.value = 0;
+    }
   } catch (error) {
     console.error('Error fetching fines report:', error);
   }
