@@ -22,7 +22,9 @@ const selectedCustomerId = ref(null);
 const includeBooks = ref(false);
 const includeMedia = ref(false);
 const includeDevices = ref(false);
-const currentLoansData = ref([]);
+const currentBooksData = ref([]);
+const currentMediaData = ref([]);
+const currentDevicesData = ref([]);
 
 const apiUrl = `http://${import.meta.env.VITE_SERVER_URL}:3000/api/fines`;
 
@@ -56,26 +58,46 @@ const fetchPastLoansReport = async () => {
 };
 
 
-const fetchCurrentLoansReport = async () => {
+async function fetchCurrentBooks() {
   try {
-    if (includeBooks.value) {
-      const booksResponse = await axios.get(`${apiUrl}/reports/currentbooks/${selectedCustomerId.value}`);
-      currentLoansData.value = currentLoansData.value.concat(booksResponse.data);
-    }
-
-    if (includeMedia.value) {
-      const mediaResponse = await axios.get(`${apiUrl}/reports/currentmedia/${selectedCustomerId.value}`);
-      currentLoansData.value = currentLoansData.value.concat(mediaResponse.data);
-    }
-
-    if (includeDevices.value) {
-      const devicesResponse = await axios.get(`${apiUrl}/reports/currentdevices/${selectedCustomerId.value}`);
-      currentLoansData.value = currentLoansData.value.concat(devicesResponse.data);
-    }
+    const booksResponse = await axios.get(`${apiUrl}/reports/currentbooks/${selectedCustomerId.value}`);
+    currentBooksData.value = booksResponse.data;
   } catch (error) {
-    console.error('Error fetching current loans report:', error);
+    console.error('Error fetching current books:', error);
   }
 };
+
+async function fetchCurrentMedia() {
+  try {
+    const mediaResponse = await axios.get(`${apiUrl}/reports/currentmedia/${selectedCustomerId.value}`);
+    currentMediaData.value = mediaResponse.data;
+  } catch (error) {
+    console.error('Error fetching current media:', error);
+  }
+}
+
+async function fetchCurrentDevices() {
+  try {
+    const devicesResponse = await axios.get(`${apiUrl}/reports/currentdevices/${selectedCustomerId.value}`);
+    currentDevicesData.value = devicesResponse.data;
+  } catch (error) {
+    console.error('Error fetching current devices:', error);
+  }
+}
+
+async function fetchCurrentLoansReport() {
+  if (includeBooks.value) {
+    await fetchCurrentBooks();
+  }
+
+  if (includeMedia.value) {
+    await fetchCurrentMedia();
+  }
+
+  if (includeDevices.value) {
+    await fetchCurrentDevices();
+  }
+}
 
 const fetchCustomers = async () => {
   try {
