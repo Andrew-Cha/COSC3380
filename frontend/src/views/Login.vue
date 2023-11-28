@@ -109,7 +109,8 @@ function signup() {
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    min-height: 100vh;
+    background-attachment: fixed;
+    height: 100vh;
 }
 
 .auth-form {
