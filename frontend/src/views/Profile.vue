@@ -615,6 +615,7 @@ async function addItem() {
 .currentLoansMedia-table td,
 .currentLoansDevice-table th,
 .currentLoansDevice-table td {
+  background-color: white;
   border: 1px solid;
   padding: 8px;
   text-align: left;
