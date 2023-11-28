@@ -137,7 +137,12 @@ CREATE TABLE transaction(
         transaction_amount DECIMAL,
         card_number VARCHAR
     );
-      
+INSERT INTO fine(customer_id, fine_amount, fined_at) VALUES
+(1, 100.5, '2023-02-15 10:00:00');
+
+INSERT INTO transaction(fine_id, transaction_amount, card_number)
+VALUES (1, 100.5, '1234123412345');
+
 create table device(
         id serial primary key,
         publisher_id integer references publisher(id),
@@ -176,6 +181,8 @@ CREATE TABLE fine_to_device(
         fine_id INTEGER REFERENCES fine(id),
         device_id INTEGER REFERENCES device(id)
     );
+INSERT INTO fine_to_device(fine_id, device_id)
+VALUES(1, 1);
 
 CREATE TABLE hold_to_book(
         id serial PRIMARY KEY,
