@@ -206,6 +206,7 @@ table {
 
 th, td {
     border: 1px solid;
+  padding: 8px;
 }
 
 button {
